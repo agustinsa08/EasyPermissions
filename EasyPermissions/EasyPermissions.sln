@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPermissions.Backend", "EasyPermissions.Backend\EasyPermissions.Backend.csproj", "{0B797E4F-DAAA-4A2A-8930-729672D8DC63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyPermissions.Backend", "EasyPermissions.Backend\EasyPermissions.Backend.csproj", "{0B797E4F-DAAA-4A2A-8930-729672D8DC63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPermissions.Frontend", "EasyPermissions.Frontend\EasyPermissions.Frontend.csproj", "{97CEC968-3453-431B-9594-340F2C525092}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyPermissions.Frontend", "EasyPermissions.Frontend\EasyPermissions.Frontend.csproj", "{97CEC968-3453-431B-9594-340F2C525092}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPermissions.Shared", "EasyPermissions.Shared\EasyPermissions.Shared.csproj", "{A9643E48-6E5B-4D16-817D-7BB7352BDDE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyPermissions.Shared", "EasyPermissions.Shared\EasyPermissions.Shared.csproj", "{A9643E48-6E5B-4D16-817D-7BB7352BDDE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPermissions.UnitTests", "EasyPermissions.UnitTests\EasyPermissions.UnitTests.csproj", "{FC7A2BC0-B85B-4FA2-9987-A592A1F73469}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyPermissions.UnitTests", "EasyPermissions.UnitTests\EasyPermissions.UnitTests.csproj", "{FC7A2BC0-B85B-4FA2-9987-A592A1F73469}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

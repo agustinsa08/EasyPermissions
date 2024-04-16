@@ -1,4 +1,4 @@
-﻿namespace Orders.Shared.Responses
+﻿namespace EasyPermissions.Shared.Responses
 {
     public class ActionResponse<T>
     {
