@@ -3,6 +3,7 @@ using EasyPermissions.Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyPermissions.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240420205524_AreaAndNoticesManagment")]
+    partial class AreaAndNoticesManagment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +49,7 @@ namespace EasyPermissions.Backend.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Areas");
+                    b.ToTable("Area");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.CategoryNotice", b =>
@@ -74,7 +77,7 @@ namespace EasyPermissions.Backend.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("CategoryNotices");
+                    b.ToTable("CategoryNotice");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.City", b =>
@@ -178,7 +181,7 @@ namespace EasyPermissions.Backend.Migrations
                     b.HasIndex("CategoryNoticeId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Notices");
+                    b.ToTable("Notice");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.State", b =>
@@ -233,7 +236,7 @@ namespace EasyPermissions.Backend.Migrations
                     b.HasIndex("CategoryNoticeId", "Name")
                         .IsUnique();
 
-                    b.ToTable("TypeNotices");
+                    b.ToTable("TypeNotice");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.City", b =>
