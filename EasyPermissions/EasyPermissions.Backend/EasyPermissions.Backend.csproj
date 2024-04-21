@@ -20,4 +20,8 @@
     <ProjectReference Include="..\EasyPermissions.Shared\EasyPermissions.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

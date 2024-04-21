@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyPermissions.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240420205524_AreaAndNoticesManagment")]
-    partial class AreaAndNoticesManagment
+    [Migration("20240421032236_Countries, states, cities, areas and Notices Managment")]
+    partial class CountriesstatescitiesareasandNoticesManagment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("status")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -49,7 +49,7 @@ namespace EasyPermissions.Backend.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Area");
+                    b.ToTable("Areas");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.CategoryNotice", b =>
@@ -69,7 +69,7 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("status")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -77,7 +77,7 @@ namespace EasyPermissions.Backend.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("CategoryNotice");
+                    b.ToTable("CategoryNotices");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.City", b =>
@@ -173,7 +173,7 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("status")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -181,7 +181,7 @@ namespace EasyPermissions.Backend.Migrations
                     b.HasIndex("CategoryNoticeId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Notice");
+                    b.ToTable("Notices");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.State", b =>
@@ -228,7 +228,7 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("status")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -236,7 +236,7 @@ namespace EasyPermissions.Backend.Migrations
                     b.HasIndex("CategoryNoticeId", "Name")
                         .IsUnique();
 
-                    b.ToTable("TypeNotice");
+                    b.ToTable("TypeNotices");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.City", b =>

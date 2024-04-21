@@ -23,12 +23,17 @@ builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWor
 builder.Services.AddScoped<IAreasRepository, AreasRepository>();
 builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<ICategoryNoticesRepository, CategoryNoticesRepository>();
 builder.Services.AddScoped<IStatesRepository, StatesRepository>();
+builder.Services.AddScoped<ITypeNoticesRepository, TypeNoticesRepository>();
+
 
 builder.Services.AddScoped<IAreasUnitOfWork, AreasUnitOfWork>();
 builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
 builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
+builder.Services.AddScoped<ICategoryNoticesUnitOfWork, CategoryNoticesUnitOfWork>();
 builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
+builder.Services.AddScoped<ITypeNoticesUnitOfWork, TypeNoticesUnitOfWork>();
 
 var app = builder.Build();
 SeedData(app);
