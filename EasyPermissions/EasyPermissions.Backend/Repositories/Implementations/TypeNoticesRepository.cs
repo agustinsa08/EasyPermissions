@@ -17,39 +17,6 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             _context = context;
         }
 
-        public override async Task<ActionResponse<TypeNotice>> GetAsync(int id)
-        {
-            var typeNotice = await _context.TypeNotices
-                 .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (typeNotice == null)
-            {
-                return new ActionResponse<TypeNotice>
-                {
-                    WasSuccess = false,
-                    Message = "Tipo no existe"
-                };
-            }
-
-            return new ActionResponse<TypeNotice>
-            {
-                WasSuccess = true,
-                Result = typeNotice
-            };
-        }
-
-        public override async Task<ActionResponse<IEnumerable<TypeNotice>>> GetAsync()
-        {
-            var typeNotices = await _context.TypeNotices
-                .OrderBy(x => x.Name)
-                .ToListAsync();
-            return new ActionResponse<IEnumerable<TypeNotice>>
-            {
-                WasSuccess = true,
-                Result = typeNotices
-            };
-        }
-
         public override async Task<ActionResponse<IEnumerable<TypeNotice>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _context.TypeNotices

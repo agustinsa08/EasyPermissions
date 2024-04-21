@@ -16,10 +16,6 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
             _typeNoticesRepository = typeNoticesRepository;
         }
 
-        public override async Task<ActionResponse<IEnumerable<TypeNotice>>> GetAsync() => await _typeNoticesRepository.GetAsync();
-
-        public override async Task<ActionResponse<TypeNotice>> GetAsync(int id) => await _typeNoticesRepository.GetAsync(id);
-
         public override async Task<ActionResponse<IEnumerable<TypeNotice>>> GetAsync(PaginationDTO pagination) => await _typeNoticesRepository.GetAsync(pagination);
 
         public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _typeNoticesRepository.GetTotalPagesAsync(pagination);

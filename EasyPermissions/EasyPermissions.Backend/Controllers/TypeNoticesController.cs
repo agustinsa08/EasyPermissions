@@ -16,17 +16,6 @@ namespace EasyPermissions.Backend.Controllers
             _typeNoticesUnitOfWork = typeNoticesUnitOfWork;
         }
 
-        [HttpGet("full")]
-        public override async Task<IActionResult> GetAsync()
-        {
-            var response = await _typeNoticesUnitOfWork.GetAsync();
-            if (response.WasSuccess)
-            {
-                return Ok(response.Result);
-            }
-            return BadRequest();
-        }
-
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
@@ -47,17 +36,6 @@ namespace EasyPermissions.Backend.Controllers
                 return Ok(action.Result);
             }
             return BadRequest();
-        }
-
-        [HttpGet("{id}")]
-        public override async Task<IActionResult> GetAsync(int id)
-        {
-            var response = await _typeNoticesUnitOfWork.GetAsync(id);
-            if (response.WasSuccess)
-            {
-                return Ok(response.Result);
-            }
-            return NotFound(response.Message);
         }
     }
 }
