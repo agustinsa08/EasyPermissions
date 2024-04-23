@@ -1,4 +1,5 @@
 ﻿using EasyPermissions.Shared.Interfaces;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace EasyPermissions.Shared.Entities
@@ -13,10 +14,11 @@ namespace EasyPermissions.Shared.Entities
         public string Name { get; set; } = null!;
 
         [Display(Name = "Descripción")]
-        public string Description { get; set; } = null!;
+        public string? Description { get; set; } = null!;
 
         [Display(Name = "Estado")]
-        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [Required(ErrorMessage = "El campo {2} es requerido.")]
+        [DefaultValue(1)]
         public int Status { get; set; } = 1;
 
         public ICollection<TypeNotice>? TypeNotices { get; set; }
@@ -28,6 +30,5 @@ namespace EasyPermissions.Shared.Entities
 
         [Display(Name = "Noticias")]
         public int NoticeNumber => Notices == null || Notices.Count == 0 ? 0 : Notices.Count;
-
     }
 }

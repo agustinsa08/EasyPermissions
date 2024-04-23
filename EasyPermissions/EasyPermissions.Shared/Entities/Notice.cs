@@ -13,13 +13,14 @@ namespace EasyPermissions.Shared.Entities
         public string Name { get; set; } = null!;
 
         [Display(Name = "Descripción")]
-        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [Required(ErrorMessage = "El campo {1} es requerido.")]
         public string Description { get; set; } = null!;
 
         [Display(Name = "Estado")]
-        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [Required(ErrorMessage = "El campo {2} es requerido.")]
         public int Status { get; set; } = 1;
 
+        [Required(ErrorMessage = "El campo {3} es requerido.")]
         public int CategoryNoticeId { get; set; }
 
         public CategoryNotice? CategoryNotice { get; set; }

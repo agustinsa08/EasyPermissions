@@ -13,7 +13,7 @@ namespace EasyPermissions.Shared.Entities
         public string Name { get; set; } = null!;
 
         [Display(Name = "Archivo")]
-        [Required(ErrorMessage = "El campo {1} es requerido.")]
+        [Required(ErrorMessage = "El campo {2} es requerido.")]
         public string File { get; set; } = null!;
 
         public int NoticeId { get; set; }
