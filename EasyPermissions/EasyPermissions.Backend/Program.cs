@@ -24,16 +24,20 @@ builder.Services.AddScoped<IAreasRepository, AreasRepository>();
 builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 builder.Services.AddScoped<ICategoryNoticesRepository, CategoryNoticesRepository>();
+builder.Services.AddScoped<IImageNoticesRepository, ImageNoticesRepository>();
 builder.Services.AddScoped<IStatesRepository, StatesRepository>();
 builder.Services.AddScoped<ITypeNoticesRepository, TypeNoticesRepository>();
+builder.Services.AddScoped<INoticesRepository, NoticesRepository>();
 
 
 builder.Services.AddScoped<IAreasUnitOfWork, AreasUnitOfWork>();
 builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
 builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
 builder.Services.AddScoped<ICategoryNoticesUnitOfWork, CategoryNoticesUnitOfWork>();
+builder.Services.AddScoped<IImageNoticesUnitOfWork, ImageNoticesUnitOfWork>();
 builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
 builder.Services.AddScoped<ITypeNoticesUnitOfWork, TypeNoticesUnitOfWork>();
+builder.Services.AddScoped<INoticesUnitOfWork, NoticesUnitOfWork>();
 
 var app = builder.Build();
 SeedData(app);

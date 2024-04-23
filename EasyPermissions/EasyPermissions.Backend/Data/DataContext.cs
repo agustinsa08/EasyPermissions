@@ -12,6 +12,7 @@ namespace EasyPermissions.Backend.Data
         public DbSet<Area> Areas { get; set; }
         public DbSet<CategoryNotice> CategoryNotices { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<ImageNotice> ImageNotices { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<TypeNotice> TypeNotices { get; set; }
