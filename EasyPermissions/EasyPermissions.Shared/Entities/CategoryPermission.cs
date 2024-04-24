@@ -1,10 +1,9 @@
 ﻿using EasyPermissions.Shared.Interfaces;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace EasyPermissions.Shared.Entities
 {
-    public class Area : IEntityWithName
+    public class CategoryPermission : IEntityWithName
     {
         public int Id { get; set; }
 
@@ -18,7 +17,17 @@ namespace EasyPermissions.Shared.Entities
 
         [Display(Name = "Estado")]
         [Required(ErrorMessage = "El campo {2} es requerido.")]
-        [DefaultValue(1)]
-        public int? Status { get; set; } = 1;
+        public int Status { get; set; } = 1;
+
+        public ICollection<TypePermission>? TypePermissions { get; set; }
+
+        [Display(Name = "Tipos")]
+        public int TypePermissionsNumber => TypePermissions == null || TypePermissions.Count == 0 ? 0 : TypePermissions.Count;
+
+        //public ICollection<Permission>? Permissions { get; set; }
+
+        //[Display(Name = "Permisos")]
+        //public int NoticeNumber => Permissions == null || Permissions.Count == 0 ? 0 : Permissions.Count;
+
     }
 }

@@ -5,21 +5,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EasyPermissions.Backend.Controllers
 {
-   [ApiController]
+    [ApiController]
     [Route("api/[controller]")]
-    public class CategoryNoticesController : GenericController<CategoryNotice>
+    public class NoticesController : GenericController<Notice>
     {
-        private readonly ICategoryNoticesUnitOfWork _categoryNoticesUnitOfWork;
+        private readonly INoticesUnitOfWork _noticesUnitOfWork;
 
-        public CategoryNoticesController(IGenericUnitOfWork<CategoryNotice> unitOfWork, ICategoryNoticesUnitOfWork categoryNoticesUnitOfWork) : base(unitOfWork)
+        public NoticesController(IGenericUnitOfWork<Notice> unitOfWork, INoticesUnitOfWork noticesUnitOfWork) : base(unitOfWork)
         {
-            _categoryNoticesUnitOfWork = categoryNoticesUnitOfWork;
+            _noticesUnitOfWork = noticesUnitOfWork;
         }
 
         [HttpGet("full")]
         public override async Task<IActionResult> GetAsync()
         {
-            var response = await _categoryNoticesUnitOfWork.GetAsync();
+            var response = await _noticesUnitOfWork.GetAsync();
             if (response.WasSuccess)
             {
                 return Ok(response.Result);
@@ -27,11 +27,10 @@ namespace EasyPermissions.Backend.Controllers
             return BadRequest();
         }
 
-
         [HttpGet]
         public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
         {
-            var response = await _categoryNoticesUnitOfWork.GetAsync(pagination);
+            var response = await _noticesUnitOfWork.GetAsync(pagination);
             if (response.WasSuccess)
             {
                 return Ok(response.Result);
@@ -42,7 +41,7 @@ namespace EasyPermissions.Backend.Controllers
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
         {
-            var response = await _categoryNoticesUnitOfWork.GetAsync(id);
+            var response = await _noticesUnitOfWork.GetAsync(id);
             if (response.WasSuccess)
             {
                 return Ok(response.Result);
@@ -53,7 +52,7 @@ namespace EasyPermissions.Backend.Controllers
         [HttpGet("totalPages")]
         public override async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
         {
-            var action = await _categoryNoticesUnitOfWork.GetTotalPagesAsync(pagination);
+            var action = await _noticesUnitOfWork.GetTotalPagesAsync(pagination);
             if (action.WasSuccess)
             {
                 return Ok(action.Result);
