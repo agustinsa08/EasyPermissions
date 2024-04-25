@@ -21,10 +21,9 @@ namespace EasyPermissions.Shared.Entities
         [DefaultValue(1)]
         public int Status { get; set; } = 1;
 
-        public ICollection<TypeNotice>? TypeNotices { get; set; }
+        public int TypeNoticeId { get; set; }
 
-        [Display(Name = "Tipos")]
-        public int TypeNoticesNumber => TypeNotices == null || TypeNotices.Count == 0 ? 0 : TypeNotices.Count;
+        public TypeNotice? TypeNotice { get; set; }
 
         public ICollection<Notice>? Notices { get; set; }
 

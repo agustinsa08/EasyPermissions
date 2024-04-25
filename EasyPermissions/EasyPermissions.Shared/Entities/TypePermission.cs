@@ -19,9 +19,9 @@ namespace EasyPermissions.Shared.Entities
         [Required(ErrorMessage = "El campo {2} es requerido.")]
         public int Status { get; set; } = 1;
 
-        [Required(ErrorMessage = "El campo {3} es requerido.")]
-        public int CategoryPermissionId { get; set; }
+        public ICollection<CategoryPermission>? CategoryPermissions { get; set; }
 
-        public CategoryPermission? CategoryPermission { get; set; }
+        [Display(Name = "Categorías")]
+        public int CategoryPermissionsNumber => CategoryPermissions == null || CategoryPermissions.Count == 0 ? 0 : CategoryPermissions.Count;
     }
 }

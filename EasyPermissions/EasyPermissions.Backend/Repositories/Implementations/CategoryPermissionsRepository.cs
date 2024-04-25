@@ -17,23 +17,10 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             _context = context;
         }
 
-        public override async Task<ActionResponse<IEnumerable<CategoryPermission>>> GetAsync()
-        {
-            var categoryPermissions = await _context.CategoryPermissions
-                .OrderBy(x => x.Name)
-                .Include(s => s.TypePermissions)
-                .ToListAsync();
-            return new ActionResponse<IEnumerable<CategoryPermission>>
-            {
-                WasSuccess = true,
-                Result = categoryPermissions
-            };
-        }
-
         public override async Task<ActionResponse<IEnumerable<CategoryPermission>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _context.CategoryPermissions
-                .Include(c => c.TypePermissions)
+                .Where(x => x.TypePermission!.Id == pagination.Id)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -53,7 +40,9 @@ namespace EasyPermissions.Backend.Repositories.Implementations
 
         public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
         {
-            var queryable = _context.CategoryPermissions.AsQueryable();
+            var queryable = _context.CategoryPermissions
+                .Where(x => x.TypePermission!.Id == pagination.Id)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
@@ -66,28 +55,6 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             {
                 WasSuccess = true,
                 Result = totalPages
-            };
-        }
-
-        public override async Task<ActionResponse<CategoryPermission>> GetAsync(int id)
-        {
-            var categoryPermission = await _context.CategoryPermissions
-                 .Include(c => c.TypePermissions!)
-                 .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (categoryPermission == null)
-            {
-                return new ActionResponse<CategoryPermission>
-                {
-                    WasSuccess = false,
-                    Message = "Categoría no existe"
-                };
-            }
-
-            return new ActionResponse<CategoryPermission>
-            {
-                WasSuccess = true,
-                Result = categoryPermission
             };
         }
     }

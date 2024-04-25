@@ -19,10 +19,9 @@ namespace EasyPermissions.Shared.Entities
         [Required(ErrorMessage = "El campo {2} es requerido.")]
         public int Status { get; set; } = 1;
 
-        public ICollection<TypePermission>? TypePermissions { get; set; }
+        public int TypePermissionId { get; set; }
 
-        [Display(Name = "Tipos")]
-        public int TypePermissionsNumber => TypePermissions == null || TypePermissions.Count == 0 ? 0 : TypePermissions.Count;
+        public TypePermission? TypePermission { get; set; }
 
         //public ICollection<Permission>? Permissions { get; set; }
 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EasyPermissions.Backend.Controllers
 {
-   [ApiController]
+    [ApiController]
     [Route("api/[controller]")]
     public class TypePermissionsController : GenericController<TypePermission>
     {
@@ -17,8 +17,20 @@ namespace EasyPermissions.Backend.Controllers
             _typePermissionsUnitOfWork = typePermissionsUnitOfWork;
         }
 
+        [HttpGet("full")]
+        public override async Task<IActionResult> GetAsync()
+        {
+            var response = await _typePermissionsUnitOfWork.GetAsync();
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return BadRequest();
+        }
+
+
         [HttpGet]
-        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
+        public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
         {
             var response = await _typePermissionsUnitOfWork.GetAsync(pagination);
             if (response.WasSuccess)
@@ -26,6 +38,17 @@ namespace EasyPermissions.Backend.Controllers
                 return Ok(response.Result);
             }
             return BadRequest();
+        }
+
+        [HttpGet("{id}")]
+        public override async Task<IActionResult> GetAsync(int id)
+        {
+            var response = await _typePermissionsUnitOfWork.GetAsync(id);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return NotFound(response.Message);
         }
 
         [HttpGet("totalPages")]

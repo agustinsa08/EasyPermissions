@@ -1,4 +1,5 @@
-﻿using EasyPermissions.Backend.UnitsOfWork.Interfaces;
+﻿using EasyPermissions.Backend.UnitsOfWork.Implementations;
+using EasyPermissions.Backend.UnitsOfWork.Interfaces;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +17,20 @@ namespace EasyPermissions.Backend.Controllers
             _typeNoticesUnitOfWork = typeNoticesUnitOfWork;
         }
 
+        [HttpGet("full")]
+        public override async Task<IActionResult> GetAsync()
+        {
+            var response = await _typeNoticesUnitOfWork.GetAsync();
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return BadRequest();
+        }
+
+
         [HttpGet]
-        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
+        public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
         {
             var response = await _typeNoticesUnitOfWork.GetAsync(pagination);
             if (response.WasSuccess)
@@ -25,6 +38,17 @@ namespace EasyPermissions.Backend.Controllers
                 return Ok(response.Result);
             }
             return BadRequest();
+        }
+
+        [HttpGet("{id}")]
+        public override async Task<IActionResult> GetAsync(int id)
+        {
+            var response = await _typeNoticesUnitOfWork.GetAsync(id);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return NotFound(response.Message);
         }
 
         [HttpGet("totalPages")]

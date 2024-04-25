@@ -17,23 +17,10 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             _context = context;
         }
 
-        public override async Task<ActionResponse<IEnumerable<CategoryNotice>>> GetAsync()
-        {
-            var categoryNotices = await _context.CategoryNotices
-                .OrderBy(x => x.Name)
-                .Include(s => s.TypeNotices)
-                .ToListAsync();
-            return new ActionResponse<IEnumerable<CategoryNotice>>
-            {
-                WasSuccess = true,
-                Result = categoryNotices
-            };
-        }
-
         public override async Task<ActionResponse<IEnumerable<CategoryNotice>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _context.CategoryNotices
-                .Include(c => c.TypeNotices)
+                .Where(x => x.TypeNotice!.Id == pagination.Id)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -53,7 +40,9 @@ namespace EasyPermissions.Backend.Repositories.Implementations
 
         public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
         {
-            var queryable = _context.CategoryNotices.AsQueryable();
+            var queryable = _context.CategoryNotices
+                .Where(x => x.TypeNotice!.Id == pagination.Id)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
@@ -66,28 +55,6 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             {
                 WasSuccess = true,
                 Result = totalPages
-            };
-        }
-
-        public override async Task<ActionResponse<CategoryNotice>> GetAsync(int id)
-        {
-            var categoryNotice = await _context.CategoryNotices
-                 .Include(c => c.TypeNotices!)
-                 .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (categoryNotice == null)
-            {
-                return new ActionResponse<CategoryNotice>
-                {
-                    WasSuccess = false,
-                    Message = "Categoría no existe"
-                };
-            }
-
-            return new ActionResponse<CategoryNotice>
-            {
-                WasSuccess = true,
-                Result = categoryNotice
             };
         }
     }
