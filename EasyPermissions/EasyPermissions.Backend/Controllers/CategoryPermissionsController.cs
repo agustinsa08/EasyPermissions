@@ -5,28 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EasyPermissions.Backend.Controllers
 {
-   [ApiController]
+    [ApiController]
     [Route("api/[controller]")]
     public class CategoryPermissionsController : GenericController<CategoryPermission>
     {
         private readonly ICategoryPermissionsUnitOfWork _categoryPermissionsUnitOfWork;
 
-        public CategoryPermissionsController(IGenericUnitOfWork<CategoryPermission> unitOfWork, ICategoryPermissionsUnitOfWork categoryPermissionsUnitOfWork) : base(unitOfWork)
+        public CategoryPermissionsController(IGenericUnitOfWork<CategoryPermission> unitOfWork, ICategoryPermissionsUnitOfWork _categoryPermissionsUnitOfWork) : base(unitOfWork)
         {
-            _categoryPermissionsUnitOfWork = categoryPermissionsUnitOfWork;
+            _categoryPermissionsUnitOfWork = _categoryPermissionsUnitOfWork;
         }
-
-        [HttpGet("full")]
-        public override async Task<IActionResult> GetAsync()
-        {
-            var response = await _categoryPermissionsUnitOfWork.GetAsync();
-            if (response.WasSuccess)
-            {
-                return Ok(response.Result);
-            }
-            return BadRequest();
-        }
-
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
@@ -37,17 +25,6 @@ namespace EasyPermissions.Backend.Controllers
                 return Ok(response.Result);
             }
             return BadRequest();
-        }
-
-        [HttpGet("{id}")]
-        public override async Task<IActionResult> GetAsync(int id)
-        {
-            var response = await _categoryPermissionsUnitOfWork.GetAsync(id);
-            if (response.WasSuccess)
-            {
-                return Ok(response.Result);
-            }
-            return NotFound(response.Message);
         }
 
         [HttpGet("totalPages")]

@@ -19,8 +19,9 @@ namespace EasyPermissions.Shared.Entities
         [Required(ErrorMessage = "El campo {2} es requerido.")]
         public int Status { get; set; } = 1;
 
-        public int CategoryNoticeId { get; set; }
+        public ICollection<CategoryNotice>? CategoryNotices { get; set; }
 
-        public CategoryNotice? CategoryNotice { get; set; }
+        [Display(Name = "Categorías")]
+        public int CategoryNoticesNumber => CategoryNotices == null || CategoryNotices.Count == 0 ? 0 : CategoryNotices.Count;
     }
 }

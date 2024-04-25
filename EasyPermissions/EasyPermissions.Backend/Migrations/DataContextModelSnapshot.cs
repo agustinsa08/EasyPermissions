@@ -69,9 +69,12 @@ namespace EasyPermissions.Backend.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int>("TypeNoticeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("TypeNoticeId", "Name")
                         .IsUnique();
 
                     b.ToTable("CategoryNotices");
@@ -96,9 +99,12 @@ namespace EasyPermissions.Backend.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int>("TypePermissionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("TypePermissionId", "Name")
                         .IsUnique();
 
                     b.ToTable("CategoryPermissions");
@@ -240,9 +246,6 @@ namespace EasyPermissions.Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryNoticeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -256,7 +259,7 @@ namespace EasyPermissions.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryNoticeId", "Name")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("TypeNotices");
@@ -270,9 +273,6 @@ namespace EasyPermissions.Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryPermissionId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -286,10 +286,32 @@ namespace EasyPermissions.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryPermissionId", "Name")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("TypePermissions");
+                });
+
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.CategoryNotice", b =>
+                {
+                    b.HasOne("EasyPermissions.Shared.Entities.TypeNotice", "TypeNotice")
+                        .WithMany("CategoryNotices")
+                        .HasForeignKey("TypeNoticeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TypeNotice");
+                });
+
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.CategoryPermission", b =>
+                {
+                    b.HasOne("EasyPermissions.Shared.Entities.TypePermission", "TypePermission")
+                        .WithMany("CategoryPermissions")
+                        .HasForeignKey("TypePermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TypePermission");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.City", b =>
@@ -336,38 +358,9 @@ namespace EasyPermissions.Backend.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("EasyPermissions.Shared.Entities.TypeNotice", b =>
-                {
-                    b.HasOne("EasyPermissions.Shared.Entities.CategoryNotice", "CategoryNotice")
-                        .WithMany("TypeNotices")
-                        .HasForeignKey("CategoryNoticeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CategoryNotice");
-                });
-
-            modelBuilder.Entity("EasyPermissions.Shared.Entities.TypePermission", b =>
-                {
-                    b.HasOne("EasyPermissions.Shared.Entities.CategoryPermission", "CategoryPermission")
-                        .WithMany("TypePermissions")
-                        .HasForeignKey("CategoryPermissionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CategoryPermission");
-                });
-
             modelBuilder.Entity("EasyPermissions.Shared.Entities.CategoryNotice", b =>
                 {
                     b.Navigation("Notices");
-
-                    b.Navigation("TypeNotices");
-                });
-
-            modelBuilder.Entity("EasyPermissions.Shared.Entities.CategoryPermission", b =>
-                {
-                    b.Navigation("TypePermissions");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.Country", b =>
@@ -383,6 +376,16 @@ namespace EasyPermissions.Backend.Migrations
             modelBuilder.Entity("EasyPermissions.Shared.Entities.State", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.TypeNotice", b =>
+                {
+                    b.Navigation("CategoryNotices");
+                });
+
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.TypePermission", b =>
+                {
+                    b.Navigation("CategoryPermissions");
                 });
 #pragma warning restore 612, 618
         }

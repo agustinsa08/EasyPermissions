@@ -26,36 +26,6 @@ namespace EasyPermissions.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CategoryNotices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CategoryNotices", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CategoryPermissions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CategoryPermissions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Countries",
                 columns: table => new
                 {
@@ -66,6 +36,120 @@ namespace EasyPermissions.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Countries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TypeNotices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TypeNotices", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TypePermissions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TypePermissions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "States",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CountryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_States", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_States_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryNotices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    TypeNoticeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryNotices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CategoryNotices_TypeNotices_TypeNoticeId",
+                        column: x => x.TypeNoticeId,
+                        principalTable: "TypeNotices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryPermissions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    TypePermissionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryPermissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CategoryPermissions_TypePermissions_TypePermissionId",
+                        column: x => x.TypePermissionId,
+                        principalTable: "TypePermissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StateId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cities_States_StateId",
+                        column: x => x.StateId,
+                        principalTable: "States",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,70 +175,6 @@ namespace EasyPermissions.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TypeNotices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CategoryNoticeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TypeNotices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TypeNotices_CategoryNotices_CategoryNoticeId",
-                        column: x => x.CategoryNoticeId,
-                        principalTable: "CategoryNotices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TypePermissions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CategoryPermissionId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TypePermissions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TypePermissions_CategoryPermissions_CategoryPermissionId",
-                        column: x => x.CategoryPermissionId,
-                        principalTable: "CategoryPermissions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "States",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_States", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_States_Countries_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Countries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ImageNotices",
                 columns: table => new
                 {
@@ -175,26 +195,6 @@ namespace EasyPermissions.Backend.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Cities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    StateId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Cities_States_StateId",
-                        column: x => x.StateId,
-                        principalTable: "States",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Areas_Name",
                 table: "Areas",
@@ -202,15 +202,15 @@ namespace EasyPermissions.Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryNotices_Name",
+                name: "IX_CategoryNotices_TypeNoticeId_Name",
                 table: "CategoryNotices",
-                column: "Name",
+                columns: new[] { "TypeNoticeId", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryPermissions_Name",
+                name: "IX_CategoryPermissions_TypePermissionId_Name",
                 table: "CategoryPermissions",
-                column: "Name",
+                columns: new[] { "TypePermissionId", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -244,15 +244,15 @@ namespace EasyPermissions.Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TypeNotices_CategoryNoticeId_Name",
+                name: "IX_TypeNotices_Name",
                 table: "TypeNotices",
-                columns: new[] { "CategoryNoticeId", "Name" },
+                column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TypePermissions_CategoryPermissionId_Name",
+                name: "IX_TypePermissions_Name",
                 table: "TypePermissions",
-                columns: new[] { "CategoryPermissionId", "Name" },
+                column: "Name",
                 unique: true);
         }
 
@@ -263,13 +263,13 @@ namespace EasyPermissions.Backend.Migrations
                 name: "Areas");
 
             migrationBuilder.DropTable(
+                name: "CategoryPermissions");
+
+            migrationBuilder.DropTable(
                 name: "Cities");
 
             migrationBuilder.DropTable(
                 name: "ImageNotices");
-
-            migrationBuilder.DropTable(
-                name: "TypeNotices");
 
             migrationBuilder.DropTable(
                 name: "TypePermissions");
@@ -281,13 +281,13 @@ namespace EasyPermissions.Backend.Migrations
                 name: "Notices");
 
             migrationBuilder.DropTable(
-                name: "CategoryPermissions");
-
-            migrationBuilder.DropTable(
                 name: "Countries");
 
             migrationBuilder.DropTable(
                 name: "CategoryNotices");
+
+            migrationBuilder.DropTable(
+                name: "TypeNotices");
         }
     }
 }

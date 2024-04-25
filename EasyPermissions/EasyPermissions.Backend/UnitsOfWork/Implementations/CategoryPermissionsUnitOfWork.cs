@@ -6,7 +6,7 @@ using EasyPermissions.Shared.Responses;
 
 namespace EasyPermissions.Backend.UnitsOfWork.Implementations
 {
-     public class CategoryPermissionsUnitOfWork : GenericUnitOfWork<CategoryPermission>, ICategoryPermissionsUnitOfWork
+    public class CategoryPermissionsUnitOfWork : GenericUnitOfWork<CategoryPermission>, ICategoryPermissionsUnitOfWork
     {
         private readonly ICategoryPermissionsRepository _categoryPermissionsRepository;
 
@@ -18,9 +18,5 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
         public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _categoryPermissionsRepository.GetTotalPagesAsync(pagination);
 
         public override async Task<ActionResponse<IEnumerable<CategoryPermission>>> GetAsync(PaginationDTO pagination) => await _categoryPermissionsRepository.GetAsync(pagination);
-
-        public override async Task<ActionResponse<IEnumerable<CategoryPermission>>> GetAsync() => await _categoryPermissionsRepository.GetAsync();
-
-        public override async Task<ActionResponse<CategoryPermission>> GetAsync(int id) => await _categoryPermissionsRepository.GetAsync(id);
     }
 }
