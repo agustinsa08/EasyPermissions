@@ -17,10 +17,22 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             _context = context;
         }
 
+        public override async Task<ActionResponse<IEnumerable<TypePermission>>> GetAsync()
+        {
+            var typePermissions = await _context.TypePermissions
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+            return new ActionResponse<IEnumerable<TypePermission>>
+            {
+                WasSuccess = true,
+                Result = typePermissions
+            };
+        }
+
         public override async Task<ActionResponse<IEnumerable<TypePermission>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _context.TypePermissions
-                .Where(x => x.CategoryPermission!.Id == pagination.Id)
+                .Include(c => c.CategoryPermissions)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -40,9 +52,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
 
         public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
         {
-            var queryable = _context.TypePermissions
-                .Where(x => x.CategoryPermission!.Id == pagination.Id)
-                .AsQueryable();
+            var queryable = _context.TypePermissions.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
@@ -55,6 +65,28 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             {
                 WasSuccess = true,
                 Result = totalPages
+            };
+        }
+
+        public override async Task<ActionResponse<TypePermission>> GetAsync(int id)
+        {
+            var typePermission = await _context.TypePermissions
+                 .Include(c => c.CategoryPermissions!)
+                 .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (typePermission == null)
+            {
+                return new ActionResponse<TypePermission>
+                {
+                    WasSuccess = false,
+                    Message = "Tipo no existe"
+                };
+            }
+
+            return new ActionResponse<TypePermission>
+            {
+                WasSuccess = true,
+                Result = typePermission
             };
         }
     }

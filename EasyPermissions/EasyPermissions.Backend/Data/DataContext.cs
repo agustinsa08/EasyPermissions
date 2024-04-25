@@ -20,18 +20,17 @@ namespace EasyPermissions.Backend.Data
         public DbSet<TypePermission> TypePermissions { get; set; }
         public DbSet<Notice> Notices { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Area>().HasIndex(x => x.Name).IsUnique();
-            modelBuilder.Entity<CategoryNotice>().HasIndex(x => x.Name).IsUnique();
-            modelBuilder.Entity<CategoryPermission>().HasIndex(x => x.Name).IsUnique();
+            modelBuilder.Entity<CategoryNotice>().HasIndex(x => new { x.TypeNoticeId, x.Name }).IsUnique();
+            modelBuilder.Entity<CategoryPermission>().HasIndex(x => new { x.TypePermissionId, x.Name }).IsUnique();
             modelBuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
             modelBuilder.Entity<City>().HasIndex(x => new { x.StateId, x.Name }).IsUnique();
             modelBuilder.Entity<State>().HasIndex(x => new { x.CountryId, x.Name }).IsUnique();
-            modelBuilder.Entity<TypeNotice>().HasIndex(x => new { x.CategoryNoticeId, x.Name }).IsUnique();
-            modelBuilder.Entity<TypePermission>().HasIndex(x => new { x.CategoryPermissionId, x.Name }).IsUnique();
+            modelBuilder.Entity<TypeNotice>().HasIndex(x => x.Name).IsUnique();
+            modelBuilder.Entity<TypePermission>().HasIndex(x => x.Name).IsUnique();
             modelBuilder.Entity<Notice>().HasIndex(x => new { x.CategoryNoticeId, x.Name }).IsUnique();
             modelBuilder.Entity<ImageNotice>().HasIndex(x => new { x.NoticeId, x.Name }).IsUnique();
             DisableCascadingDelete(modelBuilder);
