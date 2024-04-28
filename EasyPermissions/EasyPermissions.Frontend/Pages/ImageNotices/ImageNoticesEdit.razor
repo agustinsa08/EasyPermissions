@@ -1,0 +1,12 @@
+﻿@page "/imageNotices/edit/{ImageNoticesId:int}"
+
+<h3>Editar Imagen Noticia</h3>
+
+@if (imageNotices is null)
+{
+    <Loading />
+}
+else
+{
+    <FormWithName @ref="imageNoticesForm" Label="Imagen Noticia:" Model="imageNotices" OnValidSubmit="SaveAsync" ReturnAction="Return" />
+}

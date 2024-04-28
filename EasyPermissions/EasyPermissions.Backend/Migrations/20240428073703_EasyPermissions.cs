@@ -5,7 +5,7 @@
 namespace EasyPermissions.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class Fisrtmigartion : Migration
+    public partial class EasyPermissions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
