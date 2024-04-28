@@ -1,0 +1,42 @@
+﻿@page "/Areas"
+
+<h3>Areas</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/Areas/create">Nueva Area</a>
+</div>
+
+<GenericList MyList="Areas">
+    <Body>
+        <Pagination CurrentPage="currentPage"
+                    TotalPages="totalPages"
+                    SelectedPage="SelectedPageAsync" />
+
+
+        <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+            <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar area..." @bind-value="Filter" />
+            <button type="button" class="btn btn-outline-primary mx-1" @onclick="ApplyFilterAsync">Filtrar</button>
+            <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Areas</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var area in Areas!)
+                {
+                    <tr>
+                        <td>@area.Name</td>
+                        <td>
+                            <a href="/areas/edit/@area.Id" class="btn btn-sm btn-warning">Editar</a>
+                            <button @onclick=@(() => DeleteAsycn(area)) class="btn btn-sm btn-danger">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>

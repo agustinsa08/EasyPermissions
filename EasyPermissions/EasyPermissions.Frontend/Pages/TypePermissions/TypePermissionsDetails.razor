@@ -1,0 +1,52 @@
+﻿@page "/typePermissions/details/{TypePermissionsId:int}"
+
+@if (typePermissions is null)
+{
+    <Loading />
+}
+else
+{
+    <h3>@typePermissions.Name</h3>
+    <div class="mb-2">
+        <a class="btn btn-primary" href="/categoryPermissions/create/@typePermissions.Id">Nueva Categoria Permiso</a>
+        <a class="btn btn-success" href="/typePermissions">Regresar</a>
+    </div>
+
+    <h4>Categoria Permiso</h4>
+    <GenericList MyList="categoryPermissions!">
+        <Body>
+            <Pagination CurrentPage="currentPage"
+                        TotalPages="totalPages"
+                        SelectedPage="SelectedPageAsync" />
+
+            <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+                <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar categoria permiso..." @bind-value="Filter" />
+                <button type="button" class="btn btn-outline-primary mx-1" @onclick="ApplyFilterAsync">Filtrar</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Categoria Permiso</th>
+                       @*  <th style="width:90px">Categorias</th> *@
+                        <th style="width:210px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var categoryPermissions in categoryPermissions!)
+                    {
+                        <tr>
+                            <td>@categoryPermissions.Name</td>
+                            @* <td>@categoryNotice.NoticeNumber</td> *@
+                            <td>
+                                <a class="btn btn-warning btn-sm" href="/categoryPermission/edit/@categoryPermissions.Id">Editar</a>
+                                <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(categoryPermissions))>Borrar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </Body>
+    </GenericList>
+}

@@ -1,0 +1,9 @@
+﻿@page "/imageNotices/create/{NoticesId:int}"
+
+<h3>Nueva Imagen Noticia</h3>
+
+<FormWithName @ref="imageNoticesForm"
+              Label="Imagen Noticia:"
+              Model="imageNotices"
+              OnValidSubmit="CreateAsync"
+              ReturnAction="Return" />

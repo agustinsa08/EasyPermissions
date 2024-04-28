@@ -1,0 +1,12 @@
+﻿@page "/categoryPermissions/edit/{CategoryPermissionsId:int}"
+
+<h3>Editar Categoria Permiso</h3>
+
+@if (categoryPermissions is null)
+{
+    <Loading />
+}
+else
+{
+    <FormWithName @ref="categoryPermissionsForm" Label="Categoria Permiso:" Model="categoryPermissions" OnValidSubmit="SaveAsync" ReturnAction="Return" />
+}

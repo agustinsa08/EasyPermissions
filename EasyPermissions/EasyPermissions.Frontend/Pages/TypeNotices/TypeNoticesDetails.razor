@@ -1,0 +1,52 @@
+﻿@page "/typeNotices/details/{TypeNoticesId:int}"
+
+@if (typeNotices is null)
+{
+    <Loading />
+}
+else
+{
+    <h3>@typeNotices.Name</h3>
+    <div class="mb-2">
+        <a class="btn btn-primary" href="/categoryNotices/create/@typeNotices.Id">Nueva Categoria Noticia</a>
+        <a class="btn btn-success" href="/typeNotices">Regresar</a>
+    </div>
+
+    <h4>Categoria Noticia</h4>
+    <GenericList MyList="categoryNotices!">
+        <Body>
+            <Pagination CurrentPage="currentPage"
+                        TotalPages="totalPages"
+                        SelectedPage="SelectedPageAsync" />
+
+            <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+                <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar categoria noticia..." @bind-value="Filter" />
+                <button type="button" class="btn btn-outline-primary mx-1" @onclick="ApplyFilterAsync">Filtrar</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Categoria Noticia</th>
+                       @*  <th style="width:90px">Categorias</th> *@
+                        <th style="width:210px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var categoryNotices in categoryNotices!)
+                    {
+                        <tr>
+                            <td>@categoryNotices.Name</td>
+                            @* <td>@categoryNotice.NoticeNumber</td> *@
+                            <td>
+                                <a class="btn btn-warning btn-sm" href="/categoryNotices/edit/@categoryNotices.Id">Editar</a>
+                                <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(categoryNotices))>Borrar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </Body>
+    </GenericList>
+}

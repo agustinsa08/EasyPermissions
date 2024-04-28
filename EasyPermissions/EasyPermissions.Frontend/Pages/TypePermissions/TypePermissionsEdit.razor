@@ -1,0 +1,13 @@
+﻿@page "/typePermissions/edit/{Id:int}"
+
+<h3>Editar Tipo de Permiso</h3>
+
+@if (typePermissions is null)
+{
+    <Loading/>
+}
+else
+{
+    <FormWithName @ref="typePermissionsForm" Label="Tipo de Permiso:" Model="typePermissions" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
+

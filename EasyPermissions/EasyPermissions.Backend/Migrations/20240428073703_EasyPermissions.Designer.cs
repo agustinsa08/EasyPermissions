@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyPermissions.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240428033831_Fisrt migartion")]
-    partial class Fisrtmigartion
+    [Migration("20240428073703_EasyPermissions")]
+    partial class EasyPermissions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

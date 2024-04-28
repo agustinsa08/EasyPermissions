@@ -1,0 +1,9 @@
+﻿@page "/categoryPermissions/create/{TypePermissionsId:int}"
+
+<h3>Nueva Categoria Permiso</h3>
+
+<FormWithName @ref="categoryPermissionsForm"
+              Label="Categoria Permiso:"
+              Model="categoryPermissions"
+              OnValidSubmit="CreateAsync"
+              ReturnAction="Return" />
