@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyPermissions.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240425025440_Add countries, notices and permissions manangment")]
-    partial class Addcountriesnoticesandpermissionsmanangment
+    [Migration("20240428033831_Fisrt migartion")]
+    partial class Fisrtmigartion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,7 +167,6 @@ namespace EasyPermissions.Backend.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("File")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -203,8 +202,7 @@ namespace EasyPermissions.Backend.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
