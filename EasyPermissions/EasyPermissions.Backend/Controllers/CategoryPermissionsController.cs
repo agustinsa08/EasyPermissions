@@ -11,13 +11,13 @@ namespace EasyPermissions.Backend.Controllers
     {
         private readonly ICategoryPermissionsUnitOfWork _categoryPermissionsUnitOfWork;
 
-        public CategoryPermissionsController(IGenericUnitOfWork<CategoryPermission> unitOfWork, ICategoryPermissionsUnitOfWork _categoryPermissionsUnitOfWork) : base(unitOfWork)
+        public CategoryPermissionsController(IGenericUnitOfWork<CategoryPermission> unitOfWork, ICategoryPermissionsUnitOfWork categoryPermissionsUnitOfWork) : base(unitOfWork)
         {
-            _categoryPermissionsUnitOfWork = _categoryPermissionsUnitOfWork;
+            _categoryPermissionsUnitOfWork = categoryPermissionsUnitOfWork;
         }
 
         [HttpGet]
-        public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
+        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
             var response = await _categoryPermissionsUnitOfWork.GetAsync(pagination);
             if (response.WasSuccess)
