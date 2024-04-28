@@ -1,0 +1,12 @@
+﻿@page "/Areas/edit/{Id:int}"
+
+<h3>Editar Area</h3>
+
+@if (area is null)
+{
+    <Loading />
+}
+else
+{
+    <AreaForm @ref="areaForm" Area="area" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
