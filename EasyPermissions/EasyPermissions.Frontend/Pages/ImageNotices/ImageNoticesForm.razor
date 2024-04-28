@@ -1,0 +1,14 @@
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Imagen Noticia:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@imageNotices.Name" />
+            <ValidationMessage For="@(() => imageNotices.Name)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+    <button  class="btn btn-success" href="/imageNotices/details/@imageNotices.NoticeId">Regresar</button>
+</EditForm>

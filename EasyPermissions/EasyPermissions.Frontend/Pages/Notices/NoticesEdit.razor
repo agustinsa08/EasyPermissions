@@ -1,0 +1,13 @@
+﻿@page "/notices/edit/{Id:int}"
+
+<h3>Editar Noticia</h3>
+
+@if (notices is null)
+{
+    <Loading/>
+}
+else
+{
+    <FormWithName @ref="noticesForm" Label="Noticia:" Model="notices" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
+

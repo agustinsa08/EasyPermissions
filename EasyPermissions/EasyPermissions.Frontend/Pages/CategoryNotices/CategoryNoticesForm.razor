@@ -1,0 +1,14 @@
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Categoria Noticia:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@categoryNotices.Name" />
+            <ValidationMessage For="@(() => categoryNotices.Name)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+    <button  class="btn btn-success" href="/categoryNotices/details/@categoryNotices.TypeNoticeId">Regresar</button>
+</EditForm>
