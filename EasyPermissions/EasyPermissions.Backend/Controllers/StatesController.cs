@@ -2,10 +2,13 @@
 using EasyPermissions.Backend.UnitsOfWork.Interfaces;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace EasyPermissions.Backend.Controllers
 {
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class StatesController : GenericController<State>
     {
@@ -14,6 +17,13 @@ namespace EasyPermissions.Backend.Controllers
         public StatesController(IGenericUnitOfWork<State> unitOfWork, IStatesUnitOfWork statesUnitOfWork) : base(unitOfWork)
         {
             _statesUnitOfWork = statesUnitOfWork;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("combo/{countryId:int}")]
+        public async Task<IActionResult> GetComboAsync(int countryId)
+        {
+            return Ok(await _statesUnitOfWork.GetComboAsync(countryId));
         }
 
         [HttpGet("full")]
