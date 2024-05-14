@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EasyPermissions.Shared.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace EasyPermissions.Backend.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

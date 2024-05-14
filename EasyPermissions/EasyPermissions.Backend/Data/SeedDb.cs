@@ -1,26 +1,82 @@
-﻿using EasyPermissions.Shared.Entities;
+﻿using EasyPermissions.Backend.UnitsOfWork.Interfaces;
+using EasyPermissions.Shared.Entities;
+using EasyPermissions.Shared.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace EasyPermissions.Backend.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context;
+        private readonly IUsersUnitOfWork _usersUnitOfWork;
 
-        public SeedDb(DataContext context)
+        public SeedDb(DataContext context, IUsersUnitOfWork usersUnitOfWork)
         {
             _context = context;
+            _usersUnitOfWork = usersUnitOfWork;
         }
 
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
+            //await CheckCountriesFullAsync();
             await CheckCountriesAsync();
             await CheckAreasAsync();
             await CheckTypeNoticesAsync();
             await CheckNoticesAsync();
             await CheckTypePermissionsAsync();
+            await CheckRolesAsync();
+            await CheckUserAsync("1010", "Talento", "Humano", "talento.humano@yopmail.com", "322 311 4476", "Calle Luna Calle Sol 26", UserType.Admin);
+            await CheckUserAsync("1015", "Contabilidad", "Contabilidad", "contabilidad@yopmail.com", "322 311 4623", "Calle Luna Calle Sol 27", UserType.Leader);
+            await CheckUserAsync("1027", "Andres", "Morales", "andresmorales@yopmail.com", "322 311 4628", "Calle Luna Calle Sol 30", UserType.User);
         }
 
+        private async Task CheckCountriesFullAsync()
+        {
+            if (!_context.Countries.Any())
+            {
+                var countriesStatesCitiesSQLScript = File.ReadAllText("Data\\CountriesStatesCities.sql");
+                await _context.Database.ExecuteSqlRawAsync(countriesStatesCitiesSQLScript);
+            }
+        }
+
+        private async Task CheckRolesAsync()
+        {
+            await _usersUnitOfWork.CheckRoleAsync(UserType.Admin.ToString());
+            await _usersUnitOfWork.CheckRoleAsync(UserType.Leader.ToString());
+            await _usersUnitOfWork.CheckRoleAsync(UserType.User.ToString());
+        }
+
+        private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email, string phone, string address, UserType userType)
+        {
+            var user = await _usersUnitOfWork.GetUserAsync(email);
+            if (user == null)
+            {
+                var city = await _context.Cities.FirstOrDefaultAsync(x => x.Name == "Medellín");
+                city ??= await _context.Cities.FirstOrDefaultAsync();
+
+                user = new User
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Email = email,
+                    UserName = email,
+                    PhoneNumber = phone,
+                    Address = address,
+                    Document = document,
+                    City = city,
+                    UserType = userType,
+                };
+
+                await _usersUnitOfWork.AddUserAsync(user, "123456");
+                await _usersUnitOfWork.AddUserToRoleAsync(user, userType.ToString());
+
+                var token = await _usersUnitOfWork.GenerateEmailConfirmationTokenAsync(user);
+                await _usersUnitOfWork.ConfirmEmailAsync(user, token);
+            }
+
+            return user;
+        }
 
         private async Task CheckTypePermissionsAsync()
         {
