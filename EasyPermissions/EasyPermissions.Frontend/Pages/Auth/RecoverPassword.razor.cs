@@ -27,7 +27,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
             }
 
             loading = false;
-            await SweetAlertService.FireAsync("Confirmaci n", "Se te ha enviado un correo electr nico con las instrucciones para recuperar su contrase a.", SweetAlertIcon.Info);
+            await SweetAlertService.FireAsync("Confirmación", "Se te ha enviado un correo electrónico con las instrucciones para recuperar su contraseña.", SweetAlertIcon.Info);
             NavigationManager.NavigateTo("/");
         }
     }

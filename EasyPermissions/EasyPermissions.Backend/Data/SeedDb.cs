@@ -40,7 +40,6 @@ namespace EasyPermissions.Backend.Data
             }
         }
 
-
         private async Task CheckRolesAsync()
         {
             await _usersUnitOfWork.CheckRoleAsync(UserType.Admin.ToString());
