@@ -55,14 +55,26 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                     Result = entity
                 };
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                return DbUpdateExceptionActionResponse();
+                if (ex.InnerException != null)
+                {
+                    if (ex.InnerException!.Message.Contains("duplicate"))
+                    {
+                        return DbUpdateExceptionActionResponse();
+                    }
+                }
+
+                return new ActionResponse<T>
+                {
+                    WasSuccess = false,
+                    Message = ex.Message
+                };
             }
             catch (Exception exception)
             {
                 return ExceptionActionResponse(exception);
-            }        
+            }
         }
 
         public virtual async Task<ActionResponse<T>> DeleteAsync(int id)
@@ -136,9 +148,21 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                     Result = entity
                 };
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                return DbUpdateExceptionActionResponse();
+                if (ex.InnerException != null)
+                {
+                    if (ex.InnerException!.Message.Contains("duplicate"))
+                    {
+                        return DbUpdateExceptionActionResponse();
+                    }
+                }
+
+                return new ActionResponse<T>
+                {
+                    WasSuccess = false,
+                    Message = ex.Message
+                };
             }
             catch (Exception exception)
             {
