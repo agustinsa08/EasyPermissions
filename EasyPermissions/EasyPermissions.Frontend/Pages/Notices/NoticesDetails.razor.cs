@@ -3,6 +3,9 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Shared.Entities;
+using Blazored.Modal.Services;
+using Blazored.Modal;
+using EasyPermissions.Frontend.Pages.ImageNotices;
 
 namespace EasyPermissions.Frontend.Pages.Notices
 {
@@ -20,12 +23,38 @@ namespace EasyPermissions.Frontend.Pages.Notices
         [Parameter] public int NoticesId { get; set; }
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
         }
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
 
+            if (isEdit)
+            {
+                modalReference = Modal.Show<ImageNoticesEdit>(string.Empty, new ModalParameters().Add("ImageNoticesId", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<ImageNoticesCreate>(string.Empty, new ModalParameters().Add("ImageNoticesId", NoticesId));
+            }
+
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
+        }
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
+        }
         private async Task SelectedPageAsync(int page)
         {
             if (!string.IsNullOrWhiteSpace(Page))
@@ -49,9 +78,16 @@ namespace EasyPermissions.Frontend.Pages.Notices
                 }
             }
         }
-
+        private void ValidateRecordsNumber()
+        {
+            if (RecordsNumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
         private async Task LoadPagesAsync()
         {
+            ValidateRecordsNumber();
             var url = $"api/ImageNotices/totalPages?id={NoticesId}";
             if (!string.IsNullOrEmpty(Filter))
             {
@@ -70,7 +106,8 @@ namespace EasyPermissions.Frontend.Pages.Notices
 
         private async Task<bool> LoadStatesAsync(int page)
         {
-            var url = $"api/ImageNotices?id={NoticesId}&page={page}";
+            ValidateRecordsNumber();
+            var url = $"api/ImageNotices?id={NoticesId}&page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -86,13 +123,6 @@ namespace EasyPermissions.Frontend.Pages.Notices
             imageNotices = responseHttp.Response;
             return true;
         }
-
-        private async Task CleanFilterAsync()
-        {
-            Filter = string.Empty;
-            await ApplyFilterAsync();
-        }
-
         private async Task ApplyFilterAsync()
         {
             int page = 1;

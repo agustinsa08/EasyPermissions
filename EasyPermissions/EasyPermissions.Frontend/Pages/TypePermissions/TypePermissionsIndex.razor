@@ -1,46 +1,44 @@
 ﻿@page "/typePermissions"
 
-<h3>Tipo de Permiso</h3>
 
-<div class="mb-3">
-    <a class="btn btn-primary" href="/typePermissions/create">Nuevo Tipo Permiso</a>
+<div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-plus-circle" /> Tipo de Permisos
+            <a class="btn btn-primary btn-sm float-end" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square" /> Nuevo Tipo de Permiso</a>
+        </span>
+    </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar tipo de permiso..." Callback=@FilterCallBack />
+        <GenericList MyList="typePermissions">
+            <Body>
+                <Pagination CurrentPage="currentPage"
+                            TotalPages="totalPages"
+                            SelectedPage="SelectedPageAsync" />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Permiso</th>
+                            <th style="width:210px">Categoria Permiso</th>
+                            <th style="width:210px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var typePermissions in typePermissions!)
+                        {
+                            <tr>
+                                <td><a href="/typePermissions/details/@typePermissions.Id"> @typePermissions.Name</a></td>
+                                <td>@typePermissions.CategoryPermissionsNumber</td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(typePermissions.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                    <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsycn(typePermissions))><i class="bi bi-trash" /> Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+      </div>
 </div>
-
-<GenericList MyList="typePermissions">
-    <Body>
-        <Pagination CurrentPage="currentPage"
-                    TotalPages="totalPages"
-                    SelectedPage="SelectedPageAsync" />
-
-
-        <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
-            <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar tipo permiso..." @bind-value="Filter" />
-            <button type="button" class="btn btn-outline-primary mx-1" @onclick="ApplyFilterAsync">Filtrar</button>
-            <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
-        </div>
-
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Tipo de Permiso</th>
-                    <th style="width:210px">Categoria Permiso</th>
-                    <th style="width:210px"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var typePermissions in typePermissions!)
-                {
-                    <tr>
-                        <td>@typePermissions.Name</td>
-                        <td>@typePermissions.CategoryPermissionsNumber</td>
-                        <td>
-                            <a href="/typePermissions/edit/@typePermissions.Id" class="btn btn-sm btn-warning">Editar</a>
-                            <a class="btn btn-info btn-sm" href="/typePermissions/details/@typePermissions.Id">Detalles</a>
-                            <button @onclick=@(() => DeleteAsycn(typePermissions)) class="btn btn-sm btn-danger">Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </Body>
-</GenericList>

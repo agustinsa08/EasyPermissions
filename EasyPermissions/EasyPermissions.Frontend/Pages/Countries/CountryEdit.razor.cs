@@ -4,9 +4,13 @@ using Microsoft.AspNetCore.Components;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Frontend.Shared;
 using EasyPermissions.Shared.Entities;
+using Blazored.Modal.Services;
+using Blazored.Modal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyPermissions.Frontend.Pages.Countries
 {
+    [Authorize(Roles = "Admin")]
     public partial class CountryEdit
     {
         private Country? country;
@@ -15,8 +19,8 @@ namespace EasyPermissions.Frontend.Pages.Countries
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-
         [EditorRequired, Parameter] public int Id { get; set; }
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -49,7 +53,9 @@ namespace EasyPermissions.Frontend.Pages.Countries
                 return;
             }
 
+            await BlazoredModal.CloseAsync(ModalResult.Ok());
             Return();
+
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,

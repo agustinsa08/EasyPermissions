@@ -5,48 +5,44 @@
     <Loading />
 }
 else
-{
-    <h3>@typeNotices.Name</h3>
-    <div class="mb-2">
-        <a class="btn btn-primary" href="/categoryNotices/create/@typeNotices.Id">Nueva Categoria Noticia</a>
-        <a class="btn btn-success" href="/typeNotices">Regresar</a>
+{ <div class="card">
+        <div class="card-header">
+            <span>
+                <i class="bi bi-bell" /> @typeNotices.Name
+                    <a class="btn btn-sm btn-primary float-end mx-1" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square"></i> Nueva Categoria Noticia</a>
+                    <a class="btn btn-sm btn-success float-end" href="/typeNotices"><i class="bi bi-arrow-left" />  Regresar</a>
+            </span>
+        </div>
+        <div class="card-body">
+            <Filter PlaceHolder="Buscar categoria de noticia..." Callback=@FilterCallBack />
+            <GenericList MyList="categoryNotices!">
+                <Body>
+                    <Pagination CurrentPage="currentPage"
+                                TotalPages="totalPages"
+                                SelectedPage="SelectedPageAsync" />
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Categoria Noticia</th>
+                                <th style="width:210px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var categoryNotices in categoryNotices!)
+                            {
+                                <tr>
+                                    <td>@categoryNotices.Name</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(categoryNotices.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                        <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(categoryNotices))><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </Body>
+            </GenericList>
+        </div>
     </div>
-
-    <h4>Categoria Noticia</h4>
-    <GenericList MyList="categoryNotices!">
-        <Body>
-            <Pagination CurrentPage="currentPage"
-                        TotalPages="totalPages"
-                        SelectedPage="SelectedPageAsync" />
-
-            <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
-                <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar categoria noticia..." @bind-value="Filter" />
-                <button type="button" class="btn btn-outline-primary mx-1" @onclick="ApplyFilterAsync">Filtrar</button>
-                <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
-            </div>
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Categoria Noticia</th>
-                       @*  <th style="width:90px">Categorias</th> *@
-                        <th style="width:210px"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var categoryNotices in categoryNotices!)
-                    {
-                        <tr>
-                            <td>@categoryNotices.Name</td>
-                            @* <td>@categoryNotice.NoticeNumber</td> *@
-                            <td>
-                                <a class="btn btn-warning btn-sm" href="/categoryNotices/edit/@categoryNotices.Id">Editar</a>
-                                <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(categoryNotices))>Borrar</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </Body>
-    </GenericList>
 }
