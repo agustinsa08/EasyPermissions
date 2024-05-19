@@ -1,19 +1,24 @@
-﻿using CurrieTechnologies.Razor.SweetAlert2;
+﻿using Blazored.Modal;
+using Blazored.Modal.Services;
+using CurrieTechnologies.Razor.SweetAlert2;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Shared.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using System.Net;
 
 namespace EasyPermissions.Frontend.Pages.Areas
 {
+    [Authorize(Roles = "Admin")]
     public partial class AreaEdit
     {
         private Area? area;
         private AreaForm? areaForm;
 
         [Inject] private IRepository Repository { get; set; } = null!;
-        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         [EditorRequired, Parameter] public int Id { get; set; }
 
@@ -38,17 +43,19 @@ namespace EasyPermissions.Frontend.Pages.Areas
             }
         }
 
-        private async Task EditAsync()
+        private async Task SaveAsync()
         {
-            var responseHttp = await Repository.PutAsync("/api/Areas", area);
+            var responseHttp = await Repository.PutAsync($"/api/areas", area);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message);
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
 
+            await BlazoredModal.CloseAsync(ModalResult.Ok());
             Return();
+
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -58,7 +65,6 @@ namespace EasyPermissions.Frontend.Pages.Areas
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
         }
-
         private void Return()
         {
             areaForm!.FormPostedSuccessfully = true;

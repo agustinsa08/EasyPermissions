@@ -4,9 +4,13 @@ using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Frontend.Shared;
 using EasyPermissions.Shared.Entities;
 using System.Net;
+using Blazored.Modal.Services;
+using Blazored.Modal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyPermissions.Frontend.Pages.Cities
 {
+    [Authorize(Roles = "Admin")]
     public partial class CityEdit
     {
         private City? city;
@@ -17,6 +21,7 @@ namespace EasyPermissions.Frontend.Pages.Cities
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
 
         [Parameter] public int CityId { get; set; }
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -43,7 +48,10 @@ namespace EasyPermissions.Frontend.Pages.Cities
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
+
+            await BlazoredModal.CloseAsync(ModalResult.Ok());
             Return();
+
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,

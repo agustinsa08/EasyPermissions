@@ -5,49 +5,46 @@
     <Loading />
 }
 else
-{
-    <h3>@state.Name</h3>
-    <div class="mb-2">
-        <a class="btn btn-primary" href="/cities/create/@StateId">Nueva Ciudad</a>
-        <a class="btn btn-success" href="/countries/details/@state.CountryId">Regresar</a>
+{ <div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-globe-americas" /> @state.Name
+            <a class="btn btn-sm btn-primary float-end mx-1" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square"></i> Adicionar Ciudad</a>
+            <a class="btn btn-sm btn-success float-end" href="/countries"><i class="bi bi-arrow-left" />  Regresar</a>
+        </span>
     </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar ciudad..." Callback=@FilterCallBack />
+            <GenericList MyList="cities!">
+                <Body>
+                    <Pagination CurrentPage="currentPage"
+                                TotalPages="totalPages"
+                                SelectedPage="SelectedPageAsync" />
 
-    <h4>Ciudades</h4>
-    <GenericList MyList="cities!">
-        <Body>
-            <Pagination CurrentPage="currentPage"
-                        TotalPages="totalPages"
-                        SelectedPage="SelectedPageAsync" />
-
-            <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
-                <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar ciudad..." @bind-value="Filter" />
-                <button type="button" class="btn btn-outline-primary mx-1" @onclick="ApplyFilterAsync">Filtrar</button>
-                <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
-            </div>
-
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Ciudad</th>
-                        <th style="width:140px"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var city in cities!)
-                    {
-                        <tr>
-                            <td>
-                                @city.Name
-                            </td>
-                            <td>
-                                <a class="btn btn-warning btn-sm" href="/cities/edit/@city.Id">Editar</a>
-                                <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(city))>Borrar</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </Body>
-    </GenericList>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Ciudad</th>
+                                <th style="width:140px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var city in cities!)
+                            {
+                                <tr>
+                                    <td>
+                                        @city.Name
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(city.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                        <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(city))><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </Body>
+            </GenericList>
+        </div>
+    </div>
 }

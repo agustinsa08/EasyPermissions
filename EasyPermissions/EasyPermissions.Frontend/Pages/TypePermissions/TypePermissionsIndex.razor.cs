@@ -1,11 +1,15 @@
-﻿using CurrieTechnologies.Razor.SweetAlert2;
+﻿using Blazored.Modal.Services;
+using Blazored.Modal;
+using CurrieTechnologies.Razor.SweetAlert2;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Shared.Entities;
 using Microsoft.AspNetCore.Components;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyPermissions.Frontend.Pages.TypePermissions
 {
+    [Authorize(Roles = "Admin")]
     public partial class TypePermissionsIndex
     {
         private int currentPage = 1;
@@ -18,12 +22,47 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
 
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
 
         public List<TypePermission>? typePermissions { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
+        }
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
+
+            if (isEdit)
+            {
+                modalReference = Modal.Show<TypePermissionsEdit>(string.Empty, new ModalParameters().Add("Id", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<TypePermissionsCreate>();
+            }
+
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
+        }
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
+
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
         }
 
         private async Task SelectedPageAsync(int page)
@@ -45,10 +84,18 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
                 await LoadPagesAsync();
             }
         }
+        private void ValidateRecordsNumber()
+        {
+            if (RecordsNumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
 
         private async Task<bool> LoadListAsync(int page)
         {
-            var url = $"api/TypePermissions?page={page}";
+            ValidateRecordsNumber();
+            var url = $"api/TypePermissions?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -81,12 +128,6 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
                 return;
             }
             totalPages = responseHttp.Response;
-        }
-
-        private async Task CleanFilterAsync()
-        {
-            Filter = string.Empty;
-            await ApplyFilterAsync();
         }
 
         private async Task ApplyFilterAsync()

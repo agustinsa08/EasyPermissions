@@ -1,5 +1,5 @@
-﻿using System.Text.Json;
-using System.Text;
+﻿using System.Text;
+using System.Text.Json;
 
 namespace EasyPermissions.Frontend.Repositories
 {
@@ -15,6 +15,12 @@ namespace EasyPermissions.Frontend.Repositories
         public Repository(HttpClient httpClient)
         {
             _httpClient = httpClient;
+        }
+
+        public async Task<HttpResponseWrapper<object>> GetAsync(string url)
+        {
+            var responseHTTP = await _httpClient.GetAsync(url);
+            return new HttpResponseWrapper<object>(null, !responseHTTP.IsSuccessStatusCode, responseHTTP);
         }
 
         public async Task<HttpResponseWrapper<T>> GetAsync<T>(string url)

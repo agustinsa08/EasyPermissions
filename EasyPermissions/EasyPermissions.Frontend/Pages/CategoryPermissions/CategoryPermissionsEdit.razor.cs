@@ -4,9 +4,13 @@ using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Frontend.Shared;
 using EasyPermissions.Shared.Entities;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using Blazored.Modal;
+using Blazored.Modal.Services;
 
 namespace EasyPermissions.Frontend.Pages.CategoryPermissions
 {
+    [Authorize(Roles = "Admin")]
     public partial class CategoryPermissionsEdit
     {
         private CategoryPermission? categoryPermissions;
@@ -15,6 +19,7 @@ namespace EasyPermissions.Frontend.Pages.CategoryPermissions
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         [Parameter] public int CategoryPermissionsId { get; set; }
 
@@ -36,14 +41,17 @@ namespace EasyPermissions.Frontend.Pages.CategoryPermissions
 
         private async Task SaveAsync()
         {
-            var response = await Repository.PutAsync($"/api/CategoryPermissions", categoryPermissions);
-            if (response.Error)
+            var responseHttp = await Repository.PutAsync($"/api/categoryPermissions", categoryPermissions);
+            if (responseHttp.Error)
             {
-                var message = await response.GetErrorMessageAsync();
+                var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
+
+            await BlazoredModal.CloseAsync(ModalResult.Ok());
             Return();
+
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
