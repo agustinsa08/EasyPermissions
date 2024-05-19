@@ -3,9 +3,13 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Shared.Entities;
+using Blazored.Modal.Services;
+using Blazored.Modal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyPermissions.Frontend.Pages.Countries
 {
+    [Authorize(Roles = "Admin")]
     public partial class CountriesIndex
     {
         private int currentPage = 1;
@@ -17,6 +21,8 @@ namespace EasyPermissions.Frontend.Pages.Countries
 
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
 
 
         public List<Country>? Countries { get; set; }
@@ -25,7 +31,31 @@ namespace EasyPermissions.Frontend.Pages.Countries
         {
             await LoadAsync();
         }
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
 
+            if (isEdit)
+            {
+                modalReference = Modal.Show<CountryEdit>(string.Empty, new ModalParameters().Add("Id", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<CountryCreate>();
+            }
+
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
+        }
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
+        }
         private async Task SelectedPageAsync(int page)
         {
             currentPage = page;
@@ -45,10 +75,18 @@ namespace EasyPermissions.Frontend.Pages.Countries
                 await LoadPagesAsync();
             }
         }
+        private void ValidateRecordsNumber()
+        {
+            if (RecordsNumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
 
         private async Task<bool> LoadListAsync(int page)
         {
-            var url = $"api/countries?page={page}";
+            ValidateRecordsNumber();
+            var url = $"api/countries?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -67,7 +105,7 @@ namespace EasyPermissions.Frontend.Pages.Countries
 
         private async Task LoadPagesAsync()
         {
-            var url = "api/countries/totalPages";
+            var url = $"api/countries/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"?filter={Filter}";
@@ -81,12 +119,6 @@ namespace EasyPermissions.Frontend.Pages.Countries
                 return;
             }
             totalPages = responseHttp.Response;
-        }
-
-        private async Task CleanFilterAsync()
-        {
-            Filter = string.Empty;
-            await ApplyFilterAsync();
         }
 
         private async Task ApplyFilterAsync()

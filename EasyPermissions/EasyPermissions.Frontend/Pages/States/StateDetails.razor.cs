@@ -3,9 +3,14 @@ using Microsoft.AspNetCore.Components;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Shared.Entities;
 using System.Net;
+using Blazored.Modal.Services;
+using Blazored.Modal;
+using EasyPermissions.Frontend.Pages.Cities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyPermissions.Frontend.Pages.States
 {
+    [Authorize(Roles = "Admin")]
     public partial class StateDetails
     {
         private State? state;
@@ -20,12 +25,48 @@ namespace EasyPermissions.Frontend.Pages.States
         [Parameter] public int StateId { get; set; }
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
         }
 
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
+
+            if (isEdit)
+            {
+                modalReference = Modal.Show<CityEdit>(string.Empty, new ModalParameters().Add("CityId", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<CityCreate>(string.Empty, new ModalParameters().Add("StateId", StateId));
+            }
+
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
+        }
+
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
+
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
+        }
         private async Task SelectedPageAsync(int page)
         {
             if (!string.IsNullOrWhiteSpace(Page))
@@ -50,9 +91,18 @@ namespace EasyPermissions.Frontend.Pages.States
             }
         }
 
+        private void ValidateRecordsNumber()
+        {
+            if (RecordsNumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
+
         private async Task LoadPagesAsync()
         {
-            var url = $"api/cities/totalPages?id={StateId}";
+            ValidateRecordsNumber();
+            var url = $"api/cities/totalPages?id={StateId}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -70,7 +120,8 @@ namespace EasyPermissions.Frontend.Pages.States
 
         private async Task<bool> LoadCitiesAsync(int page)
         {
-            var url = $"api/cities?id={StateId}&page={page}";
+            ValidateRecordsNumber();
+            var url = $"api/cities?id={StateId}&page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -86,12 +137,6 @@ namespace EasyPermissions.Frontend.Pages.States
             cities = responseHttp.Response;
             return true;
         }
-
-        private async Task CleanFilterAsync()
-        {
-            Filter = string.Empty;
-            await ApplyFilterAsync();
-         }
 
         private async Task ApplyFilterAsync()
         {

@@ -2,10 +2,13 @@
 using EasyPermissions.Backend.UnitsOfWork.Interfaces;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace EasyPermissions.Backend.Controllers
 {
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class CountriesController : GenericController<Country>
     {
@@ -14,6 +17,13 @@ namespace EasyPermissions.Backend.Controllers
         public CountriesController(IGenericUnitOfWork<Country> unitOfWork, ICountriesUnitOfWork countriesUnitOfWork) : base(unitOfWork)
         {
             _countriesUnitOfWork = countriesUnitOfWork;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("combo")]
+        public async Task<IActionResult> GetComboAsync()
+        {
+            return Ok(await _countriesUnitOfWork.GetComboAsync());
         }
 
         [HttpGet("full")]
@@ -26,7 +36,6 @@ namespace EasyPermissions.Backend.Controllers
             }
             return BadRequest();
         }
-
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync(PaginationDTO pagination)

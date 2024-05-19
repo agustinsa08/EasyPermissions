@@ -93,5 +93,13 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 Result = totalPages
             };
         }
+
+        public async Task<IEnumerable<State>> GetComboAsync(int countryId)
+        {
+            return await _context.States
+                .Where(s => s.CountryId == countryId)
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+        }
     }
 }

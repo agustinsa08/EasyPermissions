@@ -1,46 +1,45 @@
 ﻿@page "/typeNotices"
 
-<h3>Tipo de Noticia</h3>
 
-<div class="mb-3">
-    <a class="btn btn-primary" href="/typeNotices/create">Nuevo Tipo Noticia</a>
+<div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-bell" /> Tipo de Noticia
+            <a class="btn btn-primary btn-sm float-end" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square" /> Nuevo Tipo de Noticia</a>
+        </span>
+    </div>
+    <div class="card-body">
+
+    <Filter PlaceHolder="Buscar tipo de noticia..." Callback=@FilterCallBack />
+        <GenericList MyList="typeNotices">
+            <Body>
+                <Pagination CurrentPage="currentPage"
+                            TotalPages="totalPages"
+                            SelectedPage="SelectedPageAsync" />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Noticia</th>
+                            <th style="width:210px">Categoria Noticia</th>
+                            <th style="width:210px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var typeNotices in typeNotices!)
+                        {
+                            <tr>
+                                <td><a href="/typeNotices/details/@typeNotices.Id"> @typeNotices.Name</a></td>
+                                <td>@typeNotices.CategoryNoticesNumber</td>
+                                <td>
+                                    <a @onclick=@(() => ShowModalAsync(typeNotices.Id, true)) class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                    <button @onclick=@(() => DeleteAsycn(typeNotices)) class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </div>
 </div>
-
-<GenericList MyList="typeNotices">
-    <Body>
-        <Pagination CurrentPage="currentPage"
-                    TotalPages="totalPages"
-                    SelectedPage="SelectedPageAsync" />
-
-
-        <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
-            <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar tipo noticia..." @bind-value="Filter" />
-            <button type="button" class="btn btn-outline-primary mx-1" @onclick="ApplyFilterAsync">Filtrar</button>
-            <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
-        </div>
-
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Tipo de Noticia</th>
-                    <th style="width:210px">Categoria Noticia</th>
-                    <th style="width:210px"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var typeNotices in typeNotices!)
-                {
-                    <tr>
-                        <td>@typeNotices.Name</td>
-                        <td>@typeNotices.CategoryNoticesNumber</td>
-                        <td>
-                            <a href="/typeNotices/edit/@typeNotices.Id" class="btn btn-sm btn-warning">Editar</a>
-                            <a class="btn btn-info btn-sm" href="/typeNotices/details/@typeNotices.Id">Detalles</a>
-                            <button @onclick=@(() => DeleteAsycn(typeNotices)) class="btn btn-sm btn-danger">Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </Body>
-</GenericList>

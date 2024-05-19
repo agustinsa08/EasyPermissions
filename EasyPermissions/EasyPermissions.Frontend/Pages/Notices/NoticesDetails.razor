@@ -6,47 +6,44 @@
 }
 else
 {
-    <h3>@notices.Name</h3>
-    <div class="mb-2">
-        <a class="btn btn-primary" href="/categoryNotices/create/@notices.Id">Nueva Noticia</a>
-        <a class="btn btn-success" href="/notices">Regresar</a>
+  <div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-chat-dots" /> Noticias
+            <a class="btn btn-primary btn-sm float-end" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square" /> Nueva Noticia</a>
+                <a class="btn btn-sm btn-success float-end" href="/notices"><i class="bi bi-arrow-left" />  Regresar</a>
+        </span>
     </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar imagen noticia..." Callback=@FilterCallBack />
+        <GenericList MyList="imageNotices!">
+            <Body>
+                <Pagination CurrentPage="currentPage"
+                            TotalPages="totalPages"
+                            SelectedPage="SelectedPageAsync" />
 
-    <h4>Imagenes Noticias</h4>
-    <GenericList MyList="imageNotices!">
-        <Body>
-            <Pagination CurrentPage="currentPage"
-                        TotalPages="totalPages"
-                        SelectedPage="SelectedPageAsync" />
-
-            <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
-                <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar imagen noticia..." @bind-value="Filter" />
-                <button type="button" class="btn btn-outline-primary mx-1" @onclick="ApplyFilterAsync">Filtrar</button>
-                <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
-            </div>
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Imagenes Noticias</th>
-                       @*  <th style="width:90px">Categorias</th> *@
-                        <th style="width:210px"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var imageNotices in imageNotices!)
-                    {
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td>@imageNotices.Name</td>
-                            @* <td>@categoryNotice.NoticeNumber</td> *@
-                            <td>
-                                <a class="btn btn-warning btn-sm" href="/imageNotices/edit/@imageNotices.Id">Editar</a>
-                                <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(imageNotices))>Borrar</button>
-                            </td>
+                            <th>Imagenes Noticias</th>
+                            <th style="width:210px"></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </Body>
-    </GenericList>
+                    </thead>
+                    <tbody>
+                        @foreach (var imageNotices in imageNotices!)
+                        {
+                            <tr>
+                                <td>@imageNotices.Name</td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(imageNotices.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                    <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(imageNotices))><i class="bi bi-trash" /> Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+        </div>
+    </div>
 }
