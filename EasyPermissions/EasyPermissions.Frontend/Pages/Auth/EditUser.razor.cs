@@ -1,0 +1,138 @@
+using System.Net;
+using Blazored.Modal.Services;
+using CurrieTechnologies.Razor.SweetAlert2;
+using EasyPermissions.Frontend.Repositories;
+using EasyPermissions.Frontend.Services;
+using EasyPermissions.Shared.DTOs;
+using EasyPermissions.Shared.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
+
+namespace EasyPermissions.Frontend.Pages.Auth
+{
+    [Authorize]
+    public partial class EditUser
+    {
+        private User? user;
+        private List<Country>? countries;
+        private List<State>? states;
+        private List<City>? cities;
+        private string? imageUrl;
+
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [Inject] private IRepository Repository { get; set; } = null!;
+        [Inject] private ILoginService LoginService { get; set; } = null!;
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadUserAsyc();
+            await LoadCountriesAsync();
+            await LoadStatesAsyn(user!.City!.State!.Country!.Id);
+            await LoadCitiesAsyn(user!.City!.State!.Id);
+
+            if (!string.IsNullOrEmpty(user!.Photo))
+            {
+                imageUrl = user.Photo;
+                user.Photo = null;
+            }
+        }
+
+        private void ShowModal()
+        {
+            Modal.Show<ChangePassword>();
+        }
+
+        private async Task LoadUserAsyc()
+        {
+            var responseHttp = await Repository.GetAsync<User>($"/api/accounts");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/");
+                    return;
+                }
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                return;
+            }
+            user = responseHttp.Response;
+        }
+
+        private void ImageSelected(string imagenBase64)
+        {
+            user!.Photo = imagenBase64;
+            imageUrl = null;
+        }
+
+        private async Task CountryChangedAsync(ChangeEventArgs e)
+        {
+            var selectedCountry = Convert.ToInt32(e.Value!);
+            states = null;
+            cities = null;
+            user!.CityId = 0;
+            await LoadStatesAsyn(selectedCountry);
+        }
+
+        private async Task StateChangedAsync(ChangeEventArgs e)
+        {
+            var selectedState = Convert.ToInt32(e.Value!);
+            cities = null;
+            user!.CityId = 0;
+            await LoadCitiesAsyn(selectedState);
+        }
+
+        private async Task LoadCountriesAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<Country>>("/api/countries/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            countries = responseHttp.Response;
+        }
+
+        private async Task LoadStatesAsyn(int countryId)
+        {
+            var responseHttp = await Repository.GetAsync<List<State>>($"/api/states/combo/{countryId}");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            states = responseHttp.Response;
+        }
+
+        private async Task LoadCitiesAsyn(int stateId)
+        {
+            var responseHttp = await Repository.GetAsync<List<City>>($"/api/cities/combo/{stateId}");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+
+            cities = responseHttp.Response;
+        }
+
+        private async Task SaveUserAsync()
+        {
+            var responseHttp = await Repository.PutAsync<User, TokenDTO>("/api/accounts", user!);
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+
+            await LoginService.LoginAsync(responseHttp.Response!.Token);
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}

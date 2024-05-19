@@ -1,30 +1,36 @@
-﻿using CurrieTechnologies.Razor.SweetAlert2;
+﻿using Blazored.Modal;
+using Blazored.Modal.Services;
+using CurrieTechnologies.Razor.SweetAlert2;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Frontend.Shared;
 using EasyPermissions.Shared.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using System.Net;
 
-namespace EasyPermissions.Frontend.Pages.TypeNotices
+
+namespace EasyPermissions.Frontend.Pages.Notices
 {
-    public partial class TypeNoticesEdit
+    [Authorize(Roles = "Admin")]
+    public partial class NoticesEdit
     {
-        private TypeNotice? typeNotices; 
-        private FormWithName<TypeNotice>? typeNoticesForm;
+        private Notice? notices;
+        private FormWithName<Notice>? noticesForm;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         [EditorRequired, Parameter] public int Id { get; set; }
 
         protected override async Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<TypeNotice>($"/api/TypeNotices/{Id}");
+            var responseHttp = await Repository.GetAsync<Notice>($"/api/Notices/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/typeNotices");
+                    NavigationManager.NavigateTo("/notices");
                 }
                 else
                 {
@@ -34,21 +40,23 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
             }
             else
             {
-                typeNotices = responseHttp.Response;
+                notices = responseHttp.Response;
             }
         }
 
-        private async Task EditAsync()
+        private async Task SaveAsync()
         {
-            var responseHttp = await Repository.PutAsync("/api/TypeNotices", typeNotices);
+            var responseHttp = await Repository.PutAsync($"/api/notices", notices);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message);
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
 
+            await BlazoredModal.CloseAsync(ModalResult.Ok());
             Return();
+
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -61,8 +69,8 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
 
         private void Return()
         {
-            typeNoticesForm!.FormPostedSuccessfully = true;
-            NavigationManager.NavigateTo("/typeNotices");
+            noticesForm!.FormPostedSuccessfully = true;
+            NavigationManager.NavigateTo("/Notices");
         }
     }
 }

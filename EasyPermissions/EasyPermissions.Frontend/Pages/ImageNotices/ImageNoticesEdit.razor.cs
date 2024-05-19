@@ -4,9 +4,13 @@ using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Frontend.Shared;
 using EasyPermissions.Shared.Entities;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using Blazored.Modal;
+using Blazored.Modal.Services;
 
 namespace EasyPermissions.Frontend.Pages.ImageNotices
 {
+    [Authorize(Roles = "Admin")]
     public partial class ImageNoticesEdit
     {
         private ImageNotice? imageNotices;
@@ -15,6 +19,7 @@ namespace EasyPermissions.Frontend.Pages.ImageNotices
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         [Parameter] public int ImageNoticesId { get; set; }
 
@@ -36,14 +41,17 @@ namespace EasyPermissions.Frontend.Pages.ImageNotices
 
         private async Task SaveAsync()
         {
-            var response = await Repository.PutAsync($"/api/ImageNotices", imageNotices);
-            if (response.Error)
+            var responseHttp = await Repository.PutAsync($"/api/imageNotices", imageNotices);
+            if (responseHttp.Error)
             {
-                var message = await response.GetErrorMessageAsync();
+                var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
+
+            await BlazoredModal.CloseAsync(ModalResult.Ok());
             Return();
+
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -54,10 +62,11 @@ namespace EasyPermissions.Frontend.Pages.ImageNotices
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
         }
 
+
         private void Return()
         {
             imageNoticesForm!.FormPostedSuccessfully = true;
-            NavigationManager.NavigateTo($"/imageNotices/details/{imageNotices!.NoticeId}");
+            NavigationManager.NavigateTo($"/notices/details/{imageNotices!.NoticeId}");
         }
     }
 }

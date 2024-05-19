@@ -3,6 +3,9 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Shared.Entities;
+using Blazored.Modal.Services;
+using Blazored.Modal;
+using EasyPermissions.Frontend.Pages.States;
 
 namespace EasyPermissions.Frontend.Pages.Countries
 {
@@ -20,12 +23,38 @@ namespace EasyPermissions.Frontend.Pages.Countries
         [Parameter] public int CountryId { get; set; }
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
         }
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
 
+            if (isEdit)
+            {
+                modalReference = Modal.Show<StateEdit>(string.Empty, new ModalParameters().Add("StateId", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<StateCreate>(string.Empty, new ModalParameters().Add("CountryId", CountryId));
+            }
+
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
+        }
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
+        }
         private async Task SelectedPageAsync(int page)
         {
             if (!string.IsNullOrWhiteSpace(Page))
@@ -50,9 +79,18 @@ namespace EasyPermissions.Frontend.Pages.Countries
             }
         }
 
+        private void ValidateRecordsNumber()
+        {
+            if (RecordsNumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
+
         private async Task LoadPagesAsync()
         {
-            var url = $"api/states/totalPages?id={CountryId}";
+            ValidateRecordsNumber();
+            var url = $"api/states/totalPages?id={CountryId}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -70,7 +108,8 @@ namespace EasyPermissions.Frontend.Pages.Countries
 
         private async Task<bool> LoadStatesAsync(int page)
         {
-            var url = $"api/states?id={CountryId}&page={page}";
+            ValidateRecordsNumber();
+            var url = $"api/states?id={CountryId}&page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -85,12 +124,6 @@ namespace EasyPermissions.Frontend.Pages.Countries
             }
             states = responseHttp.Response;
             return true;
-        }
-
-        private async Task CleanFilterAsync()
-        {
-            Filter = string.Empty;
-            await ApplyFilterAsync();
         }
 
         private async Task ApplyFilterAsync()

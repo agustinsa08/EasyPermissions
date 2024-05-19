@@ -1,11 +1,16 @@
-﻿using CurrieTechnologies.Razor.SweetAlert2;
+﻿using Blazored.Modal.Services;
+using Blazored.Modal;
+using CurrieTechnologies.Razor.SweetAlert2;
+using EasyPermissions.Frontend.Pages.Notices;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Shared.Entities;
 using Microsoft.AspNetCore.Components;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyPermissions.Frontend.Pages.TypeNotices
 {
+    [Authorize(Roles = "Admin")]
     public partial class TypeNoticesIndex
     {
         private int currentPage = 1;
@@ -18,6 +23,8 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
 
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
 
         public List<TypeNotice>? typeNotices { get; set; }
 
@@ -25,13 +32,37 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
         {
             await LoadAsync();
         }
+        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+        {
+            IModalReference modalReference;
 
+            if (isEdit)
+            {
+                modalReference = Modal.Show<TypeNoticesEdit>(string.Empty, new ModalParameters().Add("Id", id));
+            }
+            else
+            {
+                modalReference = Modal.Show<TypeNoticesCreate>();
+            }
+
+            var result = await modalReference.Result;
+            if (result.Confirmed)
+            {
+                await LoadAsync();
+            }
+        }
         private async Task SelectedPageAsync(int page)
         {
             currentPage = page;
             await LoadAsync(page);
         }
 
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
+        }
         private async Task LoadAsync(int page = 1)
         {
             if (!string.IsNullOrWhiteSpace(Page))
@@ -45,10 +76,17 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
                 await LoadPagesAsync();
             }
         }
-
+        private void ValidateRecordsNumber()
+        {
+            if (RecordsNumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
         private async Task<bool> LoadListAsync(int page)
         {
-            var url = $"api/TypeNotices?page={page}";
+            ValidateRecordsNumber();
+            var url = $"api/TypeNotices?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -81,12 +119,6 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
                 return;
             }
             totalPages = responseHttp.Response;
-        }
-
-        private async Task CleanFilterAsync()
-        {
-            Filter = string.Empty;
-            await ApplyFilterAsync();
         }
 
         private async Task ApplyFilterAsync()

@@ -4,9 +4,13 @@ using Microsoft.AspNetCore.Components;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Frontend.Shared;
 using EasyPermissions.Shared.Entities;
+using Blazored.Modal.Services;
+using Blazored.Modal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyPermissions.Frontend.Pages.States
 {
+    [Authorize(Roles = "Admin")]
     public partial class StateEdit
     {
         private State? state;
@@ -15,6 +19,7 @@ namespace EasyPermissions.Frontend.Pages.States
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         [Parameter] public int StateId { get; set; }
 
@@ -43,7 +48,10 @@ namespace EasyPermissions.Frontend.Pages.States
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
+
+            await BlazoredModal.CloseAsync(ModalResult.Ok());
             Return();
+
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
