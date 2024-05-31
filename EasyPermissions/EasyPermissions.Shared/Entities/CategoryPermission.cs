@@ -23,10 +23,10 @@ namespace EasyPermissions.Shared.Entities
 
         public TypePermission? TypePermission { get; set; }
 
-        //public ICollection<Permission>? Permissions { get; set; }
+        public ICollection<Permission>? Permissions { get; set; }
 
-        //[Display(Name = "Permisos")]
-        //public int NoticeNumber => Permissions == null || Permissions.Count == 0 ? 0 : Permissions.Count;
+        [Display(Name = "Permisos")]
+        public int PermissionNumber => Permissions == null || Permissions.Count == 0 ? 0 : Permissions.Count;
 
     }
 }
