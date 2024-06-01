@@ -36,11 +36,6 @@ namespace EasyPermissions.Backend.Data
             modelBuilder.Entity<TypePermission>().HasIndex(x => x.Name).IsUnique();
             modelBuilder.Entity<Notice>().HasIndex(x => new { x.CategoryNoticeId, x.Name }).IsUnique();
             modelBuilder.Entity<ImageNotice>().HasIndex(x => new { x.NoticeId, x.Name }).IsUnique();
-            modelBuilder.Entity<Permission>()
-                .HasOne(p => p.UserCollaborator)
-                .WithMany()
-                .HasForeignKey(p => p.UserCollaboratorId)
-                .OnDelete(DeleteBehavior.Restrict);
             DisableCascadingDelete(modelBuilder);
         }
 

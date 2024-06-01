@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EasyPermissions.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class addpermissionanddetailentity : Migration
+    public partial class Addpermissionentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -360,23 +360,16 @@ namespace EasyPermissions.Backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryPermissionId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateStatus = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserCollaboratorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    CategoryPermissionId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    DateStatus = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Permissions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Permissions_AspNetUsers_UserCollaboratorId",
-                        column: x => x.UserCollaboratorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Permissions_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -507,11 +500,6 @@ namespace EasyPermissions.Backend.Migrations
                 name: "IX_Permissions_CategoryPermissionId",
                 table: "Permissions",
                 column: "CategoryPermissionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Permissions_UserCollaboratorId",
-                table: "Permissions",
-                column: "UserCollaboratorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Permissions_UserId",

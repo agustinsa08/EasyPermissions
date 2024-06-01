@@ -236,18 +236,12 @@ namespace EasyPermissions.Backend.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserCollaboratorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryPermissionId");
-
-                    b.HasIndex("UserCollaboratorId");
 
                     b.HasIndex("UserId");
 
@@ -648,20 +642,14 @@ namespace EasyPermissions.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EasyPermissions.Shared.Entities.User", "UserCollaborator")
-                        .WithMany()
-                        .HasForeignKey("UserCollaboratorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("EasyPermissions.Shared.Entities.User", null)
+                    b.HasOne("EasyPermissions.Shared.Entities.User", "User")
                         .WithMany("Permissions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CategoryPermission");
 
-                    b.Navigation("UserCollaborator");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.PermissionDetail", b =>
