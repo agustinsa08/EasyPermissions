@@ -10,19 +10,19 @@ namespace EasyPermissions.Backend.Controllers
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
-    public class NoticesController : GenericController<Notice>
+    public class PermissionDetailsController : GenericController<PermissionDetail>
     {
-        private readonly INoticesUnitOfWork _noticesUnitOfWork;
+        private readonly IPermissionDetailsUnitOfWork _permissionDetailsUnitOfWork;
 
-        public NoticesController(IGenericUnitOfWork<Notice> unitOfWork, INoticesUnitOfWork noticesUnitOfWork) : base(unitOfWork)
+        public PermissionDetailsController(IGenericUnitOfWork<PermissionDetail> unitOfWork, IPermissionDetailsUnitOfWork permissionDetailsUnitOfWork) : base(unitOfWork)
         {
-            _noticesUnitOfWork = noticesUnitOfWork;
+            _permissionDetailsUnitOfWork = permissionDetailsUnitOfWork;
         }
 
         [HttpGet("full")]
         public override async Task<IActionResult> GetAsync()
         {
-            var response = await _noticesUnitOfWork.GetAsync();
+            var response = await _permissionDetailsUnitOfWork.GetAsync();
             if (response.WasSuccess)
             {
                 return Ok(response.Result);
@@ -30,11 +30,10 @@ namespace EasyPermissions.Backend.Controllers
             return BadRequest();
         }
 
-        [AllowAnonymous]
         [HttpGet]
-        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
+        public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
         {
-            var response = await _noticesUnitOfWork.GetAsync(pagination);
+            var response = await _permissionDetailsUnitOfWork.GetAsync(pagination);
             if (response.WasSuccess)
             {
                 return Ok(response.Result);
@@ -42,11 +41,10 @@ namespace EasyPermissions.Backend.Controllers
             return BadRequest();
         }
 
-        [AllowAnonymous]
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
         {
-            var response = await _noticesUnitOfWork.GetAsync(id);
+            var response = await _permissionDetailsUnitOfWork.GetAsync(id);
             if (response.WasSuccess)
             {
                 return Ok(response.Result);
@@ -54,11 +52,10 @@ namespace EasyPermissions.Backend.Controllers
             return NotFound(response.Message);
         }
 
-        [AllowAnonymous]
         [HttpGet("totalPages")]
         public override async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
         {
-            var action = await _noticesUnitOfWork.GetTotalPagesAsync(pagination);
+            var action = await _permissionDetailsUnitOfWork.GetTotalPagesAsync(pagination);
             if (action.WasSuccess)
             {
                 return Ok(action.Result);
