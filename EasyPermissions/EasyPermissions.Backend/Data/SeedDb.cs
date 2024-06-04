@@ -19,7 +19,7 @@ namespace EasyPermissions.Backend.Data
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
-            await CheckCountriesFullAsync();
+            //await CheckCountriesFullAsync();
             await CheckCountriesAsync();
             await CheckAreasAsync();
             await CheckTypeNoticesAsync();
