@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EasyPermissions.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class EasyPermissions : Migration
+    public partial class Addpermissionentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -354,6 +354,57 @@ namespace EasyPermissions.Backend.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Permissions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryPermissionId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    DateStatus = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Permissions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Permissions_CategoryPermissions_CategoryPermissionId",
+                        column: x => x.CategoryPermissionId,
+                        principalTable: "CategoryPermissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PermissionDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    PermissionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PermissionDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PermissionDetails_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Areas_Name",
                 table: "Areas",
@@ -441,6 +492,21 @@ namespace EasyPermissions.Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_PermissionDetails_PermissionId",
+                table: "PermissionDetails",
+                column: "PermissionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_CategoryPermissionId",
+                table: "Permissions",
+                column: "CategoryPermissionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_UserId",
+                table: "Permissions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_States_CountryId_Name",
                 table: "States",
                 columns: new[] { "CountryId", "Name" },
@@ -481,34 +547,40 @@ namespace EasyPermissions.Backend.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CategoryPermissions");
+                name: "ImageNotices");
 
             migrationBuilder.DropTable(
-                name: "ImageNotices");
+                name: "PermissionDetails");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "TypePermissions");
-
-            migrationBuilder.DropTable(
                 name: "Notices");
 
             migrationBuilder.DropTable(
-                name: "Cities");
+                name: "Permissions");
 
             migrationBuilder.DropTable(
                 name: "CategoryNotices");
 
             migrationBuilder.DropTable(
-                name: "States");
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "CategoryPermissions");
 
             migrationBuilder.DropTable(
                 name: "TypeNotices");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "TypePermissions");
+
+            migrationBuilder.DropTable(
+                name: "States");
 
             migrationBuilder.DropTable(
                 name: "Countries");

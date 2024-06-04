@@ -11,9 +11,9 @@ namespace EasyPermissions.Frontend.AuthenticationProviders
             var user = new ClaimsIdentity(authenticationType: "test");
             var admin = new ClaimsIdentity(new List<Claim>
             {
-                new Claim("FirstName", "Genny"),
-                new Claim("LastName", "Rivera"),
-                new Claim(ClaimTypes.Name, "gennyrivera@yopmail.com"),
+                new Claim("FirstName", "Talento"),
+                new Claim("LastName", "Humano"),
+                new Claim(ClaimTypes.Name, "talento.humano@yopmail.com"),
                 new Claim(ClaimTypes.Role, "Admin")
             },
             authenticationType: "test");

@@ -33,7 +33,6 @@ namespace EasyPermissions.Frontend.Pages.Auth
             imageUrl = null;
         }
 
-
         private async Task LoadCountriesAsync()
         {
             var responseHttp = await Repository.GetAsync<List<Country>>("/api/countries/combo");
@@ -90,7 +89,6 @@ namespace EasyPermissions.Frontend.Pages.Auth
             cities = responseHttp.Response;
         }
 
-
         private async Task CreteUserAsync()
         {
             userDTO.UserName = userDTO.Email;
@@ -106,7 +104,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
                 return;
             }
 
-            await SweetAlertService.FireAsync("Confirmaci n", "Su cuenta ha sido creada con  xito. Se te ha enviado un correo electr nico con las instrucciones para activar tu usuario.", SweetAlertIcon.Info);
+            await SweetAlertService.FireAsync("Confirmación", "Su cuenta ha sido creada con éxito. Se te ha enviado un correo electrónico con las instrucciones para activar tu usuario.", SweetAlertIcon.Info);
             NavigationManager.NavigateTo("/");
         }
     }

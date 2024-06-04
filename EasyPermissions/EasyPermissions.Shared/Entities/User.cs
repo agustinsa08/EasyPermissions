@@ -40,5 +40,11 @@ namespace EasyPermissions.Shared.Entities
 
         [Display(Name = "Usuario")]
         public string FullName => $"{FirstName} {LastName}";
+
+        public ICollection<Permission>? Permissions { get; set; }
+
+        [Display(Name = "Permisos")]
+        public int PermissionNumber => Permissions == null || Permissions.Count == 0 ? 0 : Permissions.Count;
+
     }
 }

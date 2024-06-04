@@ -34,7 +34,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
                 ShowConfirmButton = true,
                 Timer = 3000
             });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Contrase a cambiada con  xito.");
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Contraseña cambiada con éxito.");
         }
     }
 }

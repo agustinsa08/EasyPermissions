@@ -15,7 +15,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Parameter, SupplyParameterFromQuery] public string Token { get; set; } = string.Empty;
-        [CascadingParameter] IModalService Modal { get; set; } = default!;
+        [CascadingParameter] private IModalService Modal { get; set; } = default!;
 
         private async Task ChangePasswordAsync()
         {
@@ -31,7 +31,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
                 return;
             }
 
-            await SweetAlertService.FireAsync("Confirmaci n", "Contrase a cambiada con  xito, ahora puede ingresar con su nueva contrase a.", SweetAlertIcon.Info);
+            await SweetAlertService.FireAsync("Confirmación", "Contraseña cambiada con éxito, ahora puede ingresar con su nueva contraseña.", SweetAlertIcon.Info);
             Modal.Show<Login>();
         }
     }
