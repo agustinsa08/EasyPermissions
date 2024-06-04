@@ -65,7 +65,6 @@ builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 builder.Services.AddScoped<ICategoryNoticesRepository, CategoryNoticesRepository>();
 builder.Services.AddScoped<ICategoryPermissionsRepository, CategoryPermissionsRepository>();
-builder.Services.AddScoped<IPermissionsRepository, PermissionsRepository>();
 builder.Services.AddScoped<IImageNoticesRepository, ImageNoticesRepository>();
 builder.Services.AddScoped<IStatesRepository, StatesRepository>();
 builder.Services.AddScoped<ITypeNoticesRepository, TypeNoticesRepository>();
