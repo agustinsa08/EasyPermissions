@@ -17,7 +17,7 @@ namespace EasyPermissions.Backend.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -210,6 +210,66 @@ namespace EasyPermissions.Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("Notices");
+                });
+
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryPermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateStatus")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryPermissionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.PermissionDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("PermissionDetails");
                 });
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.State", b =>
@@ -574,6 +634,35 @@ namespace EasyPermissions.Backend.Migrations
                     b.Navigation("CategoryNotice");
                 });
 
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.Permission", b =>
+                {
+                    b.HasOne("EasyPermissions.Shared.Entities.CategoryPermission", "CategoryPermission")
+                        .WithMany("Permissions")
+                        .HasForeignKey("CategoryPermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EasyPermissions.Shared.Entities.User", "User")
+                        .WithMany("Permissions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CategoryPermission");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.PermissionDetail", b =>
+                {
+                    b.HasOne("EasyPermissions.Shared.Entities.Permission", "Permission")
+                        .WithMany("PermissionDetails")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+                });
+
             modelBuilder.Entity("EasyPermissions.Shared.Entities.State", b =>
                 {
                     b.HasOne("EasyPermissions.Shared.Entities.Country", "Country")
@@ -652,6 +741,11 @@ namespace EasyPermissions.Backend.Migrations
                     b.Navigation("Notices");
                 });
 
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.CategoryPermission", b =>
+                {
+                    b.Navigation("Permissions");
+                });
+
             modelBuilder.Entity("EasyPermissions.Shared.Entities.City", b =>
                 {
                     b.Navigation("Users");
@@ -667,6 +761,11 @@ namespace EasyPermissions.Backend.Migrations
                     b.Navigation("ImageNotices");
                 });
 
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.Permission", b =>
+                {
+                    b.Navigation("PermissionDetails");
+                });
+
             modelBuilder.Entity("EasyPermissions.Shared.Entities.State", b =>
                 {
                     b.Navigation("Cities");
@@ -680,6 +779,11 @@ namespace EasyPermissions.Backend.Migrations
             modelBuilder.Entity("EasyPermissions.Shared.Entities.TypePermission", b =>
                 {
                     b.Navigation("CategoryPermissions");
+                });
+
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.User", b =>
+                {
+                    b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618
         }

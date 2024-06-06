@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using EasyPermissions.Shared.Entities;
+﻿using EasyPermissions.Shared.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace EasyPermissions.Backend.Data
 {
@@ -16,6 +16,8 @@ namespace EasyPermissions.Backend.Data
         public DbSet<City> Cities { get; set; }
         public DbSet<ImageNotice> ImageNotices { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<PermissionDetail> PermissionDetails { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<TypeNotice> TypeNotices { get; set; }
         public DbSet<TypePermission> TypePermissions { get; set; }
