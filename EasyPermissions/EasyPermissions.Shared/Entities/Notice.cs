@@ -28,5 +28,8 @@ namespace EasyPermissions.Shared.Entities
 
         [Display(Name = "Imágenes")]
         public int ImageNoticesNumber => ImageNotices == null || ImageNotices.Count == 0 ? 0 : ImageNotices.Count;
+
+        [Display(Name = "Imagen")]
+        public string MainImage => ImageNotices == null || ImageNotices.Count == 0 ? string.Empty : ImageNotices.FirstOrDefault()!.File!;
     }
 }

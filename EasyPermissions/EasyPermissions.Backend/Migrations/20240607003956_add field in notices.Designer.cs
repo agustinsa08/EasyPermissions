@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyPermissions.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240601215314_Add permission entity")]
-    partial class Addpermissionentity
+    [Migration("20240607003956_add field in notices")]
+    partial class addfieldinnotices
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

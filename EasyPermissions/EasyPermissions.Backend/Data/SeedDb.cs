@@ -1,7 +1,9 @@
-﻿using EasyPermissions.Backend.UnitsOfWork.Interfaces;
+﻿using EasyPermissions.Backend.Helpers;
+using EasyPermissions.Backend.UnitsOfWork.Interfaces;
 using EasyPermissions.Shared.Entities;
 using EasyPermissions.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace EasyPermissions.Backend.Data
 {
@@ -9,11 +11,13 @@ namespace EasyPermissions.Backend.Data
     {
         private readonly DataContext _context;
         private readonly IUsersUnitOfWork _usersUnitOfWork;
+        private readonly IFileStorage _fileStorage;
 
-        public SeedDb(DataContext context, IUsersUnitOfWork usersUnitOfWork)
+        public SeedDb(DataContext context, IUsersUnitOfWork usersUnitOfWork, IFileStorage fileStorage)
         {
             _context = context;
             _usersUnitOfWork = usersUnitOfWork;
+            _fileStorage = fileStorage;
         }
 
         public async Task SeedAsync()
@@ -29,6 +33,69 @@ namespace EasyPermissions.Backend.Data
             await CheckUserAsync("1010", "Talento", "Humano", "talento.humano@yopmail.com", "322 311 4476", "Calle Luna Calle Sol 26", UserType.Admin);
             await CheckUserAsync("1015", "Contabilidad", "Contabilidad", "contabilidad@yopmail.com", "322 311 4623", "Calle Luna Calle Sol 27", UserType.Leader);
             await CheckUserAsync("1027", "Andres", "Morales", "andresmorales@yopmail.com", "322 311 4628", "Calle Luna Calle Sol 30", UserType.User);
+        }
+
+        private async Task CheckNoticesAsync()
+        {
+            if (!_context.Notices.Any())
+            {
+                await AddNoticeAsync("Elecciones 2024: Gana el presidente del verde",
+                    "En las Elecciones de 2024, el candidato del Partido Verde emerge como ganador, asegurando la presidencia. Esta victoria marca un hito en la política nacional, ya que representa un cambio significativo en el panorama político del país. El resultado refleja el respaldo de la ciudadanía hacia las políticas y propuestas del partido, lo que promete influir en las futuras decisiones gubernamentales y en la dirección del país en los próximos años.",
+                    1,
+                    1,
+                    new List<string>() { "GreenParty.png" });
+                await AddNoticeAsync("Los 5 tips necesarios en su econonomía para salir de vacaciones",
+                    "¿Planeas unas merecidas vacaciones pero te preocupa cómo manejar tus finanzas durante este tiempo? Descubre los 5 consejos clave para administrar tu economía mientras disfrutas de tus días libres. Desde establecer un presupuesto hasta buscar ofertas y promociones, estos tips te ayudarán a disfrutar al máximo sin descuidar tus finanzas.",
+                    1,
+                    11,
+                    new List<string>() { "Holiday.png" });
+                await AddNoticeAsync("La Atleta que Alcanzó la Cima: Historia de Superación y Éxito",
+                    "Descubre la inspiradora historia de una atleta que superó todos los obstáculos para alcanzar el premio más alto en su disciplina. Desde enfrentar lesiones hasta sacrificios personales, esta atleta demostró determinación y perseverancia en su camino hacia la cima. Su historia es un ejemplo de cómo el esfuerzo y la dedicación pueden llevar al éxito más allá de las adversidades.",
+                    1,
+                    18,
+                    new List<string>() { "Athlete.png" });
+                await AddNoticeAsync("¡La Épica Aventura del 2024! Descubre la Película que Revolucionará el Cine!",
+                    "Prepárate para una experiencia cinematográfica sin precedentes con la nueva película del 2024. Con una trama emocionante, efectos visuales impresionantes y un elenco estelar, esta película promete ser un hito en la historia del cine. Únete a los personajes en su épica travesía llena de acción, suspense y momentos inolvidables que te dejarán sin aliento. ¡No te pierdas este evento cinematográfico que marcará el inicio de una nueva era en el entretenimiento!",
+                    1,
+                    25,
+                    new List<string>() { "Cinema.png" });
+                await AddNoticeAsync("Descubre el Nuevo Dispositivo que Revoluciona tu Experiencia de Entretenimiento",
+                    "¡Prepárate para elevar tu experiencia de entretenimiento al siguiente nivel con el innovador dispositivo del 2024! Diseñado para brindarte una inmersión total, este dispositivo te permite disfrutar de tus contenidos favoritos con una calidad nunca antes vista. Desde películas y juegos hasta música y más, este dispositivo transformará la manera en que experimentas el entretenimiento. ¡No te pierdas la oportunidad de ser parte de esta revolución tecnológica!",
+                    1,
+                    25,
+                    new List<string>() { "Device.png" });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task AddNoticeAsync(string name, string description, int status, int categoryNoticeId, List<string> images)
+        {
+            Notice notice = new()
+            {
+                Name = name,
+                Description = description,
+                Status = status,
+                CategoryNoticeId = categoryNoticeId,
+                ImageNotices = new List<ImageNotice>()
+            };
+
+            foreach (string? image in images)
+            {
+                string filePath;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    filePath = $"{Environment.CurrentDirectory}\\Images\\notices\\{image}";
+                }
+                else
+                {
+                    filePath = $"{Environment.CurrentDirectory}/Images/notices/{image}";
+                }
+                var fileBytes = File.ReadAllBytes(filePath);
+                var imagePath = await _fileStorage.SaveFileAsync(fileBytes, "jpg", "notices");
+                notice.ImageNotices.Add(new ImageNotice { Name = image, File = imagePath, NoticeId = notice.Id });
+            }
+
+            _context.Notices.Add(notice);
         }
 
         private async Task CheckCountriesFullAsync()
@@ -777,7 +844,7 @@ namespace EasyPermissions.Backend.Data
             }
         }
 
-        private async Task CheckNoticesAsync()
+        private async Task CheckNoticesAsync2()
         {
             if (!_context.Notices.Any())
             {
