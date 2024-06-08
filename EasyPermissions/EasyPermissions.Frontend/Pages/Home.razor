@@ -1,8 +1,30 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@if (Notices is null)
+{
+    <Loading />
+}
+else
+{
+    <Filter PlaceHolder="Buscar noticia..." Callback=@FilterCallBack />
+        <Pagination CurrentPage="currentPage"
+                    TotalPages="totalPages"
+                    SelectedPage="SelectedPageAsync" />
 
-<h1>¡Hola!</h1>
-
-Bienvenido (a) a Permisos Fácil App.
-
+        <div class="row row-cols-1 row-cols-md-4 g-4 mt-1">
+            @foreach (var notice in Notices!)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="text-center zoom">
+                        <img src="@notice.MainImage" style="height:150px; max-width:200px;" class="text-center" alt=@notice.Name />
+                        </div>
+                        <div class="card-body">
+                        <h5 class="card-title text-navy text-center text-justify"> @notice.Name</h5>
+                        <p class="card-text smfnt text-center text-justify">@notice.Description</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+}
