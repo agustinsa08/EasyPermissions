@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyPermissions.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240608044543_Create database EasyPermissions")]
-    partial class CreatedatabaseEasyPermissions
+    [Migration("20240608165101_Create database")]
+    partial class Createdatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
