@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EasyPermissions.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatedatabaseEasyPermissions : Migration
+    public partial class Createdatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
