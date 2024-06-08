@@ -30,6 +30,13 @@ namespace EasyPermissions.Frontend.Pages
             await LoadAsync(page);
         }
 
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
+        }
+
         private async Task LoadAsync(int page = 1)
         {
             if (!string.IsNullOrWhiteSpace(Page))
