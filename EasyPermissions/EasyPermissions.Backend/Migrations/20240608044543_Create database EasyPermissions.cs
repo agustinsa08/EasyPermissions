@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EasyPermissions.Backend.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:EasyPermissions/EasyPermissions.Backend/Migrations/20240607003956_add field in notices.cs
-    public partial class addfieldinnotices : Migration
-========
-    public partial class addentities : Migration
->>>>>>>> f83dd1b870d706915968724e847d89182a1c3371:EasyPermissions/EasyPermissions.Backend/Migrations/20240605192143_add entities.cs
+    public partial class CreatedatabaseEasyPermissions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
