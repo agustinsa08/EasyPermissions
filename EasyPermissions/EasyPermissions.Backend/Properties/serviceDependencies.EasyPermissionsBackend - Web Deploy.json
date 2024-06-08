@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "apis1": {
+      "ignored": "true",
+      "type": "apis.azure"
+    },
+    "identityapp1": {
+      "ignored": "true",
+      "type": "identityapp"
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/EasyPermissionsBackend/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsLocalConnection_9E202A37C9",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/easypermissionsserver/databases/EasyPermissions.Backend_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:LocalConnection",
+      "dynamicId": null
+    },
+    "storage1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/EasyPermissionsBackend/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsAzureStorage_58C54C4090, /subscriptions/df864acd-9b76-4972-a78b-ce3fd6403c96/resourcegroups/ITM/providers/Microsoft.Web/sites/EasyPermissionsBackend/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsAzureStorage_9B77E751CF",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/easypermissions",
+      "type": "storage.azure",
+      "connectionId": "ConnectionStrings:AzureStorage",
+      "dynamicId": null
+    }
+  }
+}
