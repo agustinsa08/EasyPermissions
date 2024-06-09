@@ -1,69 +1,90 @@
 ﻿@page "/permissions/details/{permissionId:int}"
 
-<div class="card w-100">
-    <div class="card-header">
-        <span>
-            <i class="bi bi-person-lines" /> Detalles del permiso
-        </span>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-6">
-                <h5>Descripción</h5>
-                <p class="fw-lighter">
-                    gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                </p>
-            </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <h6 class="fw-bolder">Colaborador</h6>
+@if (permission is not null)
+{
+    <div class="card w-100">
+        <div class="card-header">
+            <span>
+                <i class="bi bi-person-lines" /> Detalles del permiso #@permissionId
+            </span>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Descripción</h5>
                     <p class="fw-lighter">
-                        Santiago ortiz ortiz
+                        @permission.Description
                     </p>
                 </div>
-                <div class="row mt-2">
-                    <h6 class="fw-bolder">Fecha de solicitud</h6>
-                    <p class="fw-lighter">
-                        13 de mayo del shshs
-                    </p>
-                </div>
-                <div class="row mt-2">
-                     <h6 class="fw-bolder">Estado Actual</h6>
-                    <AuthorizeView Roles="User">
-                        <Authorized>
+                <div class="col-md-6">
+                    <div class="row">
+                        <h6 class="fw-bolder">Colaborador</h6>
+                        <p class="fw-lighter">
+                            @permission.User!.FullName
+                        </p>
+                    </div>
+                    <div class="row mt-2">
+                        <h6 class="fw-bolder">Fecha de solicitud</h6>
+                        <p class="fw-lighter">
+                            @permission.Date
+                        </p>
+                    </div>
+                    <div class="row mt-2">
+                        <h6 class="fw-bolder">Estado Actual</h6>
+                        <AuthorizeView Roles="User">
+                            <Authorized>
                                 <p class="fw-lighter">
-                                    Pendiente
+                                    @permission.Status
                                 </p>
-                        </Authorized>
-                    </AuthorizeView>
-                    <AuthorizeView Roles="Admin, Leader">
-                        <Authorized>
-                            <EditForm>
-                                <DataAnnotationsValidator />
-                                <select class="form-select" @bind="PermissionDTO.Status">
-                                    <option value="0">-- Seleccione una categoría de permiso --</option>
-                                    @if (statusPermission is not null)
-                                    {
-                                        @foreach (var category in categoryPermissions)
-                                        {
-                                            <option value="@category.Id">@category.Name</option>
-                                        }
-                                    }
-                                </select>
-                            </EditForm>
-                        </Authorized>
-                    </AuthorizeView>
+                            </Authorized>
+                        </AuthorizeView>
+                        <AuthorizeView Roles="Admin, Leader">
+                            <Authorized>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <select class="form-select" value="@permission.Status" @onchange="StatusChangedAsync">
+                                            <option disabled value="-1">-- Seleccione un nuevo estado --</option>
+                                            @if (permissionStatus is not null)
+                                            {
+                                                @for (var i = 0; i < permissionStatus.Count; i++)
+                                                {
+                                                    <option value="@i">@permissionStatus[i]</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </Authorized>
+                        </AuthorizeView>
+                    </div>
+
+
+
                 </div>
-
-                
-
             </div>
-        </div>
-        <div class="row">
-            <h5 class="text-center">Historial</h5>
-            <div col-md-12>
-
+            <div class="row mt-5">
+                <h3 class="text-center">Historial</h3>
+                <div col-md-12>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Fecha de actualización</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var permissionDetail in permissionDetails!)
+                            {
+                                <tr>
+                                    <td>@permissionDetail.Status</td>
+                                    <td>@permissionDetail.Date</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
+}

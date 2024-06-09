@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace EasyPermissions.Frontend.Pages.Permissions
 {
-    [Authorize(Roles = "Admin, Leader, Collaborator")]
+    [Authorize(Roles = "Admin, Leader, User")]
     public partial class PermissionIndex
     {
         private int currentPage = 1;
