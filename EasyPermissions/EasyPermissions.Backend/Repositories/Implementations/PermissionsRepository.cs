@@ -6,6 +6,7 @@ using EasyPermissions.Shared.Entities;
 using EasyPermissions.Shared.Enums;
 using EasyPermissions.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
+using System.Security;
 
 namespace EasyPermissions.Backend.Repositories.Implementations
 {
@@ -117,6 +118,58 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 };
             }
 
+            return new ActionResponse<Permission>
+            {
+                WasSuccess = true,
+                Result = permission
+            };
+        }
+
+        public async Task<ActionResponse<Permission>> UpdateFullAsync(string email, PermissionDTO permissionDTO)
+        {
+            var user = await _usersRepository.GetUserAsync(email);
+            if (user == null)
+            {
+                return new ActionResponse<Permission>
+                {
+                    WasSuccess = false,
+                    Message = "Usuario no existe"
+                };
+            }
+
+            var isLeader = await _usersRepository.IsUserInRoleAsync(user, UserType.Leader.ToString());
+            if (!isLeader && permissionDTO.Status != PermissionStatus.Approved)
+            {
+                return new ActionResponse<Permission>
+                {
+                    WasSuccess = false,
+                    Message = "Solo permitido para líderes."
+                };
+            }
+
+            //Console.WriteLine($"permissionDTO: {permissionDTO}");
+            //Console.WriteLine($"permissionDTO.Id: {permissionDTO.Id}");
+
+            var permission = await _context.Permissions
+                .Include(s => s.PermissionDetails)
+                .FirstOrDefaultAsync(s => s.Id == permissionDTO.Id);
+            if (permission == null)
+            {
+                return new ActionResponse<Permission>
+                {
+                    WasSuccess = false,
+                    Message = "Permiso no existe"
+                };
+            }
+            permission.Status = permissionDTO.Status;
+            _context.Update(permission);
+            permission.PermissionDetails!.Add(new PermissionDetail
+            {
+                PermissionId = permissionDTO.Id,
+                Date = DateTime.UtcNow,
+                Status = permissionDTO.Status
+            });
+            await _context.SaveChangesAsync();
             return new ActionResponse<Permission>
             {
                 WasSuccess = true,

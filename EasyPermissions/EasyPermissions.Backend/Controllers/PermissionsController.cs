@@ -22,6 +22,17 @@ namespace EasyPermissions.Backend.Controllers
             _permissionsUnitOfWork = permissionsUnitOfWork;
         }
 
+        [HttpPut]
+        public async Task<IActionResult> PutAsync(PermissionDTO permissionDTO)
+        {
+            var response = await _permissionsUnitOfWork.UpdateFullAsync(User.Identity!.Name!, permissionDTO);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return BadRequest(response.Message);
+        }
+
         [HttpGet("full")]
         public async Task<IActionResult> GetAsync()
         {
