@@ -1,0 +1,12 @@
+﻿@page "/permissions/edit/{Id:int}"
+
+<h3>Editar Permiso</h3>
+
+@if (PermissionDTO is null)
+{
+    <Loading />
+}
+else
+{
+    <PermissionForm @ref="permissionForm" PermissionDTO="PermissionDTO" OnValidSubmit="SaveAsync" ReturnAction="Return" />
+}

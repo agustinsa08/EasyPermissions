@@ -1,0 +1,56 @@
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    
+    <div class="row">
+        <!-- PERMISSION_TYPE_ID -->
+        <div class="col-md-6">
+            <label>Tipo:</label>
+            <select class="form-select" @onchange="TypePermissionChangedAsync">
+                <option value="0">-- Seleccione un tipo de permiso --</option>
+                @if (typePermissions is not null)
+                {
+                    @foreach (var type in typePermissions)
+                    {
+                        <option value="@type.Id">@type.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <!-- PERMISSION_CATEGORY_ID -->
+        <div class="col-md-6">
+            <label>Categoría:</label>
+            <select class="form-select" @bind="PermissionDTO.CategoryPermissionId">
+                <option value="0">-- Seleccione una categoría de permiso --</option>
+                @if (categoryPermissions is not null)
+                {
+                    @foreach (var category in categoryPermissions)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <!-- DESCRIPTION -->
+        
+        <div class="col-md-12  mt-3">
+            <label>Descripción:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@PermissionDTO.Description" />
+                <ValidationMessage For="@(() => PermissionDTO.Description)" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center align-items-center mt-3">
+        <div class="col-auto">
+            <button class="btn btn-primary" type="submit" @onclick="printAction">Guardar Cambios</button>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+        </div>
+    </div>
+    
+</EditForm>
