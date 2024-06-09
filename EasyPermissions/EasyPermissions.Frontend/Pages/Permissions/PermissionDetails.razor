@@ -1,0 +1,69 @@
+﻿@page "/permissions/details/{permissionId:int}"
+
+<div class="card w-100">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-person-lines" /> Detalles del permiso
+        </span>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Descripción</h5>
+                <p class="fw-lighter">
+                    gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                </p>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <h6 class="fw-bolder">Colaborador</h6>
+                    <p class="fw-lighter">
+                        Santiago ortiz ortiz
+                    </p>
+                </div>
+                <div class="row mt-2">
+                    <h6 class="fw-bolder">Fecha de solicitud</h6>
+                    <p class="fw-lighter">
+                        13 de mayo del shshs
+                    </p>
+                </div>
+                <div class="row mt-2">
+                     <h6 class="fw-bolder">Estado Actual</h6>
+                    <AuthorizeView Roles="User">
+                        <Authorized>
+                                <p class="fw-lighter">
+                                    Pendiente
+                                </p>
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView Roles="Admin, Leader">
+                        <Authorized>
+                            <EditForm>
+                                <DataAnnotationsValidator />
+                                <select class="form-select" @bind="PermissionDTO.Status">
+                                    <option value="0">-- Seleccione una categoría de permiso --</option>
+                                    @if (statusPermission is not null)
+                                    {
+                                        @foreach (var category in categoryPermissions)
+                                        {
+                                            <option value="@category.Id">@category.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </EditForm>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
+
+                
+
+            </div>
+        </div>
+        <div class="row">
+            <h5 class="text-center">Historial</h5>
+            <div col-md-12>
+
+            </div>
+        </div>
+    </div>
+</div>
