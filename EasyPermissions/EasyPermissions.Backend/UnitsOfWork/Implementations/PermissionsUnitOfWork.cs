@@ -22,5 +22,7 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
         public override async Task<ActionResponse<IEnumerable<Permission>>> GetAsync() => await _permissionsRepository.GetAsync();
 
         public override async Task<ActionResponse<Permission>> GetAsync(int id) => await _permissionsRepository.GetAsync(id);
+
+        public async Task<ActionResponse<Permission>> UpdateFullAsync(string email, PermissionDTO permissionDTO) => await _permissionsRepository.UpdateFullAsync(email, permissionDTO);
     }
 }
