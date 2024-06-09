@@ -46,6 +46,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             }
             var queryable = _context.Permissions
                 .Include(c => c.CategoryPermission)
+                .ThenInclude(c => c!.TypePermission!)
                 .AsQueryable();
 
             var isAdmin = await _usersRepository.IsUserInRoleAsync(user, UserType.Admin.ToString());

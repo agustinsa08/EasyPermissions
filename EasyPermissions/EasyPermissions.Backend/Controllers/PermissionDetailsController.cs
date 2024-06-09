@@ -1,4 +1,5 @@
-﻿using EasyPermissions.Backend.UnitsOfWork.Interfaces;
+﻿using EasyPermissions.Backend.UnitsOfWork.Implementations;
+using EasyPermissions.Backend.UnitsOfWork.Interfaces;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,7 +32,7 @@ namespace EasyPermissions.Backend.Controllers
         }
 
         [HttpGet]
-        public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
+        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
             var response = await _permissionDetailsUnitOfWork.GetAsync(pagination);
             if (response.WasSuccess)
@@ -61,6 +62,12 @@ namespace EasyPermissions.Backend.Controllers
                 return Ok(action.Result);
             }
             return BadRequest();
+        }
+
+        [HttpGet("combo/{permissionId:int}")]
+        public async Task<IActionResult> GetComboAsync(int permissionId)
+        {
+            return Ok(await _permissionDetailsUnitOfWork.GetComboAsync(permissionId));
         }
     }
 }

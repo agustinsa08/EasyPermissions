@@ -32,7 +32,7 @@ namespace EasyPermissions.Backend.Controllers
         }
 
         [HttpGet]
-        public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
+        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
             var response = await _typeNoticesUnitOfWork.GetAsync(pagination);
             if (response.WasSuccess)
