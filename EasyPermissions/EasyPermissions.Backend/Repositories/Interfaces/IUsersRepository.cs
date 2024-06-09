@@ -1,5 +1,6 @@
 ﻿using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
+using EasyPermissions.Shared.Responses;
 using Microsoft.AspNetCore.Identity;
 
 namespace EasyPermissions.Backend.Repositories.Interfaces
@@ -33,5 +34,6 @@ namespace EasyPermissions.Backend.Repositories.Interfaces
         Task<SignInResult> LoginAsync(LoginDTO model);
 
         Task LogoutAsync();
+
     }
 }

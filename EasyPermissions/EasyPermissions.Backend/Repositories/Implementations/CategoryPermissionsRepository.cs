@@ -17,6 +17,39 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             _context = context;
         }
 
+        public override async Task<ActionResponse<CategoryPermission>> GetAsync(int id)
+        {
+            var categoryPermission = await _context.CategoryPermissions
+                 .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (categoryPermission == null)
+            {
+                return new ActionResponse<CategoryPermission>
+                {
+                    WasSuccess = false,
+                    Message = "Categoría no existe"
+                };
+            }
+
+            return new ActionResponse<CategoryPermission>
+            {
+                WasSuccess = true,
+                Result = categoryPermission
+            };
+        }
+
+        public override async Task<ActionResponse<IEnumerable<CategoryPermission>>> GetAsync()
+        {
+            var categoryPermission = await _context.CategoryPermissions
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+            return new ActionResponse<IEnumerable<CategoryPermission>>
+            {
+                WasSuccess = true,
+                Result = categoryPermission
+            };
+        }
+
         public override async Task<ActionResponse<IEnumerable<CategoryPermission>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _context.CategoryPermissions
@@ -56,6 +89,14 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 WasSuccess = true,
                 Result = totalPages
             };
+        }
+
+        public async Task<IEnumerable<CategoryPermission>> GetComboAsync(int typePermissionId)
+        {
+            return await _context.CategoryPermissions
+                .Where(s => s.TypePermissionId == typePermissionId)
+                .OrderBy(s => s.Name)
+                .ToListAsync();
         }
     }
 }

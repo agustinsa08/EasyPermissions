@@ -6,12 +6,16 @@ namespace EasyPermissions.Backend.UnitsOfWork.Interfaces
 {
     public interface IPermissionsUnitOfWork
     {
+        Task<ActionResponse<Permission>> AddAsync(Permission permission);
+
         Task<ActionResponse<Permission>> GetAsync(int id);
 
         Task<ActionResponse<IEnumerable<Permission>>> GetAsync();
 
-        Task<ActionResponse<IEnumerable<Permission>>> GetAsync(PaginationDTO pagination);
+        Task<ActionResponse<IEnumerable<Permission>>> GetAsync(string email, PaginationDTO pagination);
 
-        Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
+        Task<ActionResponse<int>> GetTotalPagesAsync(string email, PaginationDTO pagination);
+
+        Task<ActionResponse<Permission>> UpdateFullAsync(string email, PermissionDTO permissionDTO);
     }
 }
