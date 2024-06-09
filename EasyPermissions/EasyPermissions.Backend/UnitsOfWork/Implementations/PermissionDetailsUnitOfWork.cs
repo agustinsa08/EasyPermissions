@@ -22,5 +22,7 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
         public override async Task<ActionResponse<IEnumerable<PermissionDetail>>> GetAsync() => await _permissionDetailsRepository.GetAsync();
 
         public override async Task<ActionResponse<PermissionDetail>> GetAsync(int id) => await _permissionDetailsRepository.GetAsync(id);
+
+        public async Task<IEnumerable<PermissionDetail>> GetComboAsync(int permissionId) => await _permissionDetailsRepository.GetComboAsync(permissionId);
     }
 }

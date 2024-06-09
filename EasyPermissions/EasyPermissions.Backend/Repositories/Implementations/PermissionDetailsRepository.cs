@@ -89,5 +89,13 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 Result = permissionDetail
             };
         }
+
+        public async Task<IEnumerable<PermissionDetail>> GetComboAsync(int permissionId)
+        {
+            return await _context.PermissionDetails
+                .Where(s => s.PermissionId == permissionId)
+                .OrderBy(s => s.Date)
+                .ToListAsync();
+        }
     }
 }
