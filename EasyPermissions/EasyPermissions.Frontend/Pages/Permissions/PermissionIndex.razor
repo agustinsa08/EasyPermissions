@@ -1,0 +1,49 @@
+﻿@page "/permissions"
+
+<div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-person-lines" /> Permisssion
+            <a class="btn btn-primary btn-sm float-end" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square" /> Nuevo Permiso</a>
+        </span>
+    </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar permiso..." Callback=@FilterCallBack />
+        <GenericList MyList="Permissions">
+            <Body>
+                <Pagination CurrentPage="currentPage"
+                            TotalPages="totalPages"
+                            SelectedPage="SelectedPageAsync" />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Usuario</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Fecha de creación</th>
+                            <th>Fecha de actualización</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var permission in Permissions!)
+                        {
+                            <tr>
+                                <td>@permission.Id</td>
+                                <td>@permission.User!.FullName</td>
+                                <td>@permission.Description</td>
+                                <td>@permission.Status</td>
+                                <td>@permission.Date</td>
+                                <td>@permission.DateStatus</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" @onclick=@(() =>showDetail(permission.Id))><i class="bi bi-trash" /> Detalle</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </div>
+</div>

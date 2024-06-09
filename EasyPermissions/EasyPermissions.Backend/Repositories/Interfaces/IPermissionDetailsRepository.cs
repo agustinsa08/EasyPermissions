@@ -13,5 +13,8 @@ namespace EasyPermissions.Backend.Repositories.Interfaces
         Task<ActionResponse<IEnumerable<PermissionDetail>>> GetAsync(PaginationDTO pagination);
 
         Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
+
+        Task<IEnumerable<PermissionDetail>> GetComboAsync(int permissionId);
+
     }
 }

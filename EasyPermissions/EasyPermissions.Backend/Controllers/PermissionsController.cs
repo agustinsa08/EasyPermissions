@@ -45,7 +45,7 @@ namespace EasyPermissions.Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync(PaginationDTO pagination)
+        public async Task<IActionResult> GetAsync([FromQuery]  PaginationDTO pagination)
         {
             var response = await _permissionsUnitOfWork.GetAsync(User.Identity!.Name!, pagination);
             if (response.WasSuccess)
