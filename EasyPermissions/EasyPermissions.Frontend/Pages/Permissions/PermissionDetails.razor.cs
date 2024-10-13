@@ -9,12 +9,16 @@ using Microsoft.AspNetCore.Authorization;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Enums;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace EasyPermissions.Frontend.Pages.Permissions
 {
     [Authorize(Roles = "Admin, Leader, User")]
     public partial class PermissionDetails
     {
+
+        private string? photoUser;
+
         private PermissionDTO PermissionDTO = new();
         private Permission permission = null!;
         private List<PermissionDetail> permissionDetails = null!;
@@ -26,6 +30,7 @@ namespace EasyPermissions.Frontend.Pages.Permissions
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
+        [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
 
 
@@ -38,6 +43,7 @@ namespace EasyPermissions.Frontend.Pages.Permissions
         {
             await GetPermissionAsync();
             await GetPermissionDetailsAsync();
+            await GetPhotoUserAsync();
         }
 
         private async Task GetPermissionAsync()
@@ -114,6 +120,17 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
 
+        }
+
+        protected async Task GetPhotoUserAsync()
+        {
+            var authenticationState = await AuthenticationStateTask;
+            var claims = authenticationState.User.Claims.ToList();
+            var photoClaim = claims.FirstOrDefault(x => x.Type == "Photo");
+            if (photoClaim is not null)
+            {
+                photoUser = photoClaim.Value;
+            }
         }
 
     }
