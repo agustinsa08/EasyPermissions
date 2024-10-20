@@ -2,6 +2,7 @@
 
 @if (permission is not null)
 {
+    <i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>returnPermissions()) style="margin: 0px !important; cursor:pointer;"></i>
     <div class="card w-100">
         <div class="card-header">
             <span>
@@ -63,13 +64,16 @@
                                     <Authorized>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <select class="form-select" value="@permission.Status" @onchange="StatusChangedAsync">
+                                                <select class="form-select" value="@permission.Status.GetHashCode()" @onchange="StatusChangedAsync">
                                                     <option disabled value="-1">-- Seleccione un nuevo estado --</option>
-                                                    @if (permissionStatus is not null)
+                                                @if (permissionStatus is not null)
                                                     {
-                                                        @for (var i = 0; i < permissionStatus.Count; i++)
+                                                    @for (var i = 0; i < permissionStatus.Count; i++)
+                                                        {
+                                                        @if (i >= permission.Status.GetHashCode())
                                                         {
                                                             <option value="@i">@permissionStatus[i]</option>
+                                                        }
                                                         }
                                                     }
                                                 </select>

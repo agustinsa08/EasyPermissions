@@ -10,6 +10,7 @@ using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Enums;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Text.Json;
 
 namespace EasyPermissions.Frontend.Pages.Permissions
 {
@@ -23,6 +24,8 @@ namespace EasyPermissions.Frontend.Pages.Permissions
         private Permission permission = null!;
         private List<PermissionDetail> permissionDetails = null!;
         private List<PermissionStatus>? permissionStatus = Enum.GetValues(typeof(PermissionStatus)).Cast<PermissionStatus>().ToList();
+
+
 
         [Parameter] public int permissionId { get; set; }
 
@@ -64,6 +67,8 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             else
             {
                 permission = responseHttp.Response!;
+               // string jsonString = JsonSerializer.Serialize(permission);
+               
             }
         }
 
@@ -100,9 +105,16 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             PermissionDTO.Description = permission.Description;
             PermissionDTO.DateStatus = DateTime.UtcNow;
 
+            var beforeStatus = permission.Status;
+
+            permission.Status = (PermissionStatus)statusValue;
+
+            Console.WriteLine(beforeStatus);
+
             var responseHttp = await Repository.PutAsync($"/api/permissions", PermissionDTO);
             if (responseHttp.Error)
             {
+                permission.Status = beforeStatus;
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
@@ -117,7 +129,8 @@ namespace EasyPermissions.Frontend.Pages.Permissions
                 ShowConfirmButton = true,
                 Timer = 3000
             });
-            
+
+
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
 
         }
@@ -131,6 +144,11 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             {
                 photoUser = photoClaim.Value;
             }
+        }
+
+        private void returnPermissions()
+        {
+            NavigationManager.NavigateTo($"/permissions");
         }
 
     }
