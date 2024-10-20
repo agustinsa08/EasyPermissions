@@ -31,14 +31,13 @@
                         {
                             <tr>
                                 <td>@permission.Id</td>
-                                <td>@permission.User.FullName</td>
+                                <td>@permission.User!.FullName</td>
                                 <td>@permission.Description</td>
                                 <td>@permission.Status</td>
                                 <td>@permission.Date</td>
                                 <td>@permission.DateStatus</td>
                                 <td>
-                                    <!-- <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(permission.Id, true))><i class="bi bi-pencil" /> Editar</a> -->
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() =>showDetail(permission.Id))><i class="bi bi-trash" /> Detalle</button>
+                                    <button class="btn btn-success btn-sm" @onclick=@(() =>showDetail(permission.Id))><i class="bi bi-trash" /> Detalle</button>
                                 </td>
                             </tr>
                         }

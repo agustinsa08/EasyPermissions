@@ -6,6 +6,7 @@ using EasyPermissions.Shared.Entities;
 using EasyPermissions.Shared.Enums;
 using EasyPermissions.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Security;
 
 namespace EasyPermissions.Backend.Repositories.Implementations
@@ -45,6 +46,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 };
             }
             var queryable = _context.Permissions
+                .Include(c => c.User)
                 .Include(c => c.CategoryPermission)
                 .ThenInclude(c => c!.TypePermission!)
                 .AsQueryable();
@@ -107,7 +109,10 @@ namespace EasyPermissions.Backend.Repositories.Implementations
         public override async Task<ActionResponse<Permission>> GetAsync(int id)
         {
             var permission = await _context.Permissions
-                 .Include(c => c.CategoryPermission!)
+                .Include(c => c.User)
+                .Include(c => c.CategoryPermission)
+                .ThenInclude(c => c!.TypePermission!)
+                .Include(c => c.PermissionDetails)
                  .FirstOrDefaultAsync(c => c.Id == id);
 
             if (permission == null)
@@ -138,8 +143,9 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 };
             }
 
+            var isAdmin = await _usersRepository.IsUserInRoleAsync(user, UserType.Admin.ToString());
             var isLeader = await _usersRepository.IsUserInRoleAsync(user, UserType.Leader.ToString());
-            if (!isLeader && permissionDTO.Status != PermissionStatus.Approved)
+            if (!isAdmin && !isLeader && permissionDTO.Status != PermissionStatus.Approved)
             {
                 return new ActionResponse<Permission>
                 {
@@ -152,7 +158,10 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             //Console.WriteLine($"permissionDTO.Id: {permissionDTO.Id}");
 
             var permission = await _context.Permissions
-                .Include(s => s.PermissionDetails)
+                .Include(c => c.User)
+                .Include(c => c.CategoryPermission)
+                .ThenInclude(c => c!.TypePermission!)
+                .Include(c => c.PermissionDetails)
                 .FirstOrDefaultAsync(s => s.Id == permissionDTO.Id);
             if (permission == null)
             {
@@ -162,6 +171,14 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                     Message = "Permiso no existe"
                 };
             }
+            Console.WriteLine($"permissionDTO.Id: {permission.Date}");
+            Console.WriteLine($"permissionDTO.Id: {permission.Description}");
+
+            permission.User = permission.User;
+            permission.Date = permission.Date;
+            permission.CategoryPermissionId = permission.CategoryPermissionId;
+            permission.Description = permission.Description;
+            permission.DateStatus = DateTime.UtcNow;
             permission.Status = permissionDTO.Status;
             _context.Update(permission);
             permission.PermissionDetails!.Add(new PermissionDetail
