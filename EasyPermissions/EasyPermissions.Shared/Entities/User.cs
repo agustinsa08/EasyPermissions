@@ -32,6 +32,10 @@ namespace EasyPermissions.Shared.Entities
         [Display(Name = "Tipo de usuario")]
         public UserType UserType { get; set; }
 
+        //[Display(Name = "Area")]
+        //[Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un {0}.")]
+        //public int AreaId { get; set; }
+
         public City? City { get; set; }
 
         [Display(Name = "Ciudad")]
