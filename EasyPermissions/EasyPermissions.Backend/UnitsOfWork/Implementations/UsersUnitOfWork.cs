@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EasyPermissions.Backend.UnitsOfWork.Implementations
 {
-    public class UsersUnitOfWork : IUsersUnitOfWork
+    public class UsersUnitOfWork : GenericUnitOfWork<User>, IUsersUnitOfWork
     {
         private readonly IUsersRepository _usersRepository;
 
-        public UsersUnitOfWork(IUsersRepository usersRepository)
+        public UsersUnitOfWork(IGenericRepository<User> repository, IUsersRepository usersRepository) : base(repository)
         {
             _usersRepository = usersRepository;
         }
@@ -47,7 +47,11 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
 
         public async Task<User> GetUserByIdAsync(Guid userId) => await _usersRepository.GetUserByIdAsync(userId);
 
-        public async Task<List<User>> GetAllAsync() => await _usersRepository.GetAllAsync();
+        public override async Task<ActionResponse<IEnumerable<User>>> GetAsync() => await _usersRepository.GetAsync();
+
+        public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _usersRepository.GetTotalPagesAsync(pagination);
+
+        public override async Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination) => await _usersRepository.GetAsync(pagination);
 
     }
 }
