@@ -2,7 +2,7 @@
 
 @if (permission is not null)
 {
-    <i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>returnPermissions()) style="margin: 0px !important; cursor:pointer;"></i>
+    <i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>ReturnPermissions()) style="margin: 0px !important; cursor:pointer;"></i>
     <div class="card w-100">
         <div class="card-header">
             <span>
@@ -72,7 +72,7 @@
                                                         {
                                                         @if (i >= permission.Status.GetHashCode())
                                                         {
-                                                            <option value="@i">@permissionStatus[i]</option>
+                                                            <option value="@i">@GetDescription(permissionStatus[i])</option>
                                                         }
                                                         }
                                                     }
@@ -99,8 +99,8 @@
                             @foreach (var permissionDetail in permissionDetails!)
                             {
                                 <tr>
-                                    <td>@permissionDetail.Status</td>
-                                    <td>@permissionDetail.Date</td>
+                                    <td>@GetDescription(permissionDetail.Status)</td>
+                                    <td>@ApplyUtc(permissionDetail.Date)</td>
                                 </tr>
                             }
                         </tbody>

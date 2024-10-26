@@ -1,5 +1,7 @@
 ﻿@page "/Register"
 
+    <i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>ReturnIndex()) style="margin: 0px !important; cursor:pointer;"></i>
+
 @if (loading)
 {
     <Loading />
@@ -13,7 +15,7 @@ else
             <div class="card-header">
                 <span>
                     <i class="bi bi-key" /> Registrar Nuevo  Usuario
-                    <button class="btn btn-sm btn-primary float-end" type="submit"><i class="bi bi-person-add" /> Registrar</button>
+                    <button class="btn btn-sm btn-primary float-end" type="submit">Registrar</button>
                 </span>
             </div>
             <div class="card-body">
@@ -59,6 +61,21 @@ else
                             <div>
                                 <InputText class="form-control" @bind-Value="@userDTO.Email" />
                                 <ValidationMessage For="@(() => userDTO.Email)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Tipo de usuario:</label>
+                            <div>
+                                <select class="form-select">
+                                    <option value="0">-- Seleccione un tipo --</option>
+                                    @if (userTypes is not null)
+                                    {
+                                        @for (var i = 0; i < userTypes.Count; i++)
+                                        {
+                                            <option value="@i">@GetDescription(userTypes[i])</option>
+                                        }
+                                     }
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -109,6 +126,22 @@ else
                                 <ValidationMessage For="@(() => userDTO.CityId)" />
                             </div>
                         </div>
+                        <!-- <div class="mb-3">
+                            <label>Area:</label>
+                             <div>
+                                <select class="form-select" @bind="userDTO.AreaId">
+                                    <option value="0">-- Seleccione una area --</option>
+                                    @if (cities is not null)
+                                    {
+                                        @foreach (var area in areas)
+                                        {
+                                            <option value="@area.Id">@area.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <ValidationMessage For="@(() => userDTO.AreaId)" />
+                            </div>
+                        </div>-->
                         <div class="mb-3">
                             <label>Contraseña:</label>
                             <div>

@@ -11,6 +11,7 @@ using EasyPermissions.Shared.Enums;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Text.Json;
+using System.ComponentModel;
 
 namespace EasyPermissions.Frontend.Pages.Permissions
 {
@@ -146,9 +147,36 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             }
         }
 
-        private void returnPermissions()
+        private void ReturnPermissions()
         {
             NavigationManager.NavigateTo($"/permissions");
+        }
+
+        public static string GetDescription(PermissionStatus value)
+        {
+            var fieldInfo = value.GetType().GetField(value.ToString());
+            var attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
+
+            return attributes.Length > 0 ? attributes[0].Description : value.ToString();
+        }
+
+        private DateTime? ApplyUtc(DateTime date)
+        {
+
+            if (DateTime.MinValue == date)
+            {
+                return null;
+            }
+
+            DateTime newDate;
+
+            if (DateTime.TryParse(date.ToString() + 'Z', out newDate))
+            {
+                return newDate;
+            }
+
+            return null;
+
         }
 
     }
