@@ -2,6 +2,7 @@
 using EasyPermissions.Backend.Repositories.Interfaces;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
+using EasyPermissions.Shared.Responses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -107,6 +108,24 @@ namespace EasyPermissions.Backend.Repositories.Implementations
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {
             return await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<User> GetUserByIdAsync(Guid userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.City!)
+                .ThenInclude(c => c.State!)
+                .ThenInclude(s => s.Country)
+                .FirstOrDefaultAsync(x => x.Id == userId.ToString());
+            return user!;
+        }
+
+        public async Task<List<User>> GetAllAsync()
+        {
+            var users = await _context.Users
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+            return users;
         }
     }
 }

@@ -26,6 +26,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
         {
             var permissions = await _context.Permissions
                 .OrderBy(x => x.Description)
+                 .Include(c => c.UserId!)
                 .ToListAsync();
             return new ActionResponse<IEnumerable<Permission>>
             {

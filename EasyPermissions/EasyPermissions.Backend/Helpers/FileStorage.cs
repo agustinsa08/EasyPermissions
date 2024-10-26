@@ -36,5 +36,25 @@ namespace EasyPermissions.Backend.Helpers
 
             return blob.Uri.ToString();
         }
+
+        public async Task<byte[]?> GetFileAsync(string fileName, string containerName)
+        {
+            var client = new BlobContainerClient(_connectionString, containerName);
+            await client.CreateIfNotExistsAsync();
+
+            var blob = client.GetBlobClient(fileName);
+
+            if (await blob.ExistsAsync())
+            {
+                var downloadInfo = await blob.DownloadAsync();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await downloadInfo.Value.Content.CopyToAsync(memoryStream);
+                    return memoryStream.ToArray();
+                }
+            }
+            return null;
+        }
+
     }
 }
