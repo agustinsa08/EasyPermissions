@@ -33,5 +33,9 @@ namespace EasyPermissions.Backend.UnitsOfWork.Interfaces
         Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword);
 
         Task<IdentityResult> UpdateUserAsync(User user);
+
+        Task<User> GetUserByIdAsync(Guid userId);
+
+        Task<List<User>> GetAllAsync();
     }
 }
