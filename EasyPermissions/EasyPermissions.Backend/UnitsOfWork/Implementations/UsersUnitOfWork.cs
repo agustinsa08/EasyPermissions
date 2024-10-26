@@ -1,7 +1,9 @@
-﻿using EasyPermissions.Backend.Repositories.Interfaces;
+﻿using EasyPermissions.Backend.Repositories.Implementations;
+using EasyPermissions.Backend.Repositories.Interfaces;
 using EasyPermissions.Backend.UnitsOfWork.Interfaces;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
+using EasyPermissions.Shared.Responses;
 using Microsoft.AspNetCore.Identity;
 
 namespace EasyPermissions.Backend.UnitsOfWork.Implementations
@@ -42,5 +44,10 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
         public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword) => await _usersRepository.ChangePasswordAsync(user, currentPassword, newPassword);
 
         public async Task<IdentityResult> UpdateUserAsync(User user) => await _usersRepository.UpdateUserAsync(user);
+
+        public async Task<User> GetUserByIdAsync(Guid userId) => await _usersRepository.GetUserByIdAsync(userId);
+
+        public async Task<List<User>> GetAllAsync() => await _usersRepository.GetAllAsync();
+
     }
 }

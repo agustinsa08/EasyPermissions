@@ -35,5 +35,9 @@ namespace EasyPermissions.Backend.Repositories.Interfaces
 
         Task LogoutAsync();
 
+        Task<User> GetUserByIdAsync(Guid userId);
+
+        Task<List<User>> GetAllAsync();
+
     }
 }

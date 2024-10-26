@@ -169,6 +169,7 @@ namespace EasyPermissions.Backend.Controllers
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
         {
             User user = model;
+
             if (!string.IsNullOrEmpty(model.Photo))
             {
                 var photoUser = Convert.FromBase64String(model.Photo);
@@ -238,6 +239,36 @@ namespace EasyPermissions.Backend.Controllers
 
             return BadRequest("Email o contraseña incorrectos.");
         }
+
+        [HttpGet("GetUserPhoto/{userId:guid}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUserPhotoAsync(Guid userId)
+        {
+            var user = await _usersUnitOfWork.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { success = false, message = "Usuario no encontrado" });
+            }
+            var userIdString = $"{userId.ToString()}.jpg";
+            byte[] photoData = await _fileStorage.GetFileAsync(userIdString, _container);
+            if (user.Photo == null)
+            {
+                return NotFound(new { success= false, message = "Foto no encontrada / El usuario no tiene foto registrada." });
+            }
+            return Ok(new { Photo = user.Photo });
+        }
+
+        [HttpGet("full")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var response = await _usersUnitOfWork.GetAllAsync();
+            if (response!=null)
+            {
+                return Ok(response);
+            }
+            return BadRequest();
+        }
+
 
         private async Task<ActionResponse<string>> SendConfirmationEmailAsync(User user)
         {
