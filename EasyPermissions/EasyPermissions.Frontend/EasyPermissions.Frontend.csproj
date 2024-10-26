@@ -21,4 +21,10 @@
     <ProjectReference Include="..\EasyPermissions.Shared\EasyPermissions.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Pages\Users\UserIndex.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>
