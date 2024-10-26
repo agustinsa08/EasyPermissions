@@ -16,6 +16,6 @@
             return await SaveFileAsync(content, extention, containerName);
         }
 
-        Task<byte[]> GetFileAsync(string path, string containerName);
+        Task<byte[]?> GetFileAsync(string path, string containerName);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using EasyPermissions.Backend.Data;
+using EasyPermissions.Backend.Helpers;
 using EasyPermissions.Backend.Repositories.Interfaces;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
@@ -8,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EasyPermissions.Backend.Repositories.Implementations
 {
-    public class UsersRepository : IUsersRepository
+    public class UsersRepository : GenericRepository<User>,  IUsersRepository
     {
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
 
-        public UsersRepository(DataContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
+        public UsersRepository(DataContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager) : base(context)
         {
             _context = context;
             _userManager = userManager;
@@ -120,12 +121,54 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             return user!;
         }
 
-        public async Task<List<User>> GetAllAsync()
+        public override async Task<ActionResponse<IEnumerable<User>>> GetAsync()
         {
             var users = await _context.Users
                 .OrderBy(x => x.Id)
                 .ToListAsync();
-            return users;
+            return new ActionResponse<IEnumerable<User>>
+            {
+                WasSuccess = true,
+                Result = users
+            };
+        }
+
+        public override async Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination)
+        {
+            var queryable = _context.Users
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            {
+                queryable = queryable.Where(x => x.FullName.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
+            return new ActionResponse<IEnumerable<User>>
+            {
+                WasSuccess = true,
+                Result = await queryable
+                    .OrderBy(x => x.FullName)
+                    .Paginate(pagination)
+                    .ToListAsync()
+            };
+        }
+
+        public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
+        {
+            var queryable = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            {
+                queryable = queryable.Where(x => x.FullName.ToLower().Contains(pagination.Filter.ToLower()));
+            }
+
+            double count = await queryable.CountAsync();
+            int totalPages = (int)Math.Ceiling(count / pagination.RecordsNumber);
+            return new ActionResponse<int>
+            {
+                WasSuccess = true,
+                Result = totalPages
+            };
         }
     }
 }
