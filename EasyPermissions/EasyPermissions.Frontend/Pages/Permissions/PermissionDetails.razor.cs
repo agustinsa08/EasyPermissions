@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Text.Json;
 using System.ComponentModel;
+using EasyPermissions.Shared.Interfaces;
+using EasyPermissions.Shared.Responses;
 
 namespace EasyPermissions.Frontend.Pages.Permissions
 {
@@ -47,7 +49,6 @@ namespace EasyPermissions.Frontend.Pages.Permissions
         {
             await GetPermissionAsync();
             await GetPermissionDetailsAsync();
-            await GetPhotoUserAsync();
         }
 
         private async Task GetPermissionAsync()
@@ -68,8 +69,10 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             else
             {
                 permission = responseHttp.Response!;
-               // string jsonString = JsonSerializer.Serialize(permission);
-               
+
+                await GetPhotoUserAsync(permission.UserId!);
+                // string jsonString = JsonSerializer.Serialize(permission);
+
             }
         }
 
@@ -136,15 +139,17 @@ namespace EasyPermissions.Frontend.Pages.Permissions
 
         }
 
-        protected async Task GetPhotoUserAsync()
+        protected async Task GetPhotoUserAsync(string userId)
         {
-            var authenticationState = await AuthenticationStateTask;
-            var claims = authenticationState.User.Claims.ToList();
-            var photoClaim = claims.FirstOrDefault(x => x.Type == "Photo");
-            if (photoClaim is not null)
+            var responseHttp = await Repository.GetAsync<PhotoResponse>($"/api/accounts/getUserPhoto/{userId}");
+            
+            if (responseHttp.Error)
             {
-                photoUser = photoClaim.Value;
+                return;                
             }
+            
+            photoUser = responseHttp.Response.photo;
+            
         }
 
         private void ReturnPermissions()
