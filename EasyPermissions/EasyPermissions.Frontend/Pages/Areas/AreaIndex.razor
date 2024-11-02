@@ -19,7 +19,9 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Areas</th>
+                            <th>Area</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
                             <th style="width:210px"></th>
                         </tr>
                     </thead>
@@ -28,6 +30,8 @@
                         {
                             <tr>
                                 <td>@area.Name</td>
+                                <td>@area.Description</td>
+                                <td>@(getStatus(area.Status))</td>
                                 <td>
                                     <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(area.Id, true))><i class="bi bi-pencil" /> Editar</a>
                                     <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(area))><i class="bi bi-trash" /> Borrar</button>

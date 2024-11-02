@@ -9,6 +9,19 @@
             <ValidationMessage For="@(() => notices.Name)" />
         </div>
     </div>
+    <div class="mb-3">
+        <label>Descripción:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@notices.Description" />
+            <ValidationMessage For="@(() => notices.Description)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Estado:</label>
+        <div>
+            <SwitchInput @bind-Value="@notices.Status" />
+        </div>
+    </div>
     <button class="btn btn-primary" type="submit">Guardar Cambios</button>
     <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
 </EditForm>
