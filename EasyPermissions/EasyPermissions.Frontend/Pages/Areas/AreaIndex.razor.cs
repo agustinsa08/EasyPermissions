@@ -65,6 +65,14 @@ namespace EasyPermissions.Frontend.Pages.Areas
             await LoadAsync(page);
         }
 
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
+
         private async Task LoadAsync(int page = 1)
         {
             if (!string.IsNullOrWhiteSpace(Page))
@@ -128,6 +136,18 @@ namespace EasyPermissions.Frontend.Pages.Areas
             int page = 1;
             await LoadAsync(page);
             await SelectedPageAsync(page);
+        }
+
+        private string getStatus(int? value)
+        {
+
+            if(value == 0)
+            {
+                return "Inactivo";
+            }
+
+            return "Activo";
+
         }
 
         private async Task DeleteAsycn(Area area)

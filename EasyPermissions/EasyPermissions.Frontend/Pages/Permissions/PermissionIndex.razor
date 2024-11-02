@@ -2,10 +2,14 @@
 
 <div class="card">
     <div class="card-header">
-        <span>
-            <i class="bi bi-person-lines" /> Permisssion
-            <a class="btn btn-primary btn-sm float-end" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square" /> Nuevo Permiso</a>
-        </span>
+        <AuthorizeView Roles="User">
+            <Authorized>
+                <span>
+                    <i class="bi bi-person-lines" /> Permisssion
+                    <a class="btn btn-primary btn-sm float-end" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square" /> Nuevo Permiso</a>
+                </span>
+            </Authorized>
+        </AuthorizeView>
     </div>
     <div class="card-body">
         <Filter PlaceHolder="Buscar permiso..." Callback=@FilterCallBack />
@@ -13,7 +17,8 @@
             <Body>
                 <Pagination CurrentPage="currentPage"
                             TotalPages="totalPages"
-                            SelectedPage="SelectedPageAsync" />
+                            SelectedPage="SelectedPageAsync"
+                            RecordsNumber="SelectedRecordsNumberAsync" />
 
                 <table class="table table-striped">
                     <thead>
@@ -33,11 +38,11 @@
                                 <td>@permission.Id</td>
                                 <td>@permission.User!.FullName</td>
                                 <td>@permission.Description</td>
-                                <td>@permission.Status</td>
-                                <td>@permission.Date</td>
-                                <td>@permission.DateStatus</td>
+                                <td>@GetDescription(permission.Status)</td>
+                                <td>@ApplyUtc(permission.Date)</td>
+                                <td>@ApplyUtc(permission.DateStatus)</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" @onclick=@(() =>showDetail(permission.Id))><i class="bi bi-trash" /> Detalle</button>
+                                    <button class="btn btn-success btn-sm" @onclick=@(() =>ShowDetail(permission.Id))><i class="bi bi-trash" /> Detalle</button>
                                 </td>
                             </tr>
                         }

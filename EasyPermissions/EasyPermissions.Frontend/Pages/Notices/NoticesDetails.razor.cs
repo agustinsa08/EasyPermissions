@@ -66,6 +66,14 @@ namespace EasyPermissions.Frontend.Pages.Notices
             await LoadAsync(page);
         }
 
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
+
         private async Task LoadAsync(int page = 1)
         {
             var ok = await LoadCountryAsync();

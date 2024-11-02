@@ -1,5 +1,6 @@
 ﻿using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
+using EasyPermissions.Shared.Responses;
 using Microsoft.AspNetCore.Identity;
 
 namespace EasyPermissions.Backend.UnitsOfWork.Interfaces
@@ -33,5 +34,13 @@ namespace EasyPermissions.Backend.UnitsOfWork.Interfaces
         Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword);
 
         Task<IdentityResult> UpdateUserAsync(User user);
+
+        Task<User> GetUserByIdAsync(Guid userId);
+
+        Task<ActionResponse<IEnumerable<User>>> GetAsync();
+
+        Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination);
+
+        Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
     }
 }

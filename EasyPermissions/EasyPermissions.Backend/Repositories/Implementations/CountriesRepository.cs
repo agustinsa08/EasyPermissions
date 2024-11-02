@@ -68,7 +68,6 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             };
         }
 
-
         public override async Task<ActionResponse<Country>> GetAsync(int id)
         {
             var country = await _context.Countries

@@ -169,6 +169,7 @@ namespace EasyPermissions.Backend.Controllers
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
         {
             User user = model;
+
             if (!string.IsNullOrEmpty(model.Photo))
             {
                 var photoUser = Convert.FromBase64String(model.Photo);

@@ -1,16 +1,17 @@
-﻿using Blazored.Modal;
-using Blazored.Modal.Services;
-using CurrieTechnologies.Razor.SweetAlert2;
+﻿using CurrieTechnologies.Razor.SweetAlert2;
 using EasyPermissions.Frontend.Repositories;
 using EasyPermissions.Shared.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using System.Net;
+using Blazored.Modal.Services;
+using Blazored.Modal;
+using Microsoft.AspNetCore.Authorization;
 
-namespace EasyPermissions.Frontend.Pages.Notices
+
+namespace EasyPermissions.Frontend.Pages.Users
 {
     [Authorize(Roles = "Admin")]
-    public partial class NoticesIndex
+    public partial class UserIndex
     {
         private int currentPage = 1;
         private int totalPages;
@@ -24,30 +25,12 @@ namespace EasyPermissions.Frontend.Pages.Notices
         [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
         [CascadingParameter] IModalService Modal { get; set; } = default!;
 
-        public List<Notice>? notices { get; set; }
+
+        public List<Area>? Users { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
-        }
-        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
-        {
-            IModalReference modalReference;
-
-            if (isEdit)
-            {
-                modalReference = Modal.Show<NoticesEdit>(string.Empty, new ModalParameters().Add("Id", id));
-            }
-            else
-            {
-                modalReference = Modal.Show<NoticesCreate>();
-            }
-
-            var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
-                await LoadAsync();
-            }
         }
         private async Task FilterCallBack(string filter)
         {
@@ -55,6 +38,7 @@ namespace EasyPermissions.Frontend.Pages.Notices
             await ApplyFilterAsync();
             StateHasChanged();
         }
+
 
         private async Task SelectedPageAsync(int page)
         {
@@ -93,26 +77,26 @@ namespace EasyPermissions.Frontend.Pages.Notices
         private async Task<bool> LoadListAsync(int page)
         {
             ValidateRecordsNumber();
-            var url = $"api/Notices?page={page}&recordsnumber={RecordsNumber}";
+            var url = $"api/Accounts?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
             }
 
-            var responseHttp = await Repository.GetAsync<List<Notice>>(url);
+            var responseHttp = await Repository.GetAsync<List<Area>>(url);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return false;
             }
-            notices = responseHttp.Response;
+            Users = responseHttp.Response;
             return true;
         }
 
         private async Task LoadPagesAsync()
         {
-            var url = $"api/Notices/totalPages?recordsnumber={RecordsNumber}";
+            var url = $"api/Accounts/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"?filter={Filter}";
@@ -127,6 +111,7 @@ namespace EasyPermissions.Frontend.Pages.Notices
             }
             totalPages = responseHttp.Response;
         }
+
         private async Task ApplyFilterAsync()
         {
             int page = 1;
@@ -134,12 +119,12 @@ namespace EasyPermissions.Frontend.Pages.Notices
             await SelectedPageAsync(page);
         }
 
-        private async Task DeleteAsycn(Notice notices)
+        private async Task DeleteAsycn(Area area)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Estas seguro de querer borrar la categoria de noticia: {notices.Name}?",
+                Text = $"¿Estas seguro de querer borrar el usuario: {area.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -149,12 +134,12 @@ namespace EasyPermissions.Frontend.Pages.Notices
                 return;
             }
 
-            var responseHttp = await Repository.DeleteAsync<CategoryNotice>($"api/ImageNotices/{notices.Id}");
+            var responseHttp = await Repository.DeleteAsync<Area>($"api/Accounts/{area.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/notices");
+                    NavigationManager.NavigateTo("/users");
                 }
                 else
                 {
@@ -173,6 +158,16 @@ namespace EasyPermissions.Frontend.Pages.Notices
                 Timer = 3000
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+        }
+
+        private void CreateUser()
+        {
+            NavigationManager.NavigateTo($"/register");
+        }
+
+        private void EditUser(int id)
+        {
+            NavigationManager.NavigateTo($"/register/{id}");
         }
     }
 }
