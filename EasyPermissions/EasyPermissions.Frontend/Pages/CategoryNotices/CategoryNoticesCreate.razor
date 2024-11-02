@@ -2,8 +2,4 @@
 
 <h3>Nueva Categoria Noticia</h3>
 
-<FormWithName @ref="categoryNoticesForm"
-              Label="Categoria Noticia:"
-              Model="categoryNotices"
-              OnValidSubmit="CreateAsync"
-              ReturnAction="Return" />
+<CategoryNoticesForm @ref="categoryNoticesForm" categoryNotices="categoryNotices" OnValidSubmit="CreateAsync" ReturnAction="Return" />
