@@ -30,9 +30,30 @@ namespace EasyPermissions.Backend.Data
             await CheckNoticesAsync();
             await CheckTypePermissionsAsync();
             await CheckRolesAsync();
-            await CheckUserAsync("1010", "Talento", "Humano", "talento.humano@yopmail.com", "322 311 4476", "Calle Luna Calle Sol 26", UserType.Admin);
-            await CheckUserAsync("1015", "Contabilidad", "Contabilidad", "contabilidad@yopmail.com", "322 311 4623", "Calle Luna Calle Sol 27", UserType.Leader);
-            await CheckUserAsync("1027", "Andres", "Morales", "andresmorales@yopmail.com", "322 311 4628", "Calle Luna Calle Sol 30", UserType.User);
+            await CheckUserAsync("1010", "Talento", "Humano", "talento.humano@yopmail.com", "322 311 4476", "Calle Luna Calle Sol 26", UserType.Admin); 
+
+            await CheckUserAsync("1012", "María", "García", "lider1@yopmail.com", "322 311 4602", "Calle Luna Calle Sol 2", UserType.Leader);
+            await CheckUserAsync("1013", "Juan", "Pérez", "lider2@yopmail.com", "322 311 4603", "Calle Luna Calle Sol 3", UserType.Leader);
+            await CheckUserAsync("1014", "Ana", "Martínez", "lider3@yopmail.com", "322 311 4604", "Calle Luna Calle Sol 4", UserType.Leader);
+            await CheckUserAsync("1015", "Luis", "Hernández", "lider4@yopmail.com", "322 311 4605", "Calle Luna Calle Sol 5", UserType.Leader);
+            await CheckUserAsync("1016", "Laura", "Jiménez", "lider5@yopmail.com", "322 311 4606", "Calle Luna Calle Sol 6", UserType.Leader);
+            await CheckUserAsync("1017", "Pedro", "Vásquez", "lider6@yopmail.com", "322 311 4607", "Calle Luna Calle Sol 7", UserType.Leader);
+            await CheckUserAsync("1018", "Sofía", "Castro", "lider7@yopmail.com", "322 311 4608", "Calle Luna Calle Sol 8", UserType.Leader);
+            await CheckUserAsync("1019", "Jorge", "Torres", "lider8@yopmail.com", "322 311 4609", "Calle Luna Calle Sol 9", UserType.Leader);
+            await CheckUserAsync("1020", "Isabel", "Mendoza", "lider9@yopmail.com", "322 311 4610", "Calle Luna Calle Sol 10", UserType.Leader);
+            await CheckUserAsync("1021", "Carlos", "López", "lider10@yopmail.com", "322 311 4601", "Calle Luna Calle Sol 1", UserType.Leader);
+
+            await CheckUserAsync("1022", "Patricia", "Salazar", "patricia@yopmail.com", "322 311 4612", "Calle Luna Calle Sol 12", UserType.User);
+            await CheckUserAsync("1023", "Andrés", "Acuña", "andres@yopmail.com", "322 311 4613", "Calle Luna Calle Sol 13", UserType.User);
+            await CheckUserAsync("1024", "Claudia", "Rojas", "claudia@yopmail.com", "322 311 4614", "Calle Luna Calle Sol 14", UserType.User);
+            await CheckUserAsync("1025", "Diego", "Vega", "diego@yopmail.com", "322 311 4615", "Calle Luna Calle Sol 15", UserType.User);
+            await CheckUserAsync("1026", "Verónica", "Cordero", "veronica@yopmail.com", "322 311 4616", "Calle Luna Calle Sol 16", UserType.User);
+            await CheckUserAsync("1027", "Natalia", "Oliva", "natalia@yopmail.com", "322 311 4617", "Calle Luna Calle Sol 17", UserType.User);
+            await CheckUserAsync("1028", "Felipe", "Sánchez", "felipe@yopmail.com", "322 311 4618", "Calle Luna Calle Sol 18", UserType.User);
+            await CheckUserAsync("1029", "Lucía", "López", "lucia@yopmail.com", "322 311 4619", "Calle Luna Calle Sol 19", UserType.User);
+            await CheckUserAsync("1030", "Fernando", "Bermúdez", "fernando@yopmail.com", "322 311 4620", "Calle Luna Calle Sol 20", UserType.User);
+            await CheckUserAsync("1031", "Andres", "Morales", "andresmorales@yopmail.com", "322 311 4628", "Calle Luna Calle Sol 30", UserType.User);
+            await CheckUserAsync("1032", "Ricardo", "Ramírez", "ricardo@yopmail.com", "322 311 4611", "Calle Luna Calle Sol 11", UserType.User);
         }
 
         private async Task CheckNoticesAsync()
@@ -122,6 +143,10 @@ namespace EasyPermissions.Backend.Data
                 var city = await _context.Cities.FirstOrDefaultAsync(x => x.Name == "Medellín");
                 city ??= await _context.Cities.FirstOrDefaultAsync();
 
+                var area = (userType == UserType.User)
+                ? await _context.Areas.FirstOrDefaultAsync(x => x.Name == "Ingeniería")
+                : null;
+
                 user = new User
                 {
                     FirstName = firstName,
@@ -133,6 +158,7 @@ namespace EasyPermissions.Backend.Data
                     Document = document,
                     City = city,
                     UserType = userType,
+                    Area = area
                 };
 
                 await _usersUnitOfWork.AddUserAsync(user, "123456");
@@ -140,7 +166,8 @@ namespace EasyPermissions.Backend.Data
 
                 var token = await _usersUnitOfWork.GenerateEmailConfirmationTokenAsync(user);
                 await _usersUnitOfWork.ConfirmEmailAsync(user, token);
-            }
+
+                }
 
             return user;
         }
