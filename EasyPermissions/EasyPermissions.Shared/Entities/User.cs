@@ -32,10 +32,6 @@ namespace EasyPermissions.Shared.Entities
         [Display(Name = "Tipo de usuario")]
         public UserType UserType { get; set; }
 
-        //[Display(Name = "Area")]
-        //[Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un {0}.")]
-        //public int AreaId { get; set; }
-
         public City? City { get; set; }
 
         [Display(Name = "Ciudad")]
@@ -49,6 +45,16 @@ namespace EasyPermissions.Shared.Entities
 
         [Display(Name = "Permisos")]
         public int PermissionNumber => Permissions == null || Permissions.Count == 0 ? 0 : Permissions.Count;
+
+        public Area? Area { get; set; }
+
+        [Display(Name = "Área")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una {0}.")]
+        public int? AreaId { get; set; }
+
+        public ICollection<Area>? Areas { get; set; }
+
+        public ICollection<Permission>? LeaderPermissions { get; set; }
 
     }
 }
