@@ -138,6 +138,18 @@ namespace EasyPermissions.Frontend.Pages.Areas
             await SelectedPageAsync(page);
         }
 
+        private string getStatus(int? value)
+        {
+
+            if(value == 0)
+            {
+                return "Inactivo";
+            }
+
+            return "Activo";
+
+        }
+
         private async Task DeleteAsycn(Area area)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
