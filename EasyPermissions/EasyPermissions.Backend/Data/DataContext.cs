@@ -38,10 +38,20 @@ namespace EasyPermissions.Backend.Data
             modelBuilder.Entity<Notice>().HasIndex(x => new { x.CategoryNoticeId, x.Name }).IsUnique();
             modelBuilder.Entity<ImageNotice>().HasIndex(x => new { x.NoticeId, x.Name }).IsUnique();
             modelBuilder.Entity<Permission>()
-                .HasOne(p => p.User)
-                .WithMany(u => u.Permissions)
-                .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                        .HasOne(p => p.User)
+                        .WithMany(u => u.Permissions)
+                        .HasForeignKey(p => p.UserId)
+                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Permission>()
+                        .HasOne(p => p.Leader)
+                        .WithMany(u => u.LeaderPermissions)
+                        .HasForeignKey(p => p.LeaderId)
+                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Area>()
+                        .HasOne(a => a.User)
+                        .WithMany(u => u.Areas)
+                        .HasForeignKey(a => a.UserId)
+                        .OnDelete(DeleteBehavior.Restrict);
             DisableCascadingDelete(modelBuilder);
         }
 
