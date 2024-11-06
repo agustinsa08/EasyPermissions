@@ -19,7 +19,12 @@ namespace EasyPermissions.Backend.Helpers
 
         public async Task<ActionResponse<bool>> ProcessPermissionAsync(string email, int categoryPermissionId, string description)
         {
+            Console.WriteLine($"email: {email}");
             var user = await _usersUnitOfWork.GetUserAsync(email);
+            Console.WriteLine($"Area: {user?.Area?.Name}");
+            Console.WriteLine($"Lider: {user?.Area?.User?.FullName}");
+
+            Console.WriteLine($"user: {user}");
             if (user == null)
             {
                 return new ActionResponse<bool>
