@@ -77,7 +77,10 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 .Include(u => u.City!)
                 .ThenInclude(c => c.State!)
                 .ThenInclude(s => s.Country)
+                .Include(a => a.Area!)
+                .ThenInclude(l => l.User)
                 .FirstOrDefaultAsync(x => x.Email == email);
+            Console.WriteLine($"111user: {user}");
             return user!;
         }
 
