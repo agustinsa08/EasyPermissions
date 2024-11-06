@@ -71,7 +71,8 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("TypeNoticeId")
@@ -105,7 +106,8 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("TypePermissionId")
@@ -210,7 +212,8 @@ namespace EasyPermissions.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -330,7 +333,8 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -357,7 +361,8 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");

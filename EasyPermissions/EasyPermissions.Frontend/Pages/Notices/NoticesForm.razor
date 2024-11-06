@@ -2,24 +2,27 @@
 
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
-    <div class="mb-3">
-        <label>Noticia:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@notices.Name" />
-            <ValidationMessage For="@(() => notices.Name)" />
+    <div class="row" style="width: 70vw;">
+
+        <div class="mb-3">
+            <label>Título:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@notices.Name" />
+                <ValidationMessage For="@(() => notices.Name)" />
+            </div>
         </div>
-    </div>
-    <div class="mb-3">
-        <label>Descripción:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@notices.Description" />
-            <ValidationMessage For="@(() => notices.Description)" />
+        <div class="mb-3">
+            <label>Descripción:</label>
+            <div>
+                <InputTextArea class="form-control" @bind-Value="@notices.Description" Rows="5" />
+                <ValidationMessage For="@(() => notices.Description)" />
+            </div>
         </div>
-    </div>
-    <div class="mb-3">
-        <label>Estado:</label>
-        <div>
-            <SwitchInput @bind-Value="@notices.Status" />
+        <div class="mb-3">
+            <label>Estado:</label>
+            <div>
+                <SwitchInput @bind-Value="@notices.Status" />
+            </div>
         </div>
     </div>
     <button class="btn btn-primary" type="submit">Guardar Cambios</button>

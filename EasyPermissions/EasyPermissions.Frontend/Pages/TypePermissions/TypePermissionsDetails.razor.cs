@@ -37,18 +37,15 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
 
             if (isEdit)
             {
-                modalReference = Modal.Show<CategoryPermissionsEdit>(string.Empty, new ModalParameters().Add("CategoryPermissionsId", id));
+                modalReference = Modal.Show<CategoryPermissionsEdit>(string.Empty, new ModalParameters().Add("CategoryNoticesId", id).Add("TypePermissionsId", TypePermissionsId));
             }
             else
             {
-                modalReference = Modal.Show<CategoryPermissionsCreate>();
+                modalReference = Modal.Show<CategoryPermissionsCreate>(string.Empty, new ModalParameters().Add("TypePermissionsId", TypePermissionsId));
             }
 
             var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
-                await LoadAsync();
-            }
+            await LoadAsync();
         }
         private async Task SelectedPageAsync(int page)
         {
@@ -57,7 +54,6 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
                 page = Convert.ToInt32(Page);
             }
 
-            currentPage = page;
             await LoadAsync(page);
         }
 
@@ -77,6 +73,7 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
         }
         private async Task LoadAsync(int page = 1)
         {
+            currentPage = page;
             var ok = await LoadCountryAsync();
             if (ok)
             {
@@ -198,6 +195,18 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
                 Timer = 3000
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+        }
+
+        private string getStatus(int? value)
+        {
+
+            if (value == 0)
+            {
+                return "Inactivo";
+            }
+
+            return "Activo";
+
         }
     }
 }
