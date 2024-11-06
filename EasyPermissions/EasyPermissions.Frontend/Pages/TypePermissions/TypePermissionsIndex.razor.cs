@@ -45,10 +45,7 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
             }
 
             var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
                 await LoadAsync();
-            }
         }
         private async Task SelectedRecordsNumberAsync(int recordsnumber)
         {
@@ -67,12 +64,12 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
 
         private async Task SelectedPageAsync(int page)
         {
-            currentPage = page;
             await LoadAsync(page);
         }
 
         private async Task LoadAsync(int page = 1)
         {
+            currentPage = page;
             if (!string.IsNullOrWhiteSpace(Page))
             {
                 page = Convert.ToInt32(Page);
@@ -176,6 +173,18 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
                 Timer = 3000
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+        }
+
+        private string getStatus(int? value)
+        {
+
+            if (value == 0)
+            {
+                return "Inactivo";
+            }
+
+            return "Activo";
+
         }
     }
 }

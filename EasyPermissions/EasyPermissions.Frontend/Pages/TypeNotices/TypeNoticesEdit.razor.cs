@@ -14,7 +14,7 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
     public partial class TypeNoticesEdit
     {
         private TypeNotice? typeNotices;
-        private FormWithName<TypeNotice>? typeNoticesForm;
+        private TypeNoticesForm? typeNoticesForm;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;

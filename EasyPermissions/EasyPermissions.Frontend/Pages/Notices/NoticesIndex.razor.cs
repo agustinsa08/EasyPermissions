@@ -34,13 +34,18 @@ namespace EasyPermissions.Frontend.Pages.Notices
         {
             IModalReference modalReference;
 
+            var options = new ModalOptions
+            {
+                Size = ModalSize.ExtraLarge  // Puedes usar Small, Medium, Large
+            };
+
             if (isEdit)
             {
-                modalReference = Modal.Show<NoticesEdit>(string.Empty, new ModalParameters().Add("Id", id));
+                modalReference = Modal.Show<NoticesEdit>(string.Empty, new ModalParameters().Add("Id", id), options);
             }
             else
             {
-                modalReference = Modal.Show<NoticesCreate>();
+                modalReference = Modal.Show<NoticesCreate>(options);
             }
 
             var result = await modalReference.Result;
