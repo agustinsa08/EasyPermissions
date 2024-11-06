@@ -21,8 +21,10 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Tipo de Noticia</th>
-                            <th style="width:210px">Categoria Noticia</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Categorias</th>
+                            <th>Estado</th>
                             <th style="width:210px"></th>
                         </tr>
                     </thead>
@@ -31,7 +33,9 @@
                         {
                             <tr>
                                 <td><a href="/typeNotices/details/@typeNotices.Id"> @typeNotices.Name</a></td>
+                                <td>@typeNotices.Description</td>
                                 <td>@typeNotices.CategoryNoticesNumber</td>
+                                <td>@(getStatus(typeNotices.Status))</td>
                                 <td>
                                     <a @onclick=@(() => ShowModalAsync(typeNotices.Id, true)) class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
                                     <button @onclick=@(() => DeleteAsycn(typeNotices)) class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>

@@ -14,7 +14,7 @@ namespace EasyPermissions.Frontend.Pages.CategoryPermissions
     public partial class CategoryPermissionsEdit
     {
         private CategoryPermission? categoryPermissions;
-        private FormWithName<CategoryPermission>? categoryPermissionsForm;
+        private CategoryPermissionsForm? categoryPermissionsForm;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
