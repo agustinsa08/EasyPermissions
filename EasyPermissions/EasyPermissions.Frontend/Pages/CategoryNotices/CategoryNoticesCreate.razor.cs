@@ -9,7 +9,7 @@ namespace EasyPermissions.Frontend.Pages.CategoryNotices
     public partial class CategoryNoticesCreate
     {
         private CategoryNotice categoryNotices = new();
-        private FormWithName<CategoryNotice>? categoryNoticesForm;
+        private CategoryNoticesForm? categoryNoticesForm;
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
