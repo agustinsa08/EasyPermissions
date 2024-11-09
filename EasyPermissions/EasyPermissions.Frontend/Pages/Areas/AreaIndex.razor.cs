@@ -118,7 +118,7 @@ namespace EasyPermissions.Frontend.Pages.Areas
             var url = $"api/Areas/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
-                url += $"?filter={Filter}";
+                url += $"&filter={Filter}";
             }
 
             var responseHttp = await Repository.GetAsync<int>(url);
