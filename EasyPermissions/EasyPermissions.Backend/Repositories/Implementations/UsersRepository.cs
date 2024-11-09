@@ -77,10 +77,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 .Include(u => u.City!)
                 .ThenInclude(c => c.State!)
                 .ThenInclude(s => s.Country)
-                .Include(a => a.Area!)
-                .ThenInclude(l => l.User)
                 .FirstOrDefaultAsync(x => x.Email == email);
-            Console.WriteLine($"111user: {user}");
             return user!;
         }
 
@@ -143,14 +140,14 @@ namespace EasyPermissions.Backend.Repositories.Implementations
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
-                queryable = queryable.Where(x => x.FullName.ToLower().Contains(pagination.Filter.ToLower()));
+                queryable = queryable.Where(x => x.FirstName.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
             return new ActionResponse<IEnumerable<User>>
             {
                 WasSuccess = true,
                 Result = await queryable
-                    .OrderBy(x => x.FullName)
+                    .OrderBy(x => x.FirstName)
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -162,7 +159,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
-                queryable = queryable.Where(x => x.FullName.ToLower().Contains(pagination.Filter.ToLower()));
+                queryable = queryable.Where(x => x.FirstName.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
             double count = await queryable.CountAsync();
@@ -173,5 +170,28 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 Result = totalPages
             };
         }
+
+        public async Task<List<User>> GetAllLeaderAsync()
+        {
+            var users = await _context.Users
+                .Where(x => x.UserType == Shared.Enums.UserType.Leader)
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+            return users;
+        }
+
+        public async Task<User> GetDetailAsync(Guid userId)
+        {
+
+            var user = await _context.Users
+                .Include(u => u.City!)
+                .ThenInclude(c => c.State!)
+                .ThenInclude(s => s.Country)
+                .Include(a => a.Area!)
+                .ThenInclude(l => l.User)
+                .FirstOrDefaultAsync(x => x.Id == userId.ToString());
+            return user!;
+        }
+
     }
 }
