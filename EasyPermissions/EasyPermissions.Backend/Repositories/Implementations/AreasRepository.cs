@@ -53,5 +53,14 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 Result = totalPages
             };
         }
+
+        public async Task<List<Area>> GetAllWhithoutLeaderAsync()
+        {
+            var areas = await _context.Areas
+                .Where(x => x.UserId == null)
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+            return areas;
+        }
     }
 }

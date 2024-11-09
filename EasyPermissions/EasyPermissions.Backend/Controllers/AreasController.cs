@@ -1,4 +1,5 @@
-﻿using EasyPermissions.Backend.UnitsOfWork.Interfaces;
+﻿using EasyPermissions.Backend.UnitsOfWork.Implementations;
+using EasyPermissions.Backend.UnitsOfWork.Interfaces;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,6 +38,17 @@ namespace EasyPermissions.Backend.Controllers
             if (action.WasSuccess)
             {
                 return Ok(action.Result);
+            }
+            return BadRequest();
+        }
+
+        [HttpGet("withoutLeader")]
+        public async Task<IActionResult> GetAllWhithoutLeaderAsync()
+        {
+            var response = await _areasUnitOfWork.GetAllWhithoutLeaderAsync();
+            if (response != null)
+            {
+                return Ok(response);
             }
             return BadRequest();
         }

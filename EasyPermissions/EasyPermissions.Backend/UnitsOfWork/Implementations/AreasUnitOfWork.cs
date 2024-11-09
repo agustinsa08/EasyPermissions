@@ -1,4 +1,5 @@
-﻿using EasyPermissions.Backend.Repositories.Interfaces;
+﻿using EasyPermissions.Backend.Repositories.Implementations;
+using EasyPermissions.Backend.Repositories.Interfaces;
 using EasyPermissions.Backend.UnitsOfWork.Interfaces;
 using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
@@ -18,5 +19,7 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
         public override async Task<ActionResponse<IEnumerable<Area>>> GetAsync(PaginationDTO pagination) => await _areasRepository.GetAsync(pagination);
 
         public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _areasRepository.GetTotalPagesAsync(pagination);
+
+        public async Task<List<Area>> GetAllWhithoutLeaderAsync() => await _areasRepository.GetAllWhithoutLeaderAsync();
     }
 }

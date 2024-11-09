@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EasyPermissions.Shared.Entities
 {
-    public class Permission
+    public class Permission  
     {
         public int Id { get; set; }
 
