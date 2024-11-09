@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Pages\Auth\EditRegister.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Update="Pages\Users\UserIndex.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>

@@ -120,7 +120,7 @@ namespace EasyPermissions.Frontend.Pages.Notices
             var url = $"api/Notices/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
-                url += $"?filter={Filter}";
+                url += $"&filter={Filter}";
             }
 
             var responseHttp = await Repository.GetAsync<int>(url);

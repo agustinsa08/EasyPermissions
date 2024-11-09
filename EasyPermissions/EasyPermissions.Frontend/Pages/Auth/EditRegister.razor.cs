@@ -6,12 +6,15 @@ using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
 using EasyPermissions.Shared.Enums;
 using System.ComponentModel;
+using System.Net;
 
 namespace EasyPermissions.Frontend.Pages.Auth
 {
-    public partial class Register
+    public partial class EditRegister
     {
-        private UserDTO userDTO = new();
+        [Parameter] public string userId { get; set; }
+
+        private User? user;
         private List<Country>? countries;
         private List<State>? states;
         private List<City>? cities;
@@ -28,12 +31,43 @@ namespace EasyPermissions.Frontend.Pages.Auth
 
         protected override async Task OnInitializedAsync()
         {
+            await LoadUserAsyc(userId);
             await LoadCountriesAsync();
+            await LoadStatesAsyn(user!.City!.State!.Country!.Id);
+            await LoadCitiesAsyn(user!.City!.State!.Id);
+
+            if (!string.IsNullOrEmpty(user!.Photo))
+            {
+                imageUrl = user.Photo;
+                user.Photo = null;
+            }
+
+            if (user is null) return;
+
+        }
+
+       
+
+        private async Task LoadUserAsyc(string id)
+        {
+            var responseHttp = await Repository.GetAsync<User>($"/api/Users/getDetail/{id}");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/");
+                    return;
+                }
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                return;
+            }
+            user = responseHttp.Response;
         }
 
         private void ImageSelected(string imagenBase64)
         {
-            userDTO.Photo = imagenBase64;
+            user.Photo = imagenBase64;
             imageUrl = null;
         }
 
@@ -55,7 +89,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
             var selectedCountry = Convert.ToInt32(e.Value!);
             states = null;
             cities = null;
-            userDTO.CityId = 0;
+            user.CityId = 0;
             await LoadStatesAsyn(selectedCountry);
         }
 
@@ -76,7 +110,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
         {
             var selectedState = Convert.ToInt32(e.Value!);
             cities = null;
-            userDTO.CityId = 0;
+            user.CityId = 0;
             await LoadCitiesAsyn(selectedState);
         }
 
@@ -106,13 +140,9 @@ namespace EasyPermissions.Frontend.Pages.Auth
         }
 
 
-        private async Task CreteUserAsync()
+        private async Task SaveUserAsync()
         {
-            userDTO.UserName = userDTO.Email;
-            loading = true;
-            var responseHttp = await Repository.PostAsync<UserDTO>("/api/accounts/CreateUser", userDTO);
-            loading = false;
-
+            var responseHttp = await Repository.PutAsync<User, TokenDTO>($"/api/Users/{userId}", user!);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -120,8 +150,8 @@ namespace EasyPermissions.Frontend.Pages.Auth
                 return;
             }
 
-            await SweetAlertService.FireAsync("Confirmación", "Su cuenta ha sido creada con éxito. Se te ha enviado un correo electrónico con las instrucciones para activar tu usuario.", SweetAlertIcon.Info);
-            NavigationManager.NavigateTo($"/users");
+            await LoginService.LoginAsync(responseHttp.Response!.Token);
+            ReturnIndex();
         }
 
         private void ReturnIndex()
@@ -139,7 +169,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
 
         private bool disableAreaField()
         {
-            return userDTO.UserType <= 0;
+            return user.UserType <= 0;
         }
 
 
@@ -148,7 +178,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
 
             var index = Convert.ToInt32(e.Value!);
 
-            userDTO.UserType = (UserType)index;
+            user.UserType = (UserType)index;
 
             if (index == 1)
             {
@@ -164,12 +194,12 @@ namespace EasyPermissions.Frontend.Pages.Auth
         {
             if (e.Value is null)
             {
-                userDTO.AreaId = 0;
+                user.AreaId = 0;
                 return;
             };
 
             var areaId = Convert.ToInt32(e.Value!);
-            userDTO.AreaId = areaId;
+            user.AreaId = areaId;
 
         }
 
