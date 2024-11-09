@@ -86,10 +86,10 @@ namespace EasyPermissions.Backend.Controllers
             return BadRequest();
         }
 
-        [HttpGet("getDetail/{userId:guid}")]
-        public async Task<IActionResult> GetDetailAsync(Guid userId)
+        [HttpGet("getDetail/{email}")]
+        public async Task<IActionResult> GetDetailAsync(string email)
         {
-            var response = await _usersUnitOfWork.GetDetailAsync(userId);
+            var response = await _usersUnitOfWork.GetDetailAsync(email);
             if (response != null)
             {
                 return Ok(response);
