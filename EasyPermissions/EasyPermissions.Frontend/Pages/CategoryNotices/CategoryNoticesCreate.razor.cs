@@ -19,6 +19,8 @@ namespace EasyPermissions.Frontend.Pages.CategoryNotices
         private async Task CreateAsync()
         {
             categoryNotices.TypeNoticeId = TypeNoticesId;
+
+            Console.WriteLine(TypeNoticesId);
             var responseHttp = await Repository.PostAsync("/api/CategoryNotices", categoryNotices);
             if (responseHttp.Error)
             {
