@@ -148,6 +148,8 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 WasSuccess = true,
                 Result = await queryable
                     .OrderBy(x => x.FirstName)
+                    .Include(a => a.Area!)
+                    .ThenInclude(l => l.User)
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -180,7 +182,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             return users;
         }
 
-        public async Task<User> GetDetailAsync(Guid userId)
+        public async Task<User> GetDetailAsync(string email)
         {
 
             var user = await _context.Users
@@ -189,8 +191,17 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 .ThenInclude(s => s.Country)
                 .Include(a => a.Area!)
                 .ThenInclude(l => l.User)
-                .FirstOrDefaultAsync(x => x.Id == userId.ToString());
+                .FirstOrDefaultAsync(x => x.Email == email);
             return user!;
+        }
+
+        public async Task<List<User>> GetAllAdminAsync()
+        {
+            var users = await _context.Users
+                .Where(x => x.UserType == Shared.Enums.UserType.Admin)
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+            return users;
         }
 
     }

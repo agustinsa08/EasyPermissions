@@ -53,7 +53,9 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
 
         public async Task<List<User>> GetAllLeaderAsync() => await _usersRepository.GetAllLeaderAsync();
 
-        public async Task<User> GetDetailAsync(Guid userId) => await _usersRepository.GetDetailAsync(userId);
+        public async Task<List<User>> GetAllAdminAsync() => await _usersRepository.GetAllAdminAsync();
+
+        public async Task<User> GetDetailAsync(string email) => await _usersRepository.GetDetailAsync(email);
 
         public override async Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination) => await _usersRepository.GetAsync(pagination);
 
