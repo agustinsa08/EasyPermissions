@@ -74,5 +74,27 @@ namespace EasyPermissions.Backend.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("allLeaders")]
+        public async Task<IActionResult> GetAllLeaderAsync()
+        {
+            var response = await _usersUnitOfWork.GetAllLeaderAsync();
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return BadRequest();
+        }
+
+        [HttpGet("getDetail/{userId:guid}")]
+        public async Task<IActionResult> GetDetailAsync(Guid userId)
+        {
+            var response = await _usersUnitOfWork.GetDetailAsync(userId);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return BadRequest();
+        }
     }
 }
