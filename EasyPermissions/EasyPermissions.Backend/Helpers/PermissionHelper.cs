@@ -72,7 +72,7 @@ namespace EasyPermissions.Backend.Helpers
         
                 <p>Hola <strong>{user?.FullName}</strong>,</p>
         
-                <p>Nos complace informarle que se ha registrado un nuevo permiso en el sistema con el estado <strong>Pendiente</strong>.</p>
+                <p>Nos complace informarle que se ha registrado un nuevo permiso en Permisos Fácil con estado <strong>Pendiente</strong>.</p>
         
                 <p>Recibirá una notificación cuando el estado de su permiso cambie. Mientras tanto, puede consultar el estado actual en su cuenta en Permisos Fácil.</p>
 
@@ -80,7 +80,6 @@ namespace EasyPermissions.Backend.Helpers
 
                 <p style='font-size: 12px; color: #666;'>Este mensaje fue enviado automáticamente por el sistema de Permisos Fácil. Si no realizó esta solicitud, puede ignorar este correo.</p>
             </div>");
-
 
             if (user?.Area?.User != null)
             {
@@ -92,12 +91,13 @@ namespace EasyPermissions.Backend.Helpers
         
                     <p>Hola <strong>{user?.Area?.User?.FullName}</strong>,</p>
         
-                    <p>Se ha registrado un nuevo permiso en el sistema con el estado <strong>Pendiente</strong>. A continuación, se muestran los detalles del registro:</p>
+                    <p>Se ha registrado un nuevo permiso en Permisos Fácil con estado <strong>Pendiente</strong>. A continuación, se muestran los detalles del registro:</p>
 
                     <div style='background-color: #f9f9f9; padding: 15px; border: 1px solid #ddd; border-radius: 5px; margin: 15px 0;'>
                         <p><strong>Colaborador:</strong> {user?.FullName}</p>
                         <p><strong>Fecha de Registro:</strong> {DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(-5)).ToString("yyyy-MM-dd HH:mm")} (UTC-5)</p>
                         <p><strong>Estado:</strong> Pendiente</p>
+                        <p><strong>Días hábiles de respuesta:</strong> {categoryPerm?.Result?.LimitDays}</p>
                     </div>
         
                     <p>Recibirá una notificación adicional cuando el estado del permiso cambie.</p>
@@ -123,7 +123,7 @@ namespace EasyPermissions.Backend.Helpers
         
                     <p>Hola <strong>{ele?.FullName}</strong>,</p>
         
-                    <p>Se ha registrado un nuevo permiso en el sistema con el estado <strong>Pendiente</strong>. A continuación, se muestran los detalles del registro:</p>
+                    <p>Se ha registrado un nuevo permiso en Permisos Fácil con estado <strong>Pendiente</strong>. A continuación, se muestran los detalles del registro:</p>
 
                     <div style='background-color: #f9f9f9; padding: 15px; border: 1px solid #ddd; border-radius: 5px; margin: 15px 0;'>
                         <p><strong>Área:</strong> {user?.Area?.Name}</p>
@@ -131,6 +131,7 @@ namespace EasyPermissions.Backend.Helpers
                         <p><strong>Colaborador:</strong> {user?.FullName}</p>
                         <p><strong>Fecha de Registro:</strong> {DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(-5)).ToString("yyyy-MM-dd HH:mm")} (UTC-5)</p>
                         <p><strong>Estado:</strong> Pendiente</p>
+                        <p><strong>Días hábiles de respuesta:</strong> {categoryPerm?.Result?.LimitDays}</p>
                     </div>
         
                     <p>Recibirá una notificación adicional cuando el estado del permiso cambie.</p>

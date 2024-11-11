@@ -25,8 +25,8 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
 
         public async Task<ActionResponse<Permission>> UpdateFullAsync(string email, PermissionDTO permissionDTO) => await _permissionsRepository.UpdateFullAsync(email, permissionDTO);
 
-        public async Task<ActionResponse<List<Permission>>> GetAllLeaderAsync(Guid userId) => await _permissionsRepository.GetAllLeaderAsync(userId);
+        public async Task<ActionResponse<IEnumerable<Permission>>> GetAllLeaderAsync(Guid userId, PaginationDTO pagination) => await _permissionsRepository.GetAllLeaderAsync(userId, pagination);
 
-        public async Task<ActionResponse<List<Permission>>> GetAllUserAsync(Guid userId) => await _permissionsRepository.GetAllUserAsync(userId);
+        public async Task<ActionResponse<IEnumerable<Permission>>> GetAllUserAsync(Guid userId, PaginationDTO pagination) => await _permissionsRepository.GetAllUserAsync(userId, pagination);
     }
 }
