@@ -18,8 +18,8 @@ namespace EasyPermissions.Backend.UnitsOfWork.Interfaces
 
         Task<ActionResponse<Permission>> UpdateFullAsync(string email, PermissionDTO permissionDTO);
 
-        Task<ActionResponse<List<Permission>>> GetAllLeaderAsync(Guid userId);
+        Task<ActionResponse<IEnumerable<Permission>>> GetAllLeaderAsync(Guid userId, PaginationDTO pagination);
 
-        Task<ActionResponse<List<Permission>>> GetAllUserAsync(Guid userId);
+        Task<ActionResponse<IEnumerable<Permission>>> GetAllUserAsync(Guid userId, PaginationDTO pagination);
     }
 }
