@@ -1,20 +1,20 @@
-﻿@page "/Register"
+﻿@page "/Register/{userId}"
 
     <i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>ReturnIndex()) style="margin: 0px !important; cursor:pointer;"></i>
 
-@if (loading)
+@if (user is null)
 {
     <Loading />
 }
 else
 {
-    <EditForm Model="userDTO" OnValidSubmit="CreteUserAsync">
+    <EditForm Model="user" OnValidSubmit="SaveUserAsync">
         <DataAnnotationsValidator />
 
         <div class="card">
             <div class="card-header">
                 <span>
-                    <i class="bi bi-key" /> Registrar Nuevo  Usuario
+                    <i class="bi bi-key" /> Editar  Usuario
                     <button class="btn btn-sm btn-primary float-end" type="submit">Registrar</button>
                 </span>
             </div>
@@ -24,43 +24,43 @@ else
                         <div class="mb-3">
                             <label>Nombres:</label>
                             <div>
-                                <InputText class="form-control" @bind-Value="@userDTO.FirstName" />
-                                <ValidationMessage For="@(() => userDTO.FirstName)" />
+                                <InputText class="form-control" @bind-Value="@user.FirstName" />
+                                <ValidationMessage For="@(() => user.FirstName)" />
                             </div>
                         </div>
                         <div class="mb-3">
                             <label>Apellidos:</label>
                             <div>
-                                <InputText class="form-control" @bind-Value="@userDTO.LastName" />
-                                <ValidationMessage For="@(() => userDTO.LastName)" />
+                                <InputText class="form-control" @bind-Value="@user.LastName" />
+                                <ValidationMessage For="@(() => user.LastName)" />
                             </div>
                         </div>
                         <div class="mb-3">
                             <label>Documento:</label>
                             <div>
-                                <InputText class="form-control" @bind-Value="@userDTO.Document" />
-                                <ValidationMessage For="@(() => userDTO.Document)" />
+                                <InputText class="form-control" @bind-Value="@user.Document" />
+                                <ValidationMessage For="@(() => user.Document)" />
                             </div>
                         </div>
                         <div class="mb-3">
                             <label>Teléfono:</label>
                             <div>
-                                <InputText class="form-control" @bind-Value="@userDTO.PhoneNumber" />
-                                <ValidationMessage For="@(() => userDTO.PhoneNumber)" />
+                                <InputText class="form-control" @bind-Value="@user.PhoneNumber" />
+                                <ValidationMessage For="@(() => user.PhoneNumber)" />
                             </div>
                         </div>
                         <div class="mb-3">
                             <label>Dirección:</label>
                             <div>
-                                <InputText class="form-control" @bind-Value="@userDTO.Address" />
-                                <ValidationMessage For="@(() => userDTO.Address)" />
+                                <InputText class="form-control" @bind-Value="@user.Address" />
+                                <ValidationMessage For="@(() => user.Address)" />
                             </div>
                         </div>
                         <div class="mb-3">
                             <label>Email:</label>
                             <div>
-                                <InputText class="form-control" @bind-Value="@userDTO.Email" />
-                                <ValidationMessage For="@(() => userDTO.Email)" />
+                                <InputText class="form-control" @bind-Value="@user.Email" />
+                                <ValidationMessage For="@(() => user.Email)" />
                             </div>
                         </div>
                         <div class="mb-3">
@@ -76,7 +76,7 @@ else
                                         }
                                      }
                                 </select>
-                                    <ValidationMessage For="@(() => userDTO.UserType)" />
+                                <ValidationMessage For="@(() => user.UserType)" />
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@ else
                                         }
                                     }
                                 </select>
-                                    <ValidationMessage For="@(() => userDTO.AreaId)" />
+                                <ValidationMessage For="@(() => user.AreaId)" />
                             </div>
                         </div>
                         <div class="mb-3">
@@ -115,13 +115,13 @@ else
                         <div class="mb-3">
                             <label>Estado/Departamento:</label>
                             <div>
-                                <select class="form-select" @onchange="StateChangedAsync">
+                                <select class="form-select"  value="user.City.State.Id" @onchange="StateChangedAsync">
                                     <option value="0">-- Seleccione un estado/departamento --</option>
                                     @if (states is not null)
                                     {
                                         @foreach (var state in states)
                                         {
-                                            <option value="@state.Id">@state.Name</option>
+                                            <option selected="@(user.City.State.Id == state.Id)" value="@state.Id">@state.Name</option>
                                         }
                                     }
                                 </select>
@@ -130,7 +130,7 @@ else
                         <div class="mb-3">
                             <label>Ciudad:</label>
                             <div>
-                                <select class="form-select" @bind="userDTO.CityId">
+                                <select class="form-select" @bind="user.CityId">
                                     <option value="0">-- Seleccione una ciudad --</option>
                                     @if (cities is not null)
                                     {
@@ -140,37 +140,7 @@ else
                                         }
                                     }
                                 </select>
-                                <ValidationMessage For="@(() => userDTO.CityId)" />
-                            </div>
-                        </div>
-                        <!-- <div class="mb-3">
-                            <label>Area:</label>
-                             <div>
-                                <select class="form-select" @bind="userDTO.AreaId">
-                                    <option value="0">-- Seleccione una area --</option>
-                                    @if (cities is not null)
-                                    {
-                                        @foreach (var area in areas)
-                                        {
-                                            <option value="@area.Id">@area.Name</option>
-                                        }
-                                    }
-                                </select>
-                                <ValidationMessage For="@(() => userDTO.AreaId)" />
-                            </div>
-                        </div>-->
-                        <div class="mb-3">
-                            <label>Contraseña:</label>
-                            <div>
-                                <InputText type="password" class="form-control" @bind-Value="@userDTO.Password" />
-                                <ValidationMessage For="@(() => userDTO.Password)" />
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label>Confirmación de contraseña:</label>
-                            <div>
-                                <InputText type="password" class="form-control" @bind-Value="@userDTO.PasswordConfirm" />
-                                <ValidationMessage For="@(() => userDTO.PasswordConfirm)" />
+                                <ValidationMessage For="@(() => user.CityId)" />
                             </div>
                         </div>
                         <div class="mb-3">
