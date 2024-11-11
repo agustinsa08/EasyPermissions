@@ -195,5 +195,55 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 Result = permission
             };
         }
+
+        public async Task<ActionResponse<List<Permission>>> GetAllLeaderAsync(Guid userId)
+        {
+            var user = await _usersRepository.GetUserAsync(userId);
+            if (user == null)
+            {
+                return new ActionResponse<List<Permission>>
+                {
+                    WasSuccess = false,
+                    Message = "Usuario no existe"
+                };
+            }
+
+            var isLeader = await _usersRepository.IsUserInRoleAsync(user, UserType.Leader.ToString());
+            if (!isLeader)
+            {
+                return new ActionResponse<List<Permission>>
+                {
+                    WasSuccess = false,
+                    Message = "El usuario no es líder"
+                };
+            }
+
+            var permissions = await _context.Permissions
+                .Where(x => x.UserId == userId.ToString())
+                .OrderByDescending(x => x.Date)
+                .ToListAsync();
+
+            return new ActionResponse<List<Permission>>
+            {
+                WasSuccess = true,
+                Message = "Permisos obtenidos con éxito",
+                Result = permissions
+            };
+        }
+
+        public async Task<ActionResponse<List<Permission>>> GetAllUserAsync(Guid userId)
+        {
+            var permissions = await _context.Permissions
+                .Where(x => x.UserId == userId.ToString())
+                .OrderByDescending(x => x.Date)
+                .ToListAsync();
+
+            return new ActionResponse<List<Permission>>
+            {
+                WasSuccess = true,
+                Message = "Permisos obtenidos con éxito",
+                Result = permissions
+            };
+        }
     }
 }

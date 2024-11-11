@@ -56,6 +56,9 @@ namespace EasyPermissions.Backend.Repositories.Implementations
         {
             var notice = await _context.Notices
                 .Include(x => x.ImageNotices)
+                .Include(c => c.ImageNotices)
+                .Include(cn => cn.CategoryNotice)
+                .ThenInclude(tn => tn!.TypeNotice)
                 .FirstOrDefaultAsync(x => x.Id == imageDTO.NoticeId);
             if (notice == null)
             {
@@ -92,6 +95,9 @@ namespace EasyPermissions.Backend.Repositories.Implementations
         {
             var notices = await _context.Notices
                 .OrderBy(x => x.Name)
+                .Include(c => c.ImageNotices)
+                .Include(cn => cn.CategoryNotice)
+                .ThenInclude(tn => tn!.TypeNotice)
                 .ToListAsync();
             return new ActionResponse<IEnumerable<Notice>>
             {
@@ -104,6 +110,8 @@ namespace EasyPermissions.Backend.Repositories.Implementations
         {
             var queryable = _context.Notices
                 .Include(c => c.ImageNotices)
+                .Include(cn => cn.CategoryNotice)
+                .ThenInclude(tn => tn!.TypeNotice)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -116,6 +124,8 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 WasSuccess = true,
                 Result = await queryable
                     .OrderBy(x => x.Name)
+                    .Include(cn => cn.CategoryNotice)
+                    .ThenInclude(tn => tn!.TypeNotice)
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -143,6 +153,8 @@ namespace EasyPermissions.Backend.Repositories.Implementations
         {
             var notice = await _context.Notices
                  .Include(c => c.ImageNotices!)
+                 .Include(cn => cn.CategoryNotice)
+                 .ThenInclude(tn => tn!.TypeNotice)
                  .FirstOrDefaultAsync(c => c.Id == id);
 
             if (notice == null)
