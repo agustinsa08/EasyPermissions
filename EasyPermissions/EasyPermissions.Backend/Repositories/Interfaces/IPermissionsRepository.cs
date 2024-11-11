@@ -15,5 +15,9 @@ namespace EasyPermissions.Backend.Repositories.Interfaces
         Task<ActionResponse<int>> GetTotalPagesAsync(string email, PaginationDTO pagination);
 
         Task<ActionResponse<Permission>> UpdateFullAsync(string email, PermissionDTO permissionDTO);
+
+        Task<ActionResponse<List<Permission>>> GetAllLeaderAsync(Guid userId);
+
+        Task<ActionResponse<List<Permission>>> GetAllUserAsync(Guid userId);
     }
 }

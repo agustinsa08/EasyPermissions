@@ -59,5 +59,7 @@ namespace EasyPermissions.Backend.UnitsOfWork.Implementations
 
         public override async Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination) => await _usersRepository.GetAsync(pagination);
 
+        public async Task<List<User>> GetUserByTypeAsync(int? userType) => await _usersRepository.GetUserByTypeAsync(userType);
+
     }
 }

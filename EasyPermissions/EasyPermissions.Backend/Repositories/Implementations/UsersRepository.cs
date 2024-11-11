@@ -203,6 +203,38 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 .ToListAsync();
             return users;
         }
-
+       
+        public async Task<List<User>> GetUserByTypeAsync(int? userType)
+        {
+            Shared.Enums.UserType? userTypeFind = null;
+            if (userType.HasValue)
+            {
+                if (userType == 1)
+                {
+                    userTypeFind = Shared.Enums.UserType.Leader;
+                }
+                if (userType == 2)
+                {
+                    userTypeFind = Shared.Enums.UserType.User;
+                }
+                var users = await _context.Users
+                    .Where(x => x.UserType == userTypeFind)
+                    .OrderBy(x => x.Id)
+                    .ToListAsync();
+                return users;
+            }else
+            {
+                var userTypesToFind = new List<Shared.Enums.UserType>
+                                            {
+                                                Shared.Enums.UserType.User,
+                                                Shared.Enums.UserType.Leader
+                                            };
+                var users = await _context.Users
+                    .Where(x => userTypesToFind.Contains(x.UserType))
+                    .OrderBy(x => x.Id)
+                    .ToListAsync();
+                return users;
+            }
+        }
     }
 }

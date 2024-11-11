@@ -48,5 +48,7 @@ namespace EasyPermissions.Backend.UnitsOfWork.Interfaces
         Task<User> GetDetailAsync(string email);
 
         Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
+
+        Task<List<User>> GetUserByTypeAsync(int? userType);
     }
 }

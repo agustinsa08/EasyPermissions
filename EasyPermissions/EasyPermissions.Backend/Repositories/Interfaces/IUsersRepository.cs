@@ -49,5 +49,7 @@ namespace EasyPermissions.Backend.Repositories.Interfaces
 
         Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
 
+        Task<List<User>> GetUserByTypeAsync(int? userType);
+
     }
 }
