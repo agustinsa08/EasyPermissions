@@ -96,5 +96,16 @@ namespace EasyPermissions.Backend.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("getUser/list/{userType?}")]
+        public async Task<IActionResult> GetUserByTypeAsync(int? userType)
+        {
+            var response = await _usersUnitOfWork.GetUserByTypeAsync(userType);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return BadRequest();
+        }
     }
 }

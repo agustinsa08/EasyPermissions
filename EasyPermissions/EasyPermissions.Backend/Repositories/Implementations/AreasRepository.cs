@@ -31,6 +31,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 WasSuccess = true,
                 Result = await queryable
                     .OrderBy(x => x.Name)
+                    .Include(a => a.User!)
                     .Paginate(pagination)
                     .ToListAsync()
             };
