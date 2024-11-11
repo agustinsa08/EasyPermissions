@@ -89,9 +89,9 @@ namespace EasyPermissions.Backend.Controllers
         }
 
         [HttpGet("list/leader/{userId:guid}")]
-        public async Task<IActionResult> GetAllLeaderAsync(Guid userId)
+        public async Task<IActionResult> GetAllLeaderAsync(Guid userId, [FromQuery] PaginationDTO pagination)
         {
-            var response = await _permissionsUnitOfWork.GetAllLeaderAsync(userId);
+            var response = await _permissionsUnitOfWork.GetAllLeaderAsync(userId, pagination);
             if (response.Result != null)
             { 
                 return Ok(response);
@@ -100,9 +100,9 @@ namespace EasyPermissions.Backend.Controllers
         }
 
         [HttpGet("list/user/{userId:guid}")]
-        public async Task<IActionResult> GetAllUserAsync(Guid userId)
+        public async Task<IActionResult> GetAllUserAsync(Guid userId, [FromQuery] PaginationDTO pagination)
         {
-            var response = await _permissionsUnitOfWork.GetAllUserAsync(userId);
+            var response = await _permissionsUnitOfWork.GetAllUserAsync(userId, pagination);
             if (response.Result != null)
             {
                 return Ok(response);
