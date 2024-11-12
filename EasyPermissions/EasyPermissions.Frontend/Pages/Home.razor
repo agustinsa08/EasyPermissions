@@ -14,7 +14,7 @@ else
         <div class="notice-container">
             @foreach (var notice in Notices!)
             {
-                    <div class="card">
+            <div class="card" @onclick=@( () => ViewNotice(notice.Id))>
                      
                         <img src="@notice.MainImage" alt=@notice.Name />
                         <h5 class="card-notice_text poisition-absolute"> @notice.Name</h5>

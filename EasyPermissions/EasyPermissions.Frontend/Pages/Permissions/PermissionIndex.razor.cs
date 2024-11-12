@@ -37,7 +37,7 @@ namespace EasyPermissions.Frontend.Pages.Permissions
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
-            await LoadUserAsyc();
+           await LoadUserAsyc();
         }
 
         private async Task LoadUserAsyc()
@@ -92,7 +92,6 @@ namespace EasyPermissions.Frontend.Pages.Permissions
 
         private async Task SelectedPageAsync(int page)
         {
-            currentPage = page;
             await LoadAsync(page);
         }
 
@@ -106,6 +105,8 @@ namespace EasyPermissions.Frontend.Pages.Permissions
 
         private async Task LoadAsync(int page = 1)
         {
+            currentPage = page;
+            Console.WriteLine("Lo ejecuteeeeee");
             if (!string.IsNullOrWhiteSpace(Page))
             {
                 page = Convert.ToInt32(Page);
@@ -126,7 +127,9 @@ namespace EasyPermissions.Frontend.Pages.Permissions
         }
         private async Task<bool> LoadListAsync(int page)
         {
+
             ValidateRecordsNumber();
+            Console.WriteLine("------------------ frontera-------------");
             var url = $"api/permissions?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
@@ -134,12 +137,16 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             }
 
             var responseHttp = await Repository.GetAsync<List<Permission>>(url);
+            Console.WriteLine("Lo ejecuteeeeee malllll");
+
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return false;
             }
+            Console.WriteLine("Lo ejecuteeeeee biennnn");
+
             Permissions = responseHttp.Response;
             return true;
         }

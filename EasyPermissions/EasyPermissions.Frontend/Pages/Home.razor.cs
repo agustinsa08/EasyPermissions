@@ -37,6 +37,11 @@ namespace EasyPermissions.Frontend.Pages
             StateHasChanged();
         }
 
+        private void ViewNotice(int? id)
+        {
+            NavigationManager.NavigateTo($"/notices/{id}");
+        }
+
         private async Task LoadAsync(int page = 1)
         {
             if (!string.IsNullOrWhiteSpace(Page))
