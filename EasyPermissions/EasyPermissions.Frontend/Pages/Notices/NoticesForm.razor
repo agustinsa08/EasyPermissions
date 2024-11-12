@@ -3,7 +3,41 @@
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="row">
-
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label>Tipo:</label>
+                <div>
+                    <select class="form-select" @onchange="OnChangeTypeAsync">
+                        <option readonly>-- Seleccione un Tipo --</option>
+                        @if (types is not null)
+                        {
+                            @foreach (var type in types)
+                            {
+                                <option value="@type.Id">@(type.Name)</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label>Categoría:</label>
+                <div>
+                    <select class="form-select" @bind="notices.CategoryNoticeId" disabled="@disabledCategory()">
+                        <option value="0">-- Seleccione una categoría --</option>
+                        @if (categories is not null)
+                        {
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category.Id">@(category.Name)</option>
+                            }
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => notices.CategoryNoticeId)" />
+                </div>
+            </div>
+        </div>
         <div class="mb-3">
             <label>Título:</label>
             <div>
