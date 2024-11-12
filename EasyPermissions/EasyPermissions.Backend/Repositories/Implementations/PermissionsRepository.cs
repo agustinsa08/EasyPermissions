@@ -196,6 +196,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
             permission.DateStatus = DateTime.UtcNow;
             permission.Status = permissionDTO.Status;
             _context.Update(permission);
+            await _context.SaveChangesAsync();
             permission.PermissionDetails!.Add(new PermissionDetail
             {
                 PermissionId = permissionDTO.Id,
@@ -203,6 +204,8 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 Status = permissionDTO.Status
             });
             await _context.SaveChangesAsync();
+
+            var userColl = await _usersRepository.GetUserByIdAsync(Guid.Parse(permission?.User?.Id!));
 
             DateTime utcDate = permission.Date.Kind == DateTimeKind.Utc ? permission.Date : permission.Date.ToUniversalTime();
 
@@ -212,22 +215,22 @@ namespace EasyPermissions.Backend.Repositories.Implementations
 
             string formattedDate = localDate.ToString("dd MMMM yyyy HH:mm");
 
-            _mailHelper.SendMail(user?.FullName!, user?.Email!,
+            _mailHelper.SendMail(userColl?.FullName!, userColl?.Email!,
              "Permisos Fácil - Actualización de permiso",
              $@"
             <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;'>
                 <h1 style='color: #4CAF50; text-align: center;'>Permisos Fácil - Registro de Permiso</h1>
         
-                <p>Hola <strong>{user?.FullName}</strong>,</p>
+                <p>Hola <strong>{userColl?.FullName}</strong>,</p>
         
                 <p>Nos complace informarle que se ha registrado un nuevo estado para su permiso solicitado el día <strong>{formattedDate}</strong>. A continuación, el detalle:</p>
 
                     <div style='background-color: #f9f9f9; padding: 15px; border: 1px solid #ddd; border-radius: 5px; margin: 15px 0;'>
-                        <p><strong>Área:</strong> {user?.Area?.Name}</p>
-                        <p><strong>Líder:</strong> {user?.Area?.User?.FullName!}</p>
-                        <p><strong>Colaborador:</strong> {user?.FullName}</p>
-                        <p><strong>Fecha de Registro:</strong>{formattedDate}</p>
-                        <p><strong>Estado:</strong>{GetDescription(permission.Status)}</p>
+                        <p><strong>Área:</strong> {userColl?.Area?.Name}</p>
+                        <p><strong>Líder:</strong> {userColl?.Area?.User?.FullName!}</p>
+                        <p><strong>Colaborador:</strong> {userColl?.FullName}</p>
+                        <p><strong>Fecha de Registro: </strong>{formattedDate}</p>
+                        <p><strong>Estado:</strong> {GetDescription(permission.Status)}</p>
                     </div>
         
                 <p>Recibirá una notificación cuando el estado de su permiso cambie. Mientras tanto, puede consultar el estado actual en su cuenta en Permisos Fácil.</p>
@@ -237,22 +240,22 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 <p style='font-size: 12px; color: #666;'>Este mensaje fue enviado automáticamente por el sistema de Permisos Fácil. Si no realizó esta solicitud, puede ignorar este correo.</p>
             </div>");
 
-            _mailHelper.SendMail(user?.Area?.User?.FullName!, user?.Area?.User?.Email!,
+            _mailHelper.SendMail(userColl?.Area?.User?.FullName!, userColl?.Area?.User?.Email!,
              "Permisos Fácil - Actualización de permiso",
              $@"
             <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;'>
                 <h1 style='color: #4CAF50; text-align: center;'>Permisos Fácil - Registro de Permiso</h1>
         
-                <p>Hola <strong>{user?.FullName}</strong>,</p>
+                <p>Hola <strong>{userColl?.FullName}</strong>,</p>
         
-                <p>Nos complace informarle que se ha registrado un nuevo estado para un permiso solicitado por <strong>{user?.FullName}</strong>. A continuación, el detalle:</p>
+                <p>Nos complace informarle que se ha registrado un nuevo estado para un permiso solicitado por <strong>{userColl?.FullName}</strong>. A continuación, el detalle:</p>
 
                     <div style='background-color: #f9f9f9; padding: 15px; border: 1px solid #ddd; border-radius: 5px; margin: 15px 0;'>
-                        <p><strong>Área:</strong> {user?.Area?.Name}</p>
-                        <p><strong>Líder:</strong> {user?.Area?.User?.FullName!}</p>
-                        <p><strong>Colaborador:</strong> {user?.FullName}</p>
-                        <p><strong>Fecha de Registro:</strong>{formattedDate}</p>
-                        <p><strong>Estado:</strong>{GetDescription(permission.Status)}</p>
+                        <p><strong>Área: </strong>{userColl?.Area?.Name}</p>
+                        <p><strong>Líder: </strong>{userColl?.Area?.User?.FullName!}</p>
+                        <p><strong>Colaborador: </strong>{userColl?.FullName}</p>
+                        <p><strong>Fecha de Registro: </strong>{formattedDate}</p>
+                        <p><strong>Estado: </strong>{GetDescription(permission.Status)}</p>
                     </div>
         
                 <p>Recibirá una notificación cuando el estado de su permiso cambie. Mientras tanto, puede consultar el estado actual en su cuenta en Permisos Fácil.</p>
