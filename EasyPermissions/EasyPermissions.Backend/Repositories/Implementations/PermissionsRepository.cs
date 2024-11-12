@@ -52,17 +52,18 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 .Include(c => c.User)
                 .Include(c => c.CategoryPermission)
                 .ThenInclude(c => c!.TypePermission!)
+                .Include(c => c.Leader)
                 .AsQueryable();
 
             var isUser = await _usersRepository.IsUserInRoleAsync(user, UserType.User.ToString());
-            var isLeader = await _usersRepository.IsUserInRoleAsync(user, UserType.Leader.ToString());
             if (isUser)
             {
                 queryable = queryable.Where(s => s.User!.Email == email);
             }
+            var isLeader = await _usersRepository.IsUserInRoleAsync(user, UserType.Leader.ToString());
             if (isLeader)
             {
-                queryable = queryable.Where(s => s.LeaderId == user.Id.ToString());
+                queryable = queryable.Where(l => l.LeaderId == user.Id.ToString());
             }
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -94,10 +95,15 @@ namespace EasyPermissions.Backend.Repositories.Implementations
 
             var queryable = _context.Permissions.AsQueryable();
 
-            var isAdmin = await _usersRepository.IsUserInRoleAsync(user, UserType.Admin.ToString());
-            if (!isAdmin)
+            var isUser = await _usersRepository.IsUserInRoleAsync(user, UserType.User.ToString());
+            if (isUser)
             {
                 queryable = queryable.Where(s => s.User!.Email == email);
+            }
+            var isLeader = await _usersRepository.IsUserInRoleAsync(user, UserType.Leader.ToString());
+            if (isLeader)
+            {
+                queryable = queryable.Where(l => l.LeaderId == user.Id.ToString());
             }
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
