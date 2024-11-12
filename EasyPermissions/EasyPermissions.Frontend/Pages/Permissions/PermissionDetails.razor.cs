@@ -28,7 +28,7 @@ namespace EasyPermissions.Frontend.Pages.Permissions
         private List<PermissionDetail> permissionDetails = null!;
         private List<PermissionStatus>? permissionStatus = Enum.GetValues(typeof(PermissionStatus)).Cast<PermissionStatus>().ToList();
 
-
+        private string? userId;
 
         [Parameter] public int permissionId { get; set; }
 
@@ -40,15 +40,37 @@ namespace EasyPermissions.Frontend.Pages.Permissions
 
 
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-        }
 
+            await LoadUserAsyc();
 
-        protected override async Task OnParametersSetAsync()
-        {
             await GetPermissionAsync();
             await GetPermissionDetailsAsync();
+        }
+
+        private async Task LoadUserAsyc()
+        {
+            var responseHttp = await Repository.GetAsync<User>($"/api/accounts");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/");
+                    return;
+                }
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                return;
+            }
+
+            if (responseHttp.Response is null)
+            {
+                return;
+            }
+
+            userId = responseHttp.Response.Id;
+
         }
 
         private async Task GetPermissionAsync()
@@ -113,7 +135,6 @@ namespace EasyPermissions.Frontend.Pages.Permissions
 
             permission.Status = (PermissionStatus)statusValue;
 
-            Console.WriteLine(beforeStatus);
 
             var responseHttp = await Repository.PutAsync($"/api/permissions", PermissionDTO);
             if (responseHttp.Error)

@@ -9,16 +9,15 @@ using Microsoft.AspNetCore.Authorization;
 using EasyPermissions.Shared.Enums;
 using System.ComponentModel;
 using MudBlazor.Extensions;
-using Microsoft.AspNetCore.Components.Authorization;
+using EasyPermissions.Shared.Responses;
 
 namespace EasyPermissions.Frontend.Pages.Permissions
 {
     [Authorize(Roles = "Admin, Leader, User")]
-    public partial class PermissionIndex
+    public partial class PermissionUserIndex
     {
         private int currentPage = 1;
         private int totalPages;
-        private string userId;
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -29,40 +28,14 @@ namespace EasyPermissions.Frontend.Pages.Permissions
         [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
         [CascadingParameter] IModalService Modal { get; set; } = default!;
 
+        [Parameter] public string userId { get; set; }
 
         public List<Permission>? Permissions { get; set; }
-
-        [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
-            await LoadUserAsyc();
         }
-
-        private async Task LoadUserAsyc()
-        {
-            var responseHttp = await Repository.GetAsync<User>($"/api/accounts");
-            if (responseHttp.Error)
-            {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/");
-                    return;
-                }
-                var messageError = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
-                return;
-            }
-
-            if(responseHttp.Response is null) {
-                return;
-            }
-
-            userId = responseHttp.Response.Id;
-
-        }
-
         private async Task ShowModalAsync(int id = 0, bool isEdit = false)
         {
             IModalReference modalReference;
@@ -87,6 +60,11 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             Filter = filter;
             await ApplyFilterAsync();
             StateHasChanged();
+        }
+
+        private void ReturnPermissions()
+        {
+            NavigationManager.NavigateTo($"/permissions");
         }
 
 
@@ -127,20 +105,25 @@ namespace EasyPermissions.Frontend.Pages.Permissions
         private async Task<bool> LoadListAsync(int page)
         {
             ValidateRecordsNumber();
-            var url = $"api/permissions?page={page}&recordsnumber={RecordsNumber}";
+            var url = $"api/permissions/list/leader/{userId}?page={page}&recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
             }
 
-            var responseHttp = await Repository.GetAsync<List<Permission>>(url);
+            var responseHttp = await Repository.GetAsync<ActionResponse<List<Permission>>>(url);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return false;
             }
-            Permissions = responseHttp.Response;
+
+            if (responseHttp.Response is null) {
+                return false;
+            };
+
+            Permissions = responseHttp.Response.Result;
             return true;
         }
 
@@ -189,7 +172,7 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/permissions");
+                    NavigationManager.NavigateTo($"/permissions/{userId}");
                 }
                 else
                 {
@@ -215,13 +198,6 @@ namespace EasyPermissions.Frontend.Pages.Permissions
 
             NavigationManager.NavigateTo($"/permissions/details/{permissionId}");
         }
-
-        private void ShowPermissionsByUser()
-        {
-            Console.WriteLine($"------{userId}");
-            NavigationManager.NavigateTo($"/permissions/{userId}");
-        }
-
 
         private static string GetDescription(PermissionStatus value)
         {
