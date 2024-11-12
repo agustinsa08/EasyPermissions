@@ -27,9 +27,12 @@
                         <div class="d-flex justify-content-center align-items-center flex-1">
                         @if (!string.IsNullOrEmpty(photoUser))
                         {
-                            <img src="@photoUser" width="180" height="180" style="border-radius:50%; box-shadow: 10px 5px 10px #0000005c;" />
-                        }
-                        
+                                <img src="@photoUser" width="180" height="180" style="border-radius:50%; box-shadow: 10px 5px 10px #0000005c;" />
+                            } else
+                            {
+                                <img src="assets/user/user-default.jpg" width="180" height="180" style="border-radius:50%; box-shadow: 10px 5px 10px #0000005c;" />
+                            }
+
                         </div>
                     </div>
                     
@@ -48,7 +51,7 @@
 
                                 <h6 class="fw-bolder">Fecha de solicitud</h6>
                                 <p class="fw-lighter">
-                                    @permission.Date
+                                @ApplyUtc(permission.Date)
                                 </p>
                             </div>
                             <div class="row mt-2">
@@ -62,23 +65,34 @@
                                 </AuthorizeView>
                                 <AuthorizeView Roles="Admin, Leader">
                                     <Authorized>
+
+                                    @if (permission.UserId == userId)
+                                    {
+                                        <p class="fw-lighter">
+                                            @GetDescription(permission.Status)
+                                        </p>
+                                    } else
+                                    {
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <select class="form-select" value="@permission.Status.GetHashCode()" @onchange="StatusChangedAsync">
                                                     <option disabled value="-1">-- Seleccione un nuevo estado --</option>
-                                                @if (permissionStatus is not null)
+                                                    @if (permissionStatus is not null)
                                                     {
-                                                    @for (var i = 0; i < permissionStatus.Count; i++)
+                                                        @for (var i = 0; i < permissionStatus.Count; i++)
                                                         {
-                                                        @if (i >= permission.Status.GetHashCode())
-                                                        {
-                                                            <option value="@i">@GetDescription(permissionStatus[i])</option>
-                                                        }
+                                                            @if (i >= permission.Status.GetHashCode())
+                                                            {
+                                                                <option value="@i">@GetDescription(permissionStatus[i])</option>
+                                                            }
                                                         }
                                                     }
                                                 </select>
                                             </div>
                                         </div>
+                                    }
+
+                                        
                                     </Authorized>
                                 </AuthorizeView>
                             </div>

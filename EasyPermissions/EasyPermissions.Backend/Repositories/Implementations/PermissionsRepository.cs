@@ -48,6 +48,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                     Message = "Usuario no válido",
                 };
             }
+            Console.WriteLine($"user {user.Id}");
             var queryable = _context.Permissions
                 .Include(c => c.User)
                 .Include(c => c.CategoryPermission)
@@ -56,11 +57,13 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 .AsQueryable();
 
             var isUser = await _usersRepository.IsUserInRoleAsync(user, UserType.User.ToString());
+            Console.WriteLine($"isUser {isUser}");
             if (isUser)
             {
                 queryable = queryable.Where(s => s.User!.Email == email);
             }
             var isLeader = await _usersRepository.IsUserInRoleAsync(user, UserType.Leader.ToString());
+            Console.WriteLine($"isLeader {isLeader}");
             if (isLeader)
             {
                 queryable = queryable.Where(l => l.LeaderId == user.Id.ToString());

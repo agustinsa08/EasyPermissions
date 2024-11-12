@@ -3,7 +3,23 @@
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>Area:</label>
+        <label>Líder:</label>
+        <div>
+            <select class="form-select" @bind="Area.UserId">
+                <option readonly>-- Seleccione un líder --</option>
+                @if (leaders is not null)
+                {
+                    @foreach (var leader in leaders)
+                    {
+                        <option value="@leader.Id">@(leader.FullName)</option>
+                    }
+                }
+            </select>
+            <ValidationMessage For="@(() => Area.UserId)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Nombre:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Area.Name" />
             <ValidationMessage For="@(() => Area.Name)" />

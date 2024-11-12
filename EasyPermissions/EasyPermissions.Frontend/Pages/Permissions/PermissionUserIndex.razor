@@ -1,17 +1,13 @@
-﻿@page "/permissions"
+﻿@page "/permissions/{userId}"
 
+<i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>ReturnPermissions()) style="margin: 0px !important; cursor:pointer;"></i>
 <div class="card">
     <div class="card-header">
         <span>
-            <i class="bi bi-person-lines" /> Permisos
-            <AuthorizeView Roles="User">
+            <i class="bi bi-person-lines" /> Mis Permisos
+            <AuthorizeView Roles="User, Leader">
                 <Authorized>
-                    <a class="btn btn-primary btn-sm float-end" style="margin: 0 5px;" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square" /> Nuevo Permiso</a>
-                </Authorized>
-            </AuthorizeView>
-            <AuthorizeView Roles="Leader">
-                <Authorized>
-                    <a class="btn btn-primary btn-sm float-end" @onclick=@(() => ShowPermissionsByUser())> Mis Permisos</a>
+                        <a class="btn btn-primary btn-sm float-end" style="margin: 0 5px;" @onclick=@(() => ShowModalAsync())>Nuevo Permiso</a>
                 </Authorized>
             </AuthorizeView>
          </span>
@@ -47,7 +43,7 @@
                                 <td>@ApplyUtc(permission.Date)</td>
                                 <td>@ApplyUtc(permission.DateStatus)</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" @onclick=@(() =>ShowDetail(permission.Id))><i class="bi bi-trash" /> Detalle</button>
+                                    <button class="btn btn-success btn-sm" @onclick=@(() =>ShowDetail(permission.Id))>Detalle</button>
                                 </td>
                             </tr>
                         }
