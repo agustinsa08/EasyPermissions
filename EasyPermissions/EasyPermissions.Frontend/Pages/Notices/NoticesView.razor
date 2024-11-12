@@ -1,44 +1,21 @@
 ﻿@page "/notices/{noticeId:int}"
 
-<div class="card">
-    <div class="card-header">
-        <span>
-            <i class="bi bi-chat-dots" /> Noticias
-            <a class="btn btn-primary btn-sm float-end" @onclick=@(() => ShowModalAsync())><i class="bi bi-plus-square" /> Nueva Noticia</a>
-        </span>
-    </div>
-    <div class="card-body">
-        <Filter PlaceHolder="Buscar noticia..." Callback=@FilterCallBack />
-        <GenericList MyList="notices">
-            <Body>
-                <Pagination CurrentPage="currentPage"
-                            TotalPages="totalPages"
-                            SelectedPage="SelectedPageAsync"
-                            RecordsNumber="SelectedRecordsNumberAsync" />
+@if(notice is null) {
+    <Loading/>
+} else
+{
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Imágenes</th>
-                            <th style="width:210px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var notices in notices!)
-                        {
-                            <tr>
-                                <td><a href="/notices/details/@notices.Id">@notices.Name</a></td>
-                                <td>@notices.ImageNoticesNumber</td>
-                                <td>
-                                    <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(notices.Id, true))><i class="bi bi-pencil" /> Editar</a>
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(notices))><i class="bi bi-trash" /> Borrar</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </Body>
-        </GenericList>
-    </div>
-</div>
+    <i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>ReturnHome()) style="margin: 0px !important; cursor:pointer;"></i>
+
+    <img class="w-100 notice-main-image" src="@notice.MainImage" />
+
+    <h2 class="mt-5 mb-5 text-center">
+        @notice.Name
+    </h2>
+
+    <p    
+    >
+        @SanitizeHtml(notice.Description)
+    </p>
+}
+

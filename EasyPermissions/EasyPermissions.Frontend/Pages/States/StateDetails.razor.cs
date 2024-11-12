@@ -47,10 +47,7 @@ namespace EasyPermissions.Frontend.Pages.States
             }
 
             var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
                 await LoadAsync();
-            }
         }
 
         private async Task SelectedRecordsNumberAsync(int recordsnumber)

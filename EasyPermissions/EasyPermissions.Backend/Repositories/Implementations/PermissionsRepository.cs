@@ -48,22 +48,16 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                     Message = "Usuario no válido",
                 };
             }
-            Console.WriteLine($"user {user.Id}");
             var queryable = _context.Permissions
-                .Include(c => c.User)
-                .Include(c => c.CategoryPermission)
-                .ThenInclude(c => c!.TypePermission!)
-                .Include(c => c.Leader)
+                .Include(u => u.User)
                 .AsQueryable();
 
             var isUser = await _usersRepository.IsUserInRoleAsync(user, UserType.User.ToString());
-            Console.WriteLine($"isUser {isUser}");
             if (isUser)
             {
                 queryable = queryable.Where(s => s.User!.Email == email);
             }
             var isLeader = await _usersRepository.IsUserInRoleAsync(user, UserType.Leader.ToString());
-            Console.WriteLine($"isLeader {isLeader}");
             if (isLeader)
             {
                 queryable = queryable.Where(l => l.LeaderId == user.Id.ToString());
@@ -126,11 +120,12 @@ namespace EasyPermissions.Backend.Repositories.Implementations
         public override async Task<ActionResponse<Permission>> GetAsync(int id)
         {
             var permission = await _context.Permissions
-                .Include(c => c.User)
-                .Include(c => c.CategoryPermission)
-                .ThenInclude(c => c!.TypePermission!)
-                .Include(c => c.PermissionDetails)
-                 .FirstOrDefaultAsync(c => c.Id == id);
+                .Include(u => u.User)
+                .Include(cp => cp.CategoryPermission)
+                .ThenInclude(tp => tp!.TypePermission!)
+                .Include(l => l.Leader)
+                .Include(pd => pd.PermissionDetails)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (permission == null)
             {
