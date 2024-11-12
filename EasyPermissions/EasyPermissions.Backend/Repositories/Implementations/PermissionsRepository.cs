@@ -54,10 +54,15 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 .ThenInclude(c => c!.TypePermission!)
                 .AsQueryable();
 
-            var isAdmin = await _usersRepository.IsUserInRoleAsync(user, UserType.Admin.ToString());
-            if (!isAdmin)
+            var isUser = await _usersRepository.IsUserInRoleAsync(user, UserType.User.ToString());
+            var isLeader = await _usersRepository.IsUserInRoleAsync(user, UserType.Leader.ToString());
+            if (isUser)
             {
                 queryable = queryable.Where(s => s.User!.Email == email);
+            }
+            if (isLeader)
+            {
+                queryable = queryable.Where(s => s.LeaderId == user.Id.ToString());
             }
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
