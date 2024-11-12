@@ -9,175 +9,52 @@ using System.Net;
 
 namespace EasyPermissions.Frontend.Pages.Notices
 {
-    [Authorize(Roles = "Admin")]
     public partial class NoticesView
     {
-        private int currentPage = 1;
-        private int totalPages;
-
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
-        [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
-        [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
-        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
-        [CascadingParameter] IModalService Modal { get; set; } = default!;
+        [Parameter] public int noticeId { get; set; }
 
-        public List<Notice>? notices { get; set; }
+        private Notice? notice { get; set; }
+        private string RawHtmlContent = "";
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadAsync();
-        }
-        private async Task ShowModalAsync(int id = 0, bool isEdit = false)
-        {
-            IModalReference modalReference;
-
-            var options = new ModalOptions
-            {
-                Size = ModalSize.ExtraLarge  // Puedes usar Small, Medium, Large
-            };
-
-            if (isEdit)
-            {
-                modalReference = Modal.Show<NoticesEdit>(string.Empty, new ModalParameters().Add("Id", id), options);
-            }
-            else
-            {
-                modalReference = Modal.Show<NoticesCreate>(options);
-            }
-
-            var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
-                await LoadAsync();
-            }
-        }
-        private async Task FilterCallBack(string filter)
-        {
-            Filter = filter;
-            await ApplyFilterAsync();
-            StateHasChanged();
+            await LoadNoticeAsync();
         }
 
-        private async Task SelectedPageAsync(int page)
+        private MarkupString SanitizeHtml(string html)
         {
-            currentPage = page;
-            await LoadAsync(page);
+            // Elimina las etiquetas <script> y <style>
+            html = System.Text.RegularExpressions.Regex.Replace(html, @"<script[^>]*>.*?</script>", string.Empty, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            html = System.Text.RegularExpressions.Regex.Replace(html, @"<style[^>]*>.*?</style>", string.Empty, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            html = html.Replace("\n", "<br />");
+
+            // Puedes agregar más reglas para eliminar otras etiquetas o atributos peligrosos
+            return new MarkupString(html);
         }
 
-        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        private void ReturnHome()
         {
-            RecordsNumber = recordsnumber;
-            int page = 1;
-            await LoadAsync(page);
-            await SelectedPageAsync(page);
+            NavigationManager.NavigateTo($"/");
         }
 
-        private async Task LoadAsync(int page = 1)
+        private async Task LoadNoticeAsync()
         {
-            if (!string.IsNullOrWhiteSpace(Page))
-            {
-                page = Convert.ToInt32(Page);
-            }
+            var url = $"api/Notices/{noticeId}";
 
-            var ok = await LoadListAsync(page);
-            if (ok)
-            {
-                await LoadPagesAsync();
-            }
-        }
-        private void ValidateRecordsNumber()
-        {
-            if (RecordsNumber == 0)
-            {
-                RecordsNumber = 10;
-            }
-        }
-        private async Task<bool> LoadListAsync(int page)
-        {
-            ValidateRecordsNumber();
-            var url = $"api/Notices?page={page}&recordsnumber={RecordsNumber}";
-            if (!string.IsNullOrEmpty(Filter))
-            {
-                url += $"&filter={Filter}";
-            }
-
-            var responseHttp = await Repository.GetAsync<List<Notice>>(url);
+            var responseHttp = await Repository.GetAsync<Notice>(url);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return false;
             }
-            notices = responseHttp.Response;
-            return true;
+            notice = responseHttp.Response;
         }
 
-        private async Task LoadPagesAsync()
-        {
-            var url = $"api/Notices/totalPages?recordsnumber={RecordsNumber}";
-            if (!string.IsNullOrEmpty(Filter))
-            {
-                url += $"&filter={Filter}";
-            }
-
-            var responseHttp = await Repository.GetAsync<int>(url);
-            if (responseHttp.Error)
-            {
-                var message = await responseHttp.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
-            }
-            totalPages = responseHttp.Response;
-        }
-        private async Task ApplyFilterAsync()
-        {
-            int page = 1;
-            await LoadAsync(page);
-            await SelectedPageAsync(page);
-        }
-
-        private async Task DeleteAsycn(Notice notices)
-        {
-            var result = await SweetAlertService.FireAsync(new SweetAlertOptions
-            {
-                Title = "Confirmación",
-                Text = $"¿Estas seguro de querer borrar la categoria de noticia: {notices.Name}?",
-                Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true,
-            });
-            var confirm = string.IsNullOrEmpty(result.Value);
-            if (confirm)
-            {
-                return;
-            }
-
-            var responseHttp = await Repository.DeleteAsync<CategoryNotice>($"api/ImageNotices/{notices.Id}");
-            if (responseHttp.Error)
-            {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/notices");
-                }
-                else
-                {
-                    var mensajeError = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
-                }
-                return;
-            }
-
-            await LoadAsync();
-            var toast = SweetAlertService.Mixin(new SweetAlertOptions
-            {
-                Toast = true,
-                Position = SweetAlertPosition.BottomEnd,
-                ShowConfirmButton = true,
-                Timer = 3000
-            });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
-        }
+       
     }
 }
