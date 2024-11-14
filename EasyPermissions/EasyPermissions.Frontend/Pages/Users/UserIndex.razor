@@ -1,0 +1,53 @@
+﻿@page "/users"
+
+<div class="card">
+    <div class="card-header">
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <span>
+                    <i class="bi bi-person-lines" /> Usuarios
+                    <a class="btn btn-primary btn-sm float-end" @onclick=@(() =>CreateUser())><i class="bi bi-plus-square" /> Nuevo usuario</a>
+                </span>
+            </Authorized>
+        </AuthorizeView>
+    </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar usuario..." Callback=@FilterCallBack />
+        <GenericList MyList="Users">
+            <Body>
+                <Pagination CurrentPage="currentPage"
+                            TotalPages="totalPages"
+                            SelectedPage="SelectedPageAsync"
+                            RecordsNumber="SelectedRecordsNumberAsync" />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre Completo</th>
+                            <th>Tipo</th>
+                            <th>Area</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Users!)
+                        {
+                            <tr>
+                                <td>@user.FirstName @user.LastName</td>
+                                <td>@GetDescription(user.UserType)</td>
+                                <td>Area</td>
+                                <td>@user.UserName</td>
+                                <td>@user.PhoneNumber</td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm" @onclick=@(() => EditUser(user.Id))><i class="bi bi-pencil" /> Editar</a>
+                                    <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(user))><i class="bi bi-trash" /> Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </div>
+</div>

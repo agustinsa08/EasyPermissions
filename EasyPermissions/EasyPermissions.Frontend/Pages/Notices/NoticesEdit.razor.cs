@@ -15,7 +15,7 @@ namespace EasyPermissions.Frontend.Pages.Notices
     public partial class NoticesEdit
     {
         private Notice? notices;
-        private FormWithName<Notice>? noticesForm;
+        private NoticesForm? noticesForm;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;

@@ -2,11 +2,61 @@
 
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
-    <div class="mb-3">
-        <label>Noticia:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@notices.Name" />
-            <ValidationMessage For="@(() => notices.Name)" />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label>Tipo:</label>
+                <div>
+                    <select class="form-select" @onchange="OnChangeTypeAsync">
+                        <option readonly>-- Seleccione un Tipo --</option>
+                        @if (types is not null)
+                        {
+                            @foreach (var type in types)
+                            {
+                                <option value="@type.Id">@(type.Name)</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label>Categoría:</label>
+                <div>
+                    <select class="form-select" @bind="notices.CategoryNoticeId" disabled="@disabledCategory()">
+                        <option value="0">-- Seleccione una categoría --</option>
+                        @if (categories is not null)
+                        {
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category.Id">@(category.Name)</option>
+                            }
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => notices.CategoryNoticeId)" />
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label>Título:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@notices.Name" />
+                <ValidationMessage For="@(() => notices.Name)" />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label>Descripción:</label>
+            <div>
+                <InputTextArea class="form-control" @bind-Value="@notices.Description" Rows="5" />
+                <ValidationMessage For="@(() => notices.Description)" />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label>Estado:</label>
+            <div>
+                <SwitchInput @bind-Value="@notices.Status" />
+            </div>
         </div>
     </div>
     <button class="btn btn-primary" type="submit">Guardar Cambios</button>

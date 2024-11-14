@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EasyPermissions.Shared.Entities
 {
-    public class Permission
+    public class Permission  
     {
         public int Id { get; set; }
 
@@ -27,6 +27,11 @@ namespace EasyPermissions.Shared.Entities
 
         public User? User { get; set; }
 
+        [Display(Name = "Líder")]
+        public string? LeaderId { get; set; }
+
+        public User? Leader { get; set; }
+
         public PermissionStatus Status { get; set; } = PermissionStatus.Pending;
 
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
@@ -38,5 +43,9 @@ namespace EasyPermissions.Shared.Entities
 
         [Display(Name = "Detalles de Permiso")]
         public int PermissionDetailNumber => PermissionDetails == null || PermissionDetails.Count == 0 ? 0 : PermissionDetails.Count;
+
+        [Display(Name = "Límites de días para respuesta")]
+        [Required(ErrorMessage = "El campo {2} es requerido.")]
+        public int? LimitDays { get; set; } = 5;
     }
 }

@@ -2,8 +2,4 @@
 
 <h3>Nueva Categoria Permiso</h3>
 
-<FormWithName @ref="categoryPermissionsForm"
-              Label="Categoria Permiso:"
-              Model="categoryPermissions"
-              OnValidSubmit="CreateAsync"
-              ReturnAction="Return" />
+<CategoryPermissionsForm @ref="categoryPermissionsForm" categoryPermissions="categoryPermissions" OnValidSubmit="CreateAsync" ReturnAction="Return" />

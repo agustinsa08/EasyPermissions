@@ -46,15 +46,20 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
             }
 
             var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
-                await LoadAsync();
-            }
+            await LoadAsync();
         }
         private async Task SelectedPageAsync(int page)
         {
             currentPage = page;
             await LoadAsync(page);
+        }
+
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
         }
 
         private async Task FilterCallBack(string filter)
@@ -119,6 +124,18 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
                 return;
             }
             totalPages = responseHttp.Response;
+        }
+
+        private string getStatus(int? value)
+        {
+
+            if (value == 0)
+            {
+                return "Inactivo";
+            }
+
+            return "Activo";
+
         }
 
         private async Task ApplyFilterAsync()

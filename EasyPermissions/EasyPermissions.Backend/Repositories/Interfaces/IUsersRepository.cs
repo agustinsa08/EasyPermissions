@@ -35,5 +35,21 @@ namespace EasyPermissions.Backend.Repositories.Interfaces
 
         Task LogoutAsync();
 
+        Task<User> GetUserByIdAsync(Guid userId);
+
+        Task<ActionResponse<IEnumerable<User>>> GetAsync();
+
+        Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination);
+
+        Task<List<User>> GetAllLeaderAsync();
+
+        Task<List<User>> GetAllAdminAsync();
+
+        Task<User> GetDetailAsync(string email);
+
+        Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
+
+        Task<List<User>> GetUserByTypeAsync(int? userType);
+
     }
 }

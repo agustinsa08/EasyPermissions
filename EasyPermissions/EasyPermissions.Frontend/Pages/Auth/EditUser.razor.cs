@@ -7,6 +7,7 @@ using EasyPermissions.Shared.DTOs;
 using EasyPermissions.Shared.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 
 namespace EasyPermissions.Frontend.Pages.Auth
 {
@@ -64,6 +65,7 @@ namespace EasyPermissions.Frontend.Pages.Auth
         private void ImageSelected(string imagenBase64)
         {
             user!.Photo = imagenBase64;
+
             imageUrl = null;
         }
 

@@ -1,5 +1,6 @@
 ﻿@page "/Areas"
 
+
 <div class="card">
     <div class="card-header">
         <span>
@@ -8,17 +9,29 @@
         </span>
     </div>
     <div class="card-body">
+        @if (Areas is null)
+        {
+            <Loading />
+        }
+        else
+        {
+
         <Filter PlaceHolder="Buscar area..." Callback=@FilterCallBack />
         <GenericList MyList="Areas">
             <Body>
                 <Pagination CurrentPage="currentPage"
                             TotalPages="totalPages"
-                            SelectedPage="SelectedPageAsync" />
+                            SelectedPage="SelectedPageAsync"
+                            RecordsNumber="SelectedRecordsNumberAsync" />
 
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Areas</th>
+                            <th>Nombre</th>
+                            <th>Líder</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th style="width:210px"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,6 +39,10 @@
                         {
                             <tr>
                                 <td>@area.Name</td>
+                                <td>@(area.User is not null ? area.User.FullName : "")</td>
+                                <td>@area.Name</td>
+                                <td>@area.Description</td>
+                                <td>@(getStatus(area.Status))</td>
                                 <td>
                                     <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(area.Id, true))><i class="bi bi-pencil" /> Editar</a>
                                     <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(area))><i class="bi bi-trash" /> Borrar</button>
@@ -36,5 +53,7 @@
                 </table>
             </Body>
         </GenericList>
+        }
     </div>
 </div>
+

@@ -17,7 +17,7 @@ namespace EasyPermissions.Shared.Entities
 
         [Display(Name = "Estado")]
         [Required(ErrorMessage = "El campo {2} es requerido.")]
-        public int Status { get; set; } = 1;
+        public int? Status { get; set; } = 1;
 
         public int TypePermissionId { get; set; }
 
@@ -27,6 +27,10 @@ namespace EasyPermissions.Shared.Entities
 
         [Display(Name = "Permisos")]
         public int PermissionNumber => Permissions == null || Permissions.Count == 0 ? 0 : Permissions.Count;
+
+        [Display(Name = "Límites de días para respuesta")]
+        [Required(ErrorMessage = "El campo {2} es requerido.")]
+        public int? LimitDays { get; set; } = 5;
 
     }
 }

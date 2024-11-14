@@ -11,20 +11,18 @@ else
                     TotalPages="totalPages"
                     SelectedPage="SelectedPageAsync" />
 
-        <div class="row row-cols-1 row-cols-md-4 g-4 mt-1">
+        <div class="notice-container">
             @foreach (var notice in Notices!)
             {
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="text-center zoom">
-                        <img src="@notice.MainImage" style="height:150px; max-width:200px;" class="text-center" alt=@notice.Name />
-                        </div>
-                        <div class="card-body">
-                        <h5 class="card-title text-navy text-center text-justify"> @notice.Name</h5>
-                        <p class="card-text smfnt text-center text-justify">@notice.Description</p>
-                        </div>
+            <div class="card" @onclick=@( () => ViewNotice(notice.Id))>
+                     
+                        <img src="@notice.MainImage" alt=@notice.Name />
+                        <h5 class="card-notice_text poisition-absolute"> @notice.Name</h5>
+                        <!--
+                            <p class="card-text smfnt text-center text-justify">@notice.Description</p>
+                        -->
+                        
                     </div>
-                </div>
             }
         </div>
 }

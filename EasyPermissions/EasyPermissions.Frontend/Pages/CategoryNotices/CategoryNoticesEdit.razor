@@ -8,5 +8,5 @@
 }
 else
 {
-    <FormWithName @ref="categoryNoticesForm" Label="Categoria Noticia:" Model="categoryNotices" OnValidSubmit="SaveAsync" ReturnAction="Return" />
+    <CategoryNoticesForm @ref="categoryNoticesForm" categoryNotices="categoryNotices" OnValidSubmit="SaveAsync" ReturnAction="Return" />
 }

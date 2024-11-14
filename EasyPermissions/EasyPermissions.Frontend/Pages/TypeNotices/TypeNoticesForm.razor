@@ -3,10 +3,23 @@
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>Tipo de Noticia:</label>
+        <label>Nombre:</label>
         <div>
             <InputText class="form-control" @bind-Value="@typeNotices.Name" />
             <ValidationMessage For="@(() => typeNotices.Name)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Descripción:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@typeNotices.Description" />
+            <ValidationMessage For="@(() => typeNotices.Description)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Estado:</label>
+        <div>
+            <SwitchInput @bind-Value="@typeNotices.Status" />
         </div>
     </div>
     <button class="btn btn-primary" type="submit">Guardar Cambios</button>

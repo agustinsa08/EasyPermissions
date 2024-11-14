@@ -1,0 +1,21 @@
+﻿@page "/notices/{noticeId:int}"
+
+@if(notice is null) {
+    <Loading/>
+} else
+{
+
+    <i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>ReturnHome()) style="margin: 0px !important; cursor:pointer;"></i>
+
+    <img class="w-100 notice-main-image" src="@notice.MainImage" />
+
+    <h2 class="mt-5 mb-5 text-center">
+        @notice.Name
+    </h2>
+
+    <p    
+    >
+        @SanitizeHtml(notice.Description)
+    </p>
+}
+

@@ -41,14 +41,12 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
             }
             else
             {
-                modalReference = Modal.Show<CategoryNoticesCreate>();
+                modalReference = Modal.Show<CategoryNoticesCreate>(string.Empty, new ModalParameters().Add("TypeNoticesId", TypeNoticesId));
             }
 
             var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
-                await LoadAsync();
-            }
+            await LoadAsync();
+          
         }
 
         private async Task SelectedPageAsync(int page)
@@ -58,9 +56,18 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
                 page = Convert.ToInt32(Page);
             }
 
-            currentPage = page;
+          
             await LoadAsync(page);
         }
+
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
+
         private async Task FilterCallBack(string filter)
         {
             Filter = filter;
@@ -70,6 +77,7 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
 
         private async Task LoadAsync(int page = 1)
         {
+            currentPage = page;
             var ok = await LoadCountryAsync();
             if (ok)
             {
@@ -170,7 +178,7 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
                 return;
             }
 
-            var responseHttp = await Repository.DeleteAsync<CategoryNotice>($"/api/CategoryNotice/{categoryNotices.Id}");
+            var responseHttp = await Repository.DeleteAsync<CategoryNotice>($"/api/CategoryNotices/{categoryNotices.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
@@ -191,5 +199,18 @@ namespace EasyPermissions.Frontend.Pages.TypeNotices
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
         }
+
+        private string getStatus(int? value)
+        {
+
+            if (value == 0)
+            {
+                return "Inactivo";
+            }
+
+            return "Activo";
+
+        }
+
     }
 }

@@ -45,10 +45,8 @@ namespace EasyPermissions.Frontend.Pages.Countries
             }
 
             var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
                 await LoadAsync();
-            }
+            
         }
         private async Task FilterCallBack(string filter)
         {
@@ -60,6 +58,14 @@ namespace EasyPermissions.Frontend.Pages.Countries
         {
             currentPage = page;
             await LoadAsync(page);
+        }
+
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
         }
 
         private async Task LoadAsync(int page = 1)
@@ -108,7 +114,7 @@ namespace EasyPermissions.Frontend.Pages.Countries
             var url = $"api/countries/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
-                url += $"?filter={Filter}";
+                url += $"&filter={Filter}";
             }
 
             var responseHttp = await Repository.GetAsync<int>(url);

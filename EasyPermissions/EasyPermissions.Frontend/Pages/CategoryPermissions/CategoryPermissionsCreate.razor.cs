@@ -9,7 +9,7 @@ namespace EasyPermissions.Frontend.Pages.CategoryPermissions
     public partial class CategoryPermissionsCreate
     {
         private CategoryPermission categoryPermissions = new();
-        private FormWithName<CategoryPermission>? categoryPermissionsForm;
+        private CategoryPermissionsForm? categoryPermissionsForm;
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;

@@ -19,7 +19,7 @@ namespace EasyPermissions.Shared.Entities
         [Display(Name = "Estado")]
         [Required(ErrorMessage = "El campo {2} es requerido.")]
         [DefaultValue(1)]
-        public int Status { get; set; } = 1;
+        public int? Status { get; set; } = 1;
 
         public int TypeNoticeId { get; set; }
 

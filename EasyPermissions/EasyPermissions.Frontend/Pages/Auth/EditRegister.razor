@@ -1,0 +1,154 @@
+﻿@page "/Register/{userId}"
+
+    <i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>ReturnIndex()) style="margin: 0px !important; cursor:pointer;"></i>
+
+@if (user is null)
+{
+    <Loading />
+}
+else
+{
+    <EditForm Model="user" OnValidSubmit="SaveUserAsync">
+        <DataAnnotationsValidator />
+
+        <div class="card">
+            <div class="card-header">
+                <span>
+                    <i class="bi bi-key" /> Editar  Usuario
+                    <button class="btn btn-sm btn-primary float-end" type="submit">Registrar</button>
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label>Nombres:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.FirstName" />
+                                <ValidationMessage For="@(() => user.FirstName)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Apellidos:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.LastName" />
+                                <ValidationMessage For="@(() => user.LastName)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Documento:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.Document" />
+                                <ValidationMessage For="@(() => user.Document)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Teléfono:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.PhoneNumber" />
+                                <ValidationMessage For="@(() => user.PhoneNumber)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Dirección:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.Address" />
+                                <ValidationMessage For="@(() => user.Address)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Email:</label>
+                            <div>
+                                <InputText class="form-control" @bind-Value="@user.Email" />
+                                <ValidationMessage For="@(() => user.Email)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Tipo de usuario:</label>
+                            <div>
+                                        <select class="form-select" @onchange="ChangeTypeAsync">
+                                    <option value="-1">-- Seleccione un tipo --</option>
+                                    @if (userTypes is not null)
+                                    {
+                                        @for (var i = 0; i < userTypes.Count; i++)
+                                        {
+                                            <option value="@i">@GetDescription(userTypes[i])</option>
+                                        }
+                                     }
+                                </select>
+                                <ValidationMessage For="@(() => user.UserType)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label>Area:</label>
+                            <div>
+                                        <select class="form-select" disabled="@disableAreaField()" @onchange="OnChangeArea">
+                                    <option readonly>-- Seleccione un area --</option>
+                                    @if (areas is not null)
+                                    {
+                                        @foreach (var area in areas)
+                                        {
+                                                      <option value="@area.Id">@area.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <ValidationMessage For="@(() => user.AreaId)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>País:</label>
+                            <div>
+                                <select class="form-select" @onchange="CountryChangedAsync">
+                                    <option value="0">-- Seleccione un país --</option>
+                                    @if (countries is not null)
+                                    {
+                                        @foreach (var country in countries)
+                                        {
+                                            <option value="@country.Id">@country.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Estado/Departamento:</label>
+                            <div>
+                                <select class="form-select"  value="user.City.State.Id" @onchange="StateChangedAsync">
+                                    <option value="0">-- Seleccione un estado/departamento --</option>
+                                    @if (states is not null)
+                                    {
+                                        @foreach (var state in states)
+                                        {
+                                            <option selected="@(user.City.State.Id == state.Id)" value="@state.Id">@state.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Ciudad:</label>
+                            <div>
+                                <select class="form-select" @bind="user.CityId">
+                                    <option value="0">-- Seleccione una ciudad --</option>
+                                    @if (cities is not null)
+                                    {
+                                        @foreach (var city in cities)
+                                        {
+                                            <option value="@city.Id">@city.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <ValidationMessage For="@(() => user.CityId)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <InputImg Label="Foto" ImageSelected="ImageSelected" ImageURL="@imageUrl" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}

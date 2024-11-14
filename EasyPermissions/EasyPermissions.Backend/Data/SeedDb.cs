@@ -30,9 +30,30 @@ namespace EasyPermissions.Backend.Data
             await CheckNoticesAsync();
             await CheckTypePermissionsAsync();
             await CheckRolesAsync();
-            await CheckUserAsync("1010", "Talento", "Humano", "talento.humano@yopmail.com", "322 311 4476", "Calle Luna Calle Sol 26", UserType.Admin);
-            await CheckUserAsync("1015", "Contabilidad", "Contabilidad", "contabilidad@yopmail.com", "322 311 4623", "Calle Luna Calle Sol 27", UserType.Leader);
-            await CheckUserAsync("1027", "Andres", "Morales", "andresmorales@yopmail.com", "322 311 4628", "Calle Luna Calle Sol 30", UserType.User);
+            await CheckUserAsync("1010", "Talento", "Humano", "talento.humano@yopmail.com", "322 311 4476", "Calle Luna Calle Sol 26", UserType.Admin); 
+
+            await CheckUserAsync("1012", "María", "García", "lider1@yopmail.com", "322 311 4602", "Calle Luna Calle Sol 2", UserType.Leader);
+            await CheckUserAsync("1013", "Juan", "Pérez", "lider2@yopmail.com", "322 311 4603", "Calle Luna Calle Sol 3", UserType.Leader);
+            await CheckUserAsync("1014", "Ana", "Martínez", "lider3@yopmail.com", "322 311 4604", "Calle Luna Calle Sol 4", UserType.Leader);
+            await CheckUserAsync("1015", "Luis", "Hernández", "lider4@yopmail.com", "322 311 4605", "Calle Luna Calle Sol 5", UserType.Leader);
+            await CheckUserAsync("1016", "Laura", "Jiménez", "lider5@yopmail.com", "322 311 4606", "Calle Luna Calle Sol 6", UserType.Leader);
+            await CheckUserAsync("1017", "Pedro", "Vásquez", "lider6@yopmail.com", "322 311 4607", "Calle Luna Calle Sol 7", UserType.Leader);
+            await CheckUserAsync("1018", "Sofía", "Castro", "lider7@yopmail.com", "322 311 4608", "Calle Luna Calle Sol 8", UserType.Leader);
+            await CheckUserAsync("1019", "Jorge", "Torres", "lider8@yopmail.com", "322 311 4609", "Calle Luna Calle Sol 9", UserType.Leader);
+            await CheckUserAsync("1020", "Isabel", "Mendoza", "lider9@yopmail.com", "322 311 4610", "Calle Luna Calle Sol 10", UserType.Leader);
+            await CheckUserAsync("1021", "Carlos", "López", "lider10@yopmail.com", "322 311 4601", "Calle Luna Calle Sol 1", UserType.Leader);
+
+            await CheckUserAsync("1022", "Patricia", "Salazar", "patricia@yopmail.com", "322 311 4612", "Calle Luna Calle Sol 12", UserType.User);
+            await CheckUserAsync("1023", "Andrés", "Acuña", "andres@yopmail.com", "322 311 4613", "Calle Luna Calle Sol 13", UserType.User);
+            await CheckUserAsync("1024", "Claudia", "Rojas", "claudia@yopmail.com", "322 311 4614", "Calle Luna Calle Sol 14", UserType.User);
+            await CheckUserAsync("1025", "Diego", "Vega", "diego@yopmail.com", "322 311 4615", "Calle Luna Calle Sol 15", UserType.User);
+            await CheckUserAsync("1026", "Verónica", "Cordero", "veronica@yopmail.com", "322 311 4616", "Calle Luna Calle Sol 16", UserType.User);
+            await CheckUserAsync("1027", "Natalia", "Oliva", "natalia@yopmail.com", "322 311 4617", "Calle Luna Calle Sol 17", UserType.User);
+            await CheckUserAsync("1028", "Felipe", "Sánchez", "felipe@yopmail.com", "322 311 4618", "Calle Luna Calle Sol 18", UserType.User);
+            await CheckUserAsync("1029", "Lucía", "López", "lucia@yopmail.com", "322 311 4619", "Calle Luna Calle Sol 19", UserType.User);
+            await CheckUserAsync("1030", "Fernando", "Bermúdez", "fernando@yopmail.com", "322 311 4620", "Calle Luna Calle Sol 20", UserType.User);
+            await CheckUserAsync("1031", "Andres", "Morales", "andresmorales@yopmail.com", "322 311 4628", "Calle Luna Calle Sol 30", UserType.User);
+            await CheckUserAsync("1032", "Ricardo", "Ramírez", "ricardo@yopmail.com", "322 311 4611", "Calle Luna Calle Sol 11", UserType.User);
         }
 
         private async Task CheckNoticesAsync()
@@ -122,6 +143,10 @@ namespace EasyPermissions.Backend.Data
                 var city = await _context.Cities.FirstOrDefaultAsync(x => x.Name == "Medellín");
                 city ??= await _context.Cities.FirstOrDefaultAsync();
 
+                var area = (userType == UserType.User)
+                ? await _context.Areas.FirstOrDefaultAsync(x => x.Name == "Ingeniería")
+                : null;
+
                 user = new User
                 {
                     FirstName = firstName,
@@ -133,6 +158,7 @@ namespace EasyPermissions.Backend.Data
                     Document = document,
                     City = city,
                     UserType = userType,
+                    Area = area
                 };
 
                 await _usersUnitOfWork.AddUserAsync(user, "123456");
@@ -140,7 +166,8 @@ namespace EasyPermissions.Backend.Data
 
                 var token = await _usersUnitOfWork.GenerateEmailConfirmationTokenAsync(user);
                 await _usersUnitOfWork.ConfirmEmailAsync(user, token);
-            }
+
+                }
 
             return user;
         }
@@ -838,164 +865,6 @@ namespace EasyPermissions.Backend.Data
                             Description = "Permiso para realizar otros trámites administrativos",
                             Status = 1
                         }
-                    ]
-                });
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        private async Task CheckNoticesAsync2()
-        {
-            if (!_context.Notices.Any())
-            {
-                _ = _context.Notices.Add(new Notice
-                {
-                    Name = "Elecciones 2024: Gana el presidente del verde",
-                    Description = "En las Elecciones de 2024, el candidato del Partido Verde emerge como ganador, asegurando la presidencia. Esta victoria marca un hito en la política nacional, ya que representa un cambio significativo en el panorama político del país. El resultado refleja el respaldo de la ciudadanía hacia las políticas y propuestas del partido, lo que promete influir en las futuras decisiones gubernamentales y en la dirección del país en los próximos años.",
-                    Status = 1,
-                    CategoryNoticeId = 1,
-                    ImageNotices =
-                    [
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 1",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 2",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 3",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 4",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 5",
-                        },
-                    ]
-                });
-                _context.Notices.Add(new Notice
-                {
-                    Name = "Los 5 tips necesarios en su econonomía para salir de vacaciones",
-                    Description = "¿Planeas unas merecidas vacaciones pero te preocupa cómo manejar tus finanzas durante este tiempo? Descubre los 5 consejos clave para administrar tu economía mientras disfrutas de tus días libres. Desde establecer un presupuesto hasta buscar ofertas y promociones, estos tips te ayudarán a disfrutar al máximo sin descuidar tus finanzas.",
-                    Status = 1,
-                    CategoryNoticeId = 11,
-                    ImageNotices =
-                    [
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 1",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 2",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 3",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 4",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 5",
-                        },
-                    ]
-                });
-                _context.Notices.Add(new Notice
-                {
-                    Name = "La Atleta que Alcanzó la Cima: Historia de Superación y Éxito",
-                    Description = "Descubre la inspiradora historia de una atleta que superó todos los obstáculos para alcanzar el premio más alto en su disciplina. Desde enfrentar lesiones hasta sacrificios personales, esta atleta demostró determinación y perseverancia en su camino hacia la cima. Su historia es un ejemplo de cómo el esfuerzo y la dedicación pueden llevar al éxito más allá de las adversidades.",
-                    Status = 1,
-                    CategoryNoticeId = 18,
-                    ImageNotices =
-                    [
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 1",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 2",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 3",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 4",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 5",
-                        },
-                    ]
-                });
-                _context.Notices.Add(new Notice
-                {
-                    Name = "¡La Épica Aventura del 2024! Descubre la Película que Revolucionará el Cine",
-                    Description = "Prepárate para una experiencia cinematográfica sin precedentes con la nueva película del 2024. Con una trama emocionante, efectos visuales impresionantes y un elenco estelar, esta película promete ser un hito en la historia del cine. Únete a los personajes en su épica travesía llena de acción, suspense y momentos inolvidables que te dejarán sin aliento. ¡No te pierdas este evento cinematográfico que marcará el inicio de una nueva era en el entretenimiento!",
-                    Status = 1,
-                    CategoryNoticeId = 25,
-                    ImageNotices =
-                    [
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 1",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 2",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 3",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 4",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 5",
-                        },
-                    ]
-                });
-                _context.Notices.Add(new Notice
-                {
-                    Name = "Descubre el Nuevo Dispositivo que Revoluciona tu Experiencia de Entretenimiento",
-                    Description = "¡Prepárate para elevar tu experiencia de entretenimiento al siguiente nivel con el innovador dispositivo del 2024! Diseñado para brindarte una inmersión total, este dispositivo te permite disfrutar de tus contenidos favoritos con una calidad nunca antes vista. Desde películas y juegos hasta música y más, este dispositivo transformará la manera en que experimentas el entretenimiento. ¡No te pierdas la oportunidad de ser parte de esta revolución tecnológica!",
-                    Status = 1,
-                    CategoryNoticeId = 35,
-                    ImageNotices =
-                    [
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 1",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 2",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 3",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 4",
-                        },
-                        new ImageNotice()
-                        {
-                            Name = "Imagen 5",
-                        },
                     ]
                 });
                 await _context.SaveChangesAsync();

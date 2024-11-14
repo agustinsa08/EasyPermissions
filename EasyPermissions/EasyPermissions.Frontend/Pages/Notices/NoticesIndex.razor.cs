@@ -34,20 +34,22 @@ namespace EasyPermissions.Frontend.Pages.Notices
         {
             IModalReference modalReference;
 
+            var options = new ModalOptions
+            {
+                Size = ModalSize.ExtraLarge  // Puedes usar Small, Medium, Large
+            };
+
             if (isEdit)
             {
-                modalReference = Modal.Show<NoticesEdit>(string.Empty, new ModalParameters().Add("Id", id));
+                modalReference = Modal.Show<NoticesEdit>(string.Empty, new ModalParameters().Add("Id", id), options);
             }
             else
             {
-                modalReference = Modal.Show<NoticesCreate>();
+                modalReference = Modal.Show<NoticesCreate>(options);
             }
 
             var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
                 await LoadAsync();
-            }
         }
         private async Task FilterCallBack(string filter)
         {
@@ -60,6 +62,14 @@ namespace EasyPermissions.Frontend.Pages.Notices
         {
             currentPage = page;
             await LoadAsync(page);
+        }
+
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
         }
 
         private async Task LoadAsync(int page = 1)
@@ -107,7 +117,7 @@ namespace EasyPermissions.Frontend.Pages.Notices
             var url = $"api/Notices/totalPages?recordsnumber={RecordsNumber}";
             if (!string.IsNullOrEmpty(Filter))
             {
-                url += $"?filter={Filter}";
+                url += $"&filter={Filter}";
             }
 
             var responseHttp = await Repository.GetAsync<int>(url);

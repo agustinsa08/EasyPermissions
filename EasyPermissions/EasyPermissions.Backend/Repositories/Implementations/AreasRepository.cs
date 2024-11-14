@@ -31,6 +31,7 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 WasSuccess = true,
                 Result = await queryable
                     .OrderBy(x => x.Name)
+                    .Include(a => a.User!)
                     .Paginate(pagination)
                     .ToListAsync()
             };
@@ -52,6 +53,15 @@ namespace EasyPermissions.Backend.Repositories.Implementations
                 WasSuccess = true,
                 Result = totalPages
             };
+        }
+
+        public async Task<List<Area>> GetAllWhithoutLeaderAsync()
+        {
+            var areas = await _context.Areas
+                .Where(x => x.UserId == null)
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+            return areas;
         }
     }
 }

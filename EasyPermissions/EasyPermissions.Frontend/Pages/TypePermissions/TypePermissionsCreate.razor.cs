@@ -10,7 +10,7 @@ namespace EasyPermissions.Frontend.Pages.TypePermissions
     public partial class TypePermissionsCreate
     {
         private TypePermission typePermissions = new();
-        private FormWithName<TypePermission>? typePermissionsForm;
+        private TypePermissionsForm? typePermissionsForm;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;

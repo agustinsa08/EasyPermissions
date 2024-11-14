@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyPermissions.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240608165101_Create database")]
+    [Migration("20241102021227_Create database")]
     partial class Createdatabase
     {
         /// <inheritdoc />
@@ -45,10 +45,15 @@ namespace EasyPermissions.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Areas");
                 });
@@ -69,7 +74,8 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("TypeNoticeId")
@@ -94,12 +100,17 @@ namespace EasyPermissions.Backend.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("LimitDays")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("TypePermissionId")
@@ -204,7 +215,8 @@ namespace EasyPermissions.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -236,6 +248,13 @@ namespace EasyPermissions.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LeaderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("LimitDays")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -245,6 +264,8 @@ namespace EasyPermissions.Backend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryPermissionId");
+
+                    b.HasIndex("LeaderId");
 
                     b.HasIndex("UserId");
 
@@ -315,7 +336,8 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -342,7 +364,8 @@ namespace EasyPermissions.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -365,6 +388,9 @@ namespace EasyPermissions.Backend.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CityId")
                         .HasColumnType("int");
@@ -435,6 +461,8 @@ namespace EasyPermissions.Backend.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
 
                     b.HasIndex("CityId");
 
@@ -582,6 +610,16 @@ namespace EasyPermissions.Backend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.Area", b =>
+                {
+                    b.HasOne("EasyPermissions.Shared.Entities.User", "User")
+                        .WithMany("Areas")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EasyPermissions.Shared.Entities.CategoryNotice", b =>
                 {
                     b.HasOne("EasyPermissions.Shared.Entities.TypeNotice", "TypeNotice")
@@ -645,12 +683,19 @@ namespace EasyPermissions.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("EasyPermissions.Shared.Entities.User", "Leader")
+                        .WithMany("LeaderPermissions")
+                        .HasForeignKey("LeaderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("EasyPermissions.Shared.Entities.User", "User")
                         .WithMany("Permissions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CategoryPermission");
+
+                    b.Navigation("Leader");
 
                     b.Navigation("User");
                 });
@@ -679,11 +724,18 @@ namespace EasyPermissions.Backend.Migrations
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.User", b =>
                 {
+                    b.HasOne("EasyPermissions.Shared.Entities.Area", "Area")
+                        .WithMany("Users")
+                        .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("EasyPermissions.Shared.Entities.City", "City")
                         .WithMany("Users")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Area");
 
                     b.Navigation("City");
                 });
@@ -739,6 +791,11 @@ namespace EasyPermissions.Backend.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("EasyPermissions.Shared.Entities.Area", b =>
+                {
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("EasyPermissions.Shared.Entities.CategoryNotice", b =>
                 {
                     b.Navigation("Notices");
@@ -786,6 +843,10 @@ namespace EasyPermissions.Backend.Migrations
 
             modelBuilder.Entity("EasyPermissions.Shared.Entities.User", b =>
                 {
+                    b.Navigation("Areas");
+
+                    b.Navigation("LeaderPermissions");
+
                     b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618

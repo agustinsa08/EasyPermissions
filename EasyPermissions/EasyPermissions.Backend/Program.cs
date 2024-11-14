@@ -53,8 +53,8 @@ builder.Services.AddSwaggerGen(c =>
           }
         });
 });
-//builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=AzureConnection"));
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
+//builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=AzureConnection"));
 builder.Services.AddTransient<SeedDb>();
 builder.Services.AddScoped<IFileStorage, FileStorage>();
 builder.Services.AddScoped<IMailHelper, MailHelper>();
@@ -134,7 +134,7 @@ void SeedData(WebApplication app)
     using (var scope = scopedFactory!.CreateScope())
     {
         var service = scope.ServiceProvider.GetService<SeedDb>();
-        service!.SeedAsync().Wait();
+        //service!.SeedAsync().Wait();
     }
 }
 

@@ -1,0 +1,55 @@
+﻿@page "/permissions/{userId}"
+
+<i class="bi bi-arrow-left mb-5 cursor-pointer" @onclick=@(() =>ReturnPermissions()) style="margin: 0px !important; cursor:pointer;"></i>
+<div class="card">
+    <div class="card-header">
+        <span>
+            <i class="bi bi-person-lines" /> Mis Permisos
+            <AuthorizeView Roles="User, Leader">
+                <Authorized>
+                        <a class="btn btn-primary btn-sm float-end" style="margin: 0 5px;" @onclick=@(() => ShowModalAsync())>Nuevo Permiso</a>
+                </Authorized>
+            </AuthorizeView>
+         </span>
+    </div>
+    <div class="card-body">
+        <Filter PlaceHolder="Buscar permiso..." Callback=@FilterCallBack />
+        <GenericList MyList="Permissions">
+            <Body>
+                <Pagination CurrentPage="currentPage"
+                            TotalPages="totalPages"
+                            SelectedPage="SelectedPageAsync"
+                            RecordsNumber="SelectedRecordsNumberAsync" />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Usuario</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Fecha de creación</th>
+                            <th>Fecha de actualización</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var permission in Permissions!)
+                        {
+                            <tr>
+                                <td>@permission.Id</td>
+                                <td>@permission.User!.FullName</td>
+                                <td>@permission.Description</td>
+                                <td>@GetDescription(permission.Status)</td>
+                                <td>@ApplyUtc(permission.Date)</td>
+                                <td>@ApplyUtc(permission.DateStatus)</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" @onclick=@(() =>ShowDetail(permission.Id))>Detalle</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
+    </div>
+</div>

@@ -9,5 +9,8 @@ namespace EasyPermissions.Backend.UnitsOfWork.Interfaces
         Task<ActionResponse<IEnumerable<Area>>> GetAsync(PaginationDTO pagination);
 
         Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
+
+        Task<List<Area>> GetAllWhithoutLeaderAsync();
+
     }
 }

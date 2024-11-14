@@ -20,5 +20,12 @@ namespace EasyPermissions.Shared.Entities
         [Required(ErrorMessage = "El campo {2} es requerido.")]
         [DefaultValue(1)]
         public int? Status { get; set; } = 1;
+
+        [Display(Name = "Líder")]
+        public string? UserId { get; set; }
+
+        public User? User { get; set; }
+
+        public ICollection<User>? Users { get; set; }
     }
 }

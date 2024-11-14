@@ -44,10 +44,8 @@ namespace EasyPermissions.Frontend.Pages.Notices
             }
 
             var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
                 await LoadAsync();
-            }
+            
         }
         private async Task FilterCallBack(string filter)
         {
@@ -64,6 +62,14 @@ namespace EasyPermissions.Frontend.Pages.Notices
 
             currentPage = page;
             await LoadAsync(page);
+        }
+
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
         }
 
         private async Task LoadAsync(int page = 1)
