@@ -22,28 +22,31 @@ else
                             SelectedPage="SelectedPageAsync"
                             RecordsNumber="SelectedRecordsNumberAsync" />
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Estado / Departamento</th>
-                            <th style="width:90px">Ciudades</th>
-                            <th style="width:210px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var state in states!)
-                        {
+                <div style="max-width: 100%; overflow-x: auto;">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td><a href="/states/details/@state.Id">@state.Name</a></td>
-                                <td>@state.CitiesNumber</td>
-                                <td>
-                                    <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(state.Id, true))><i class="bi bi-pencil" /> Editar</a>
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(state))><i class="bi bi-trash" /> Borrar</button>
-                                </td>
+                                <th>Estado / Departamento</th>
+                                <th style="width:90px">Ciudades</th>
+                                <th style="width:210px"></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var state in states!)
+                            {
+                                <tr>
+                                    <td><a href="/states/details/@state.Id">@state.Name</a></td>
+                                    <td>@state.CitiesNumber</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(state.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                        <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(state))><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
             </Body>
         </GenericList>
         </div>

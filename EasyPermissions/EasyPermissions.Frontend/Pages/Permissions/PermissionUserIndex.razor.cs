@@ -50,10 +50,7 @@ namespace EasyPermissions.Frontend.Pages.Permissions
             }
 
             var result = await modalReference.Result;
-            if (result.Confirmed)
-            {
-                await LoadAsync();
-            }
+            await LoadAsync();
         }
         private async Task FilterCallBack(string filter)
         {

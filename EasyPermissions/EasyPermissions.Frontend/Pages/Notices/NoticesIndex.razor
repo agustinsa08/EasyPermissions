@@ -16,28 +16,32 @@
                             SelectedPage="SelectedPageAsync"
                             RecordsNumber="SelectedRecordsNumberAsync" />
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Imágenes</th>
-                            <th style="width:210px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var notices in notices!)
-                        {
+                <div style="max-width: 100%; overflow-x: auto;">
+
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td><a href="/notices/details/@notices.Id">@notices.Name</a></td>
-                                <td>@notices.ImageNoticesNumber</td>
-                                <td>
-                                    <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(notices.Id, true))><i class="bi bi-pencil" /> Editar</a>
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(notices))><i class="bi bi-trash" /> Borrar</button>
-                                </td>
+                                <th>Nombre</th>
+                                <th>Imágenes</th>
+                                <th style="width:210px"></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var notices in notices!)
+                            {
+                                <tr>
+                                    <td><a href="/notices/details/@notices.Id">@notices.Name</a></td>
+                                    <td>@notices.ImageNoticesNumber</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(notices.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                        <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(notices))><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
             </Body>
         </GenericList>
     </div>

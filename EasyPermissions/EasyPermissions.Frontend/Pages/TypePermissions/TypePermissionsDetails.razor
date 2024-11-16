@@ -22,31 +22,32 @@ else
                                 TotalPages="totalPages"
                                 SelectedPage="SelectedPageAsync"
                                 RecordsNumber="SelectedRecordsNumberAsync" />
-
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Estado</th>
-                                <th style="width:210px"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var categoryPermissions in categoryPermissions!)
-                            {
+                    <div style="max-width: 100%; overflow-x: auto;">
+                        <table class="table table-striped">
+                            <thead>
                                 <tr>
-                                    <td>@categoryPermissions.Name</td>
-                                    <td>@categoryPermissions.Description</td>
-                                    <td>@(getStatus(typePermissions.Status))</td>
-                                    <td>
-                                        <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(categoryPermissions.Id, true))><i class="bi bi-pencil" /> Editar</a>
-                                        <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(categoryPermissions))><i class="bi bi-trash" /> Borrar</button>
-                                    </td>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Estado</th>
+                                    <th style="width:210px"></th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var categoryPermissions in categoryPermissions!)
+                                {
+                                    <tr>
+                                        <td>@categoryPermissions.Name</td>
+                                        <td>@categoryPermissions.Description</td>
+                                        <td>@(getStatus(typePermissions.Status))</td>
+                                        <td>
+                                            <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(categoryPermissions.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                            <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(categoryPermissions))><i class="bi bi-trash" /> Borrar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </Body>
             </GenericList>
         </div>
