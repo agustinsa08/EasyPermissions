@@ -23,26 +23,28 @@ else
                             SelectedPage="SelectedPageAsync"
                             RecordsNumber="SelectedRecordsNumberAsync" />
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Imagenes Noticias</th>
-                            <th style="width:210px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var imageNotices in imageNotices!)
-                        {
+                <div style="max-width: 100%; overflow-x: auto;">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>@imageNotices.Name</td>
-                                <td>
-                                    <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(imageNotices.Id, true))><i class="bi bi-pencil" /> Editar</a>
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(imageNotices))><i class="bi bi-trash" /> Borrar</button>
-                                </td>
+                                <th>Imagenes Noticias</th>
+                                <th style="width:210px"></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var imageNotices in imageNotices!)
+                            {
+                                <tr>
+                                    <td>@imageNotices.Name</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(imageNotices.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                        <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(imageNotices))><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </Body>
         </GenericList>
         </div>

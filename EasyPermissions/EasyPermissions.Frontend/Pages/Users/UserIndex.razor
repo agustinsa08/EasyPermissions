@@ -20,33 +20,36 @@
                             SelectedPage="SelectedPageAsync"
                             RecordsNumber="SelectedRecordsNumberAsync" />
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre Completo</th>
-                            <th>Tipo</th>
-                            <th>Area</th>
-                            <th>Correo</th>
-                            <th>Teléfono</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var user in Users!)
-                        {
+                <div style="max-width: 100%; overflow-x: auto;">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>@user.FirstName @user.LastName</td>
-                                <td>@GetDescription(user.UserType)</td>
-                                <td>Area</td>
-                                <td>@user.UserName</td>
-                                <td>@user.PhoneNumber</td>
-                                <td>
-                                    <a class="btn btn-warning btn-sm" @onclick=@(() => EditUser(user.Id))><i class="bi bi-pencil" /> Editar</a>
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(user))><i class="bi bi-trash" /> Borrar</button>
-                                </td>
+                                <th>Nombre Completo</th>
+                                <th>Tipo</th>
+                                <th>Area</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Users!)
+                            {
+                                <tr>
+                                    <td>@user.FirstName @user.LastName</td>
+                                    <td>@GetDescription(user.UserType)</td>
+                                    <td>Area</td>
+                                    <td>@user.UserName</td>
+                                    <td>@user.PhoneNumber</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" @onclick=@(() => EditUser(user.Id))><i class="bi bi-pencil" /> Editar</a>
+                                        <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(user))><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
             </Body>
         </GenericList>
     </div>

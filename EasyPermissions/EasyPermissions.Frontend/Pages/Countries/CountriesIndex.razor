@@ -16,28 +16,31 @@
                             SelectedPage="SelectedPageAsync"
                             RecordsNumber="SelectedRecordsNumberAsync" />
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>País</th>
-                            <th style="width:210px">Estados / Departamentos</th>
-                            <th style="width:210px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var country in Countries!)
-                        {
+                <div style="max-width: 100%; overflow-x: auto;">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td><a href="/countries/details/@country.Id"> @country.Name</a></td>
-                                <td>@country.StatesNumber</td>
-                                <td>
-                                    <a @onclick=@(() => ShowModalAsync(country.Id, true)) class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
-                                    <button @onclick=@(() => DeleteAsycn(country)) class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
-                                </td>
+                                <th>País</th>
+                                <th style="width:210px">Estados / Departamentos</th>
+                                <th style="width:210px"></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var country in Countries!)
+                            {
+                                <tr>
+                                    <td><a href="/countries/details/@country.Id"> @country.Name</a></td>
+                                    <td>@country.StatesNumber</td>
+                                    <td>
+                                        <a @onclick=@(() => ShowModalAsync(country.Id, true)) class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                        <button @onclick=@(() => DeleteAsycn(country)) class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
             </Body>
         </GenericList>
     </div>
