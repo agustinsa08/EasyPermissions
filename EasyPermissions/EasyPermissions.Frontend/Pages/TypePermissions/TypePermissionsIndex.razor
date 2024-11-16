@@ -17,32 +17,36 @@
                             SelectedPage="SelectedPageAsync"
                             RecordsNumber="SelectedRecordsNumberAsync" />
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Estado</th>
-                            <th>Categorias</th>
-                            <th style="width:210px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var typePermissions in typePermissions!)
-                        {
+                <div style="max-width: 100%; overflow-x: auto;">
+
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td><a href="/typePermissions/details/@typePermissions.Id"> @typePermissions.Name</a></td>
-                                <td>@typePermissions.Description</td>
-                                <td>@(getStatus(typePermissions.Status))</td>
-                                <td>@typePermissions.CategoryPermissionsNumber</td>
-                                <td>
-                                    <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(typePermissions.Id, true))><i class="bi bi-pencil" /> Editar</a>
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsycn(typePermissions))><i class="bi bi-trash" /> Borrar</button>
-                                </td>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Categorias</th>
+                                <th style="width:210px"></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var typePermissions in typePermissions!)
+                            {
+                                <tr>
+                                    <td><a href="/typePermissions/details/@typePermissions.Id"> @typePermissions.Name</a></td>
+                                    <td>@typePermissions.Description</td>
+                                    <td>@(getStatus(typePermissions.Status))</td>
+                                    <td>@typePermissions.CategoryPermissionsNumber</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(typePermissions.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                        <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsycn(typePermissions))><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
             </Body>
         </GenericList>
       </div>

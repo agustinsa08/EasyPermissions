@@ -38,7 +38,7 @@ namespace EasyPermissions.Frontend.Pages.Permissions
 
         [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
-
+        private bool loadingChangeState = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -135,6 +135,8 @@ namespace EasyPermissions.Frontend.Pages.Permissions
 
             permission.Status = (PermissionStatus)statusValue;
 
+            loadingChangeState = true;
+
 
             var responseHttp = await Repository.PutAsync($"/api/permissions", PermissionDTO);
             if (responseHttp.Error)
@@ -155,8 +157,11 @@ namespace EasyPermissions.Frontend.Pages.Permissions
                 Timer = 3000
             });
 
+            loadingChangeState = false;
 
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
+
+
 
         }
 
