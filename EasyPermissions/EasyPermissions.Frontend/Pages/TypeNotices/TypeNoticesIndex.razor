@@ -18,32 +18,34 @@
                             SelectedPage="SelectedPageAsync"
                             RecordsNumber="SelectedRecordsNumberAsync" />
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Categorias</th>
-                            <th>Estado</th>
-                            <th style="width:210px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var typeNotices in typeNotices!)
-                        {
+                <div style="max-width: 100%; overflow-x: auto;">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td><a href="/typeNotices/details/@typeNotices.Id"> @typeNotices.Name</a></td>
-                                <td>@typeNotices.Description</td>
-                                <td>@typeNotices.CategoryNoticesNumber</td>
-                                <td>@(getStatus(typeNotices.Status))</td>
-                                <td>
-                                    <a @onclick=@(() => ShowModalAsync(typeNotices.Id, true)) class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
-                                    <button @onclick=@(() => DeleteAsycn(typeNotices)) class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
-                                </td>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Categorias</th>
+                                <th>Estado</th>
+                                <th style="width:210px"></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var typeNotices in typeNotices!)
+                            {
+                                <tr>
+                                    <td><a href="/typeNotices/details/@typeNotices.Id"> @typeNotices.Name</a></td>
+                                    <td>@typeNotices.Description</td>
+                                    <td>@typeNotices.CategoryNoticesNumber</td>
+                                    <td>@(getStatus(typeNotices.Status))</td>
+                                    <td>
+                                        <a @onclick=@(() => ShowModalAsync(typeNotices.Id, true)) class="btn btn-sm btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                        <button @onclick=@(() => DeleteAsycn(typeNotices)) class="btn btn-sm btn-danger"><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </Body>
         </GenericList>
     </div>

@@ -25,34 +25,38 @@
                             SelectedPage="SelectedPageAsync"
                             RecordsNumber="SelectedRecordsNumberAsync" />
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Usuario</th>
-                            <th>Descripción</th>
-                            <th>Estado</th>
-                            <th>Fecha de creación</th>
-                            <th>Fecha de actualización</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var permission in Permissions!)
-                        {
+                <div style="max-width: 100%; overflow-x: auto;">
+
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>@permission.Id</td>
-                                <td>@permission.User!.FullName</td>
-                                <td>@permission.Description</td>
-                                <td>@GetDescription(permission.Status)</td>
-                                <td>@ApplyUtc(permission.Date)</td>
-                                <td>@ApplyUtc(permission.DateStatus)</td>
-                                <td>
-                                    <button class="btn btn-success btn-sm" @onclick=@(() =>ShowDetail(permission.Id))><i class="bi bi-trash" /> Detalle</button>
-                                </td>
+                                <th>Id</th>
+                                <th>Usuario</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Fecha de creación</th>
+                                <th>Fecha de actualización</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var permission in Permissions!)
+                            {
+                                <tr>
+                                    <td>@permission.Id</td>
+                                    <td>@permission.User!.FullName</td>
+                                    <td>@permission.Description</td>
+                                    <td>@GetDescription(permission.Status)</td>
+                                    <td>@ApplyUtc(permission.Date)</td>
+                                    <td>@ApplyUtc(permission.DateStatus)</td>
+                                    <td>
+                                        <button class="btn btn-success btn-sm" @onclick=@(() =>ShowDetail(permission.Id))><i class="bi bi-trash" /> Detalle</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
             </Body>
         </GenericList>
     </div>

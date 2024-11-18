@@ -24,33 +24,36 @@
                             SelectedPage="SelectedPageAsync"
                             RecordsNumber="SelectedRecordsNumberAsync" />
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Líder</th>
-                            <th>Descripción</th>
-                            <th>Estado</th>
-                            <th style="width:210px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var area in Areas!)
-                        {
+            <div style="max-width: 100%; overflow-x: auto;">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>@area.Name</td>
-                                <td>@(area.User is not null ? area.User.FullName : "")</td>
-                                <td>@area.Name</td>
-                                <td>@area.Description</td>
-                                <td>@(getStatus(area.Status))</td>
-                                <td>
-                                    <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(area.Id, true))><i class="bi bi-pencil" /> Editar</a>
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(area))><i class="bi bi-trash" /> Borrar</button>
-                                </td>
+                                <th>Nombre</th>
+                                <th>Líder</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th style="width:210px"></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var area in Areas!)
+                            {
+                                <tr>
+                                    <td>@area.Name</td>
+                                    <td>@(area.User is not null ? area.User.FullName : "")</td>
+                                    <td>@area.Name</td>
+                                    <td>@area.Description</td>
+                                    <td>@(getStatus(area.Status))</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(area.Id, true))><i class="bi bi-pencil" /> Editar</a>
+                                        <button class="btn btn-danger btn-sm" @onclick=@(() =>DeleteAsycn(area))><i class="bi bi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+            </div>
+
             </Body>
         </GenericList>
         }
